@@ -1,10 +1,10 @@
-package dev.krazymanj.shopito.database
+package dev.krazymanj.shopito.database.entities
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "template_table")
-data class TemplateDatabaseClass(
+@Entity(tableName = "shopping_item")
+data class ShoppingItem(
     // Variables here
 
     @PrimaryKey(autoGenerate = true)

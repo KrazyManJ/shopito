@@ -1,4 +1,4 @@
-package dev.krazymanj.shopito.views.template
+package dev.krazymanj.shopito.views.shoppingListsSummary
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.runtime.Composable
@@ -8,17 +8,17 @@ import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.ui.components.BaseScreen
 
 @Composable
-fun TemplateScreen(
+fun ShoppingListsSummaryScreen(
     navRouter: INavigationRouter
 ) {
-    val viewModel = hiltViewModel<TemplateViewModel>()
+    val viewModel = hiltViewModel<ShoppingListsSummaryViewModel>()
 
-    val state = viewModel.templateUIState.collectAsStateWithLifecycle()
+    val state = viewModel.shoppingListsSummaryUIState.collectAsStateWithLifecycle()
 
     BaseScreen(
-        topBarText = "Template Screen"
+        topBarText = "Lists Summary"
     ) {
-        TemplateScreenContent(
+        ShoppingListsSummaryScreenContent(
             paddingValues = it,
             state = state.value,
             actions = viewModel
@@ -27,10 +27,10 @@ fun TemplateScreen(
 }
 
 @Composable
-fun TemplateScreenContent(
+fun ShoppingListsSummaryScreenContent(
     paddingValues: PaddingValues,
-    state: TemplateUIState,
-    actions: TemplateActions
+    state: ShoppingListsSummaryUIState,
+    actions: ShoppingListsSummaryActions
 ) {
 
 }

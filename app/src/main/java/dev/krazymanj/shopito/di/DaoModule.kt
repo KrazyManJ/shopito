@@ -4,8 +4,8 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dev.krazymanj.shopito.database.TemplateDao
-import dev.krazymanj.shopito.database.TemplateDatabase
+import dev.krazymanj.shopito.database.ShopitoDao
+import dev.krazymanj.shopito.database.ShopitoDatabase
 import javax.inject.Singleton
 
 @Module
@@ -14,7 +14,7 @@ object DaoModule {
 
     @Provides
     @Singleton
-    fun provideDao(database: TemplateDatabase): TemplateDao {
+    fun provideDao(database: ShopitoDatabase): ShopitoDao {
         return database.templateDao()
     }
 }

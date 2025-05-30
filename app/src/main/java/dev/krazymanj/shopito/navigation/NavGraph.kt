@@ -6,7 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import dev.krazymanj.shopito.views.template.TemplateScreen
+import dev.krazymanj.shopito.views.shoppingListsSummary.ShoppingListsSummaryScreen
 
 @Composable
 fun NavGraph(
@@ -18,8 +18,8 @@ fun NavGraph(
         startDestination = startDestination.route,
         navController = navHostController
     ) {
-        composable(route = Destination.TemplateScreen.route) {
-            TemplateScreen(navRouter)
+        composable(route = Destination.ShoppingListsSummaryScreen.route) {
+            ShoppingListsSummaryScreen(navRouter)
         }
     }
 }
