@@ -16,13 +16,13 @@ fun NavGraph(
     navRouter: INavigationRouter = remember { NavigationRouterImpl(navHostController) }
 ) {
     NavHost(
-        startDestination = startDestination.route,
+        startDestination = startDestination,
         navController = navHostController
     ) {
-        composable(route = Destination.ShoppingListsSummaryScreen.route) {
+        composable<Destination.ShoppingListsScreen> {
             ShoppingListsSummaryScreen(navRouter)
         }
-        composable(route = Destination.ShoppingListsScreen.route) {
+        composable<Destination.ShoppingListsSummaryScreen> {
             ShoppingListsScreen(navRouter)
         }
     }

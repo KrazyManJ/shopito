@@ -1,6 +1,6 @@
 package dev.krazymanj.shopito.navigation
 
 interface INavigationRouter {
-    fun navigateToShoppingListsSummaryScreen()
+    fun navigateTo(destination: Destination)
     fun returnBack()
 }
