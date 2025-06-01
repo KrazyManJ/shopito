@@ -5,10 +5,12 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import dev.krazymanj.shopito.database.entities.ShoppingItem
+import dev.krazymanj.shopito.database.entities.ShoppingList
 
 @Database(
     entities = [
-        ShoppingItem::class
+        ShoppingItem::class,
+        ShoppingList::class,
     ],
     version = 1,
     exportSchema = true

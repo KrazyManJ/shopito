@@ -1,11 +1,29 @@
 package dev.krazymanj.shopito.database.entities
 
+import androidx.room.ColumnInfo
 import androidx.room.Entity
+import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "shopping_item")
+@Entity(
+    tableName = "shopping_item",
+    foreignKeys = [
+        ForeignKey(
+            entity = ShoppingList::class,
+            parentColumns = arrayOf("id"),
+            childColumns = arrayOf("listId")
+        )
+    ]
+)
 data class ShoppingItem(
-    // Variables here
+    var itemName: String,
+    var amount: Int,
+
+    var isDone: Boolean = false,
+    var buyTime: Long? = null,
+
+    @ColumnInfo(index = true)
+    var listId: Long? = null,
 
     @PrimaryKey(autoGenerate = true)
     var id: Long? = null
