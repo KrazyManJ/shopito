@@ -17,7 +17,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             ShopitoTheme {
                 NavGraph(
-                    startDestination = Destination.ShoppingListsSummaryScreen
+                    startDestination = Destination.ShoppingListsScreen
                 )
             }
         }
