@@ -15,6 +15,6 @@ object DaoModule {
     @Provides
     @Singleton
     fun provideDao(database: ShopitoDatabase): ShopitoDao {
-        return database.templateDao()
+        return database.shopitoDao()
     }
 }

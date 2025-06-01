@@ -13,11 +13,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Plus
+import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.ui.components.BaseScreen
 
@@ -34,7 +36,7 @@ fun ShoppingListsScreen(
     }
 
     BaseScreen(
-        topBarText = "Shopping Lists",
+        topBarText = stringResource(R.string.navigation_shopping_lists_label),
         navigationRouter = navRouter,
         floatingActionButton = {
             FloatingActionButton(

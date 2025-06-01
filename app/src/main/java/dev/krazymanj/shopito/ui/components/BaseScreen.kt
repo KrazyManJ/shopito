@@ -15,14 +15,16 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import com.composables.icons.lucide.ListChecks
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.ScrollText
+import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
 
 data class NavigationItem(
-    val label: String,
+    val label: Int,
     val icon: ImageVector,
     val route: Destination,
     val displaySelectedOnRoutes: List<Destination>
@@ -30,7 +32,7 @@ data class NavigationItem(
 
 val navigationItems: List<NavigationItem> = listOf(
     NavigationItem(
-        label = "Lists Summary",
+        label = R.string.navigation_lists_summary_label,
         icon = Lucide.ScrollText,
         route = Destination.ShoppingListsSummaryScreen,
         displaySelectedOnRoutes = listOf(
@@ -38,7 +40,7 @@ val navigationItems: List<NavigationItem> = listOf(
         )
     ),
     NavigationItem(
-        label = "Shopping Lists",
+        label = R.string.navigation_shopping_lists_label,
         icon = Lucide.ListChecks,
         route = Destination.ShoppingListsScreen,
         displaySelectedOnRoutes = listOf(
@@ -84,7 +86,7 @@ fun BaseScreen(
                             }
                         },
                         label = {
-                            Text(text = it.label)
+                            Text(text = stringResource(it.label))
                         },
                         icon = {
                             Image(
