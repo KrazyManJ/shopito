@@ -14,6 +14,7 @@ room = "2.6.1"
 ksp = "2.0.21-1.0.27"
 hilt = "2.51.1"
 hilt-compose = "1.2.0"
+icons-lucide = "1.0.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -42,6 +43,8 @@ room-runtime = { group = "androidx.room", name = "room-ktx", version.ref = "room
 hilt-android = { group = "com.google.dagger", name = "hilt-android" , version.ref = "hilt"}
 hilt-compiler-ksp = { group = "com.google.dagger", name = "hilt-compiler" , version.ref = "hilt"}
 hilt-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-compose" }
+
+icons-lucide = { group = "com.composables", name = "icons-lucide", version.ref = "icons-lucide"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

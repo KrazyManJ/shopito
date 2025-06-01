@@ -71,4 +71,6 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.hilt.compose)
     ksp(libs.hilt.compiler.ksp)
+
+    implementation(libs.icons.lucide)
 }

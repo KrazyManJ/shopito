@@ -17,12 +17,12 @@ fun NavGraph(
 ) {
     NavHost(
         startDestination = startDestination,
-        navController = navHostController
+        navController = navHostController,
     ) {
-        composable<Destination.ShoppingListsScreen> {
+        composable<Destination.ShoppingListsSummaryScreen> {
             ShoppingListsSummaryScreen(navRouter)
         }
-        composable<Destination.ShoppingListsSummaryScreen> {
+        composable<Destination.ShoppingListsScreen> {
             ShoppingListsScreen(navRouter)
         }
     }

@@ -16,7 +16,8 @@ fun ShoppingListsSummaryScreen(
     val state = viewModel.shoppingListsSummaryUIState.collectAsStateWithLifecycle()
 
     BaseScreen(
-        topBarText = "Lists Summary"
+        topBarText = "Lists Summary",
+        navigationRouter = navRouter
     ) {
         ShoppingListsSummaryScreenContent(
             paddingValues = it,
