@@ -4,4 +4,9 @@
     <string name="general_shopping_list_description">This is a general shopping list.</string>
     <string name="navigation_lists_summary_label">Lists Summary</string>
     <string name="navigation_shopping_lists_label">Shopping Lists</string>
+    <string name="add_shopping_list_title">Add shopping list</string>
+    <string name="edit_shopping_list_title">Edit shopping list</string>
+    <string name="name_label">Name</string>
+    <string name="description_label">Description</string>
+    <string name="save_label">Save</string>
 </resources>

@@ -7,4 +7,8 @@ sealed class Destination {
     data object ShoppingListsSummaryScreen : Destination()
     @Serializable
     data object ShoppingListsScreen : Destination()
+    @Serializable
+    data class AddEditShoppingList(
+        val shoppingListId: Long?
+    ) : Destination()
 }

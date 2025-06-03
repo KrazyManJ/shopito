@@ -19,7 +19,8 @@ fun ShoppingListsSummaryScreen(
 
     BaseScreen(
         topBarText = stringResource(R.string.navigation_lists_summary_label),
-        navigationRouter = navRouter
+        navigationRouter = navRouter,
+        showBottomNavigationBar = true
     ) {
         ShoppingListsSummaryScreenContent(
             paddingValues = it,

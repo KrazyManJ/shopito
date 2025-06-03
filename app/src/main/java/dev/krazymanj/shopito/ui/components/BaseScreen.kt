@@ -57,6 +57,7 @@ fun BaseScreen(
     onBackClick: (() -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
+    showBottomNavigationBar: Boolean = false,
     content: @Composable (paddingValues: PaddingValues) -> Unit,
 ) {
     Scaffold(
@@ -76,6 +77,9 @@ fun BaseScreen(
             )
         },
         bottomBar = {
+            if (!showBottomNavigationBar) {
+                return@Scaffold
+            }
             NavigationBar {
                 navigationItems.forEach {
                     NavigationBarItem(
