@@ -1,8 +1,10 @@
 package dev.krazymanj.shopito.database
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import dev.krazymanj.shopito.database.entities.ShoppingItem
 import dev.krazymanj.shopito.database.entities.ShoppingList
 import kotlinx.coroutines.flow.Flow
@@ -16,11 +18,23 @@ interface ShopitoDao {
     @Insert
     suspend fun insert(shoppingList: ShoppingList)
 
+    @Update
+    suspend fun update(shoppingItem: ShoppingItem)
+
+    @Update
+    suspend fun update(shoppingList: ShoppingList)
+
+    @Delete
+    suspend fun delete(shoppingItem: ShoppingItem)
+
+    @Delete
+    suspend fun delete(shoppingList: ShoppingList)
+
     @Query("SELECT * FROM shopping_list")
     fun getShoppingLists(): Flow<List<ShoppingList>>
 
     @Query("SELECT * FROM shopping_list WHERE id = :id")
-    fun getShoppingListById(id: Long): Flow<ShoppingList>
+    suspend fun getShoppingListById(id: Long): ShoppingList
 
     @Query("SELECT * FROM shopping_item WHERE listId = :id")
     fun getShoppingItemsByShoppingList(id: Long): Flow<List<ShoppingItem>>

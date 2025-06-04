@@ -1,11 +1,11 @@
 package dev.krazymanj.shopito.views.addEditShoppingList
 
+import dev.krazymanj.shopito.database.entities.ShoppingList
+
 
 data class AddEditShoppingUIState(
-    val loading: Boolean = true,
+    val shoppingList: ShoppingList = ShoppingList("",""),
 
-    val nameInput: String = "",
-    val descriptionInput: String = "",
-
-    val isDone: Boolean = false,
+    val isSaved: Boolean = false,
+    val isDeleted: Boolean = false,
 )

@@ -4,7 +4,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.krazymanj.shopito.database.IShopitoLocalRepository
-import dev.krazymanj.shopito.database.entities.ShoppingList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -20,33 +19,46 @@ class AddEditShoppingListViewModel @Inject constructor(private val repository: I
 
     override fun onNameInput(name: String) {
         _state.value = _state.value.copy(
-            nameInput = name
+            shoppingList = _state.value.shoppingList.copy(name = name)
         )
     }
 
     override fun onDescriptionInput(desc: String) {
         _state.value = _state.value.copy(
-            descriptionInput = desc
+            shoppingList = _state.value.shoppingList.copy(description = desc)
         )
     }
 
     override fun submit() {
-        val input = _state.value
         viewModelScope.launch {
-            repository.insert(ShoppingList(input.nameInput,input.descriptionInput))
+            if (_state.value.shoppingList.id != null) {
+                repository.update(_state.value.shoppingList)
+            }
+            else {
+                repository.insert(_state.value.shoppingList)
+            }
             _state.value = _state.value.copy(
-                isDone = true
+                isSaved = true
             )
         }
     }
 
     override fun loadShoppingListData(id: Long?) {
-        if (id == null) {
+        if (id == null) return
+
+        viewModelScope.launch {
             _state.value = _state.value.copy(
-                loading = false
+                shoppingList = repository.getShoppingListById(id),
             )
-            return
         }
-        TODO("Editing not implemented")
+    }
+
+    override fun deleteShoppingList() {
+        viewModelScope.launch {
+            repository.delete(_state.value.shoppingList)
+            _state.value = _state.value.copy(
+                isDeleted = true
+            )
+        }
     }
 }

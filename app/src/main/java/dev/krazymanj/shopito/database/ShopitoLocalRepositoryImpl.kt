@@ -15,11 +15,27 @@ class ShopitoLocalRepositoryImpl @Inject constructor(private val shopitoDao: Sho
         return shopitoDao.insert(shoppingList)
     }
 
+    override suspend fun update(shoppingItem: ShoppingItem) {
+        return shopitoDao.update(shoppingItem)
+    }
+
+    override suspend fun update(shoppingList: ShoppingList) {
+        return shopitoDao.update(shoppingList)
+    }
+
+    override suspend fun delete(shoppingItem: ShoppingItem) {
+        return shopitoDao.delete(shoppingItem)
+    }
+
+    override suspend fun delete(shoppingList: ShoppingList) {
+        return shopitoDao.delete(shoppingList)
+    }
+
     override suspend fun getShoppingLists(): Flow<List<ShoppingList>> {
         return shopitoDao.getShoppingLists()
     }
 
-    override suspend fun getShoppingListById(id: Long): Flow<ShoppingList> {
+    override suspend fun getShoppingListById(id: Long): ShoppingList {
         return shopitoDao.getShoppingListById(id)
     }
 

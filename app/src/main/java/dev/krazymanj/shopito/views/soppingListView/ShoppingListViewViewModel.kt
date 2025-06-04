@@ -7,7 +7,6 @@ import dev.krazymanj.shopito.database.IShopitoLocalRepository
 import dev.krazymanj.shopito.database.entities.ShoppingItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.random.Random
@@ -22,15 +21,10 @@ class ShoppingListViewViewModel @Inject constructor(private val repository: ISho
 
     override fun loadShoppingListData(shoppingListId: Long) {
         viewModelScope.launch {
-            combine(
-                repository.getShoppingListById(shoppingListId),
-                repository.getShoppingItemsByShoppingList(shoppingListId)
-            ) { shoppingList, shoppingItems ->
-                shoppingList to shoppingItems
-            }.collect { (shoppingList, shoppingItems) ->
+            repository.getShoppingItemsByShoppingList(shoppingListId).collect {
                 _state.value = _state.value.copy(
-                    shoppingList = shoppingList,
-                    shoppingItems = shoppingItems
+                    shoppingList = repository.getShoppingListById(shoppingListId),
+                    shoppingItems = it
                 )
             }
         }

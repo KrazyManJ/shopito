@@ -7,7 +7,11 @@ import kotlinx.coroutines.flow.Flow
 interface IShopitoLocalRepository {
     suspend fun insert(shoppingItem: ShoppingItem)
     suspend fun insert(shoppingList: ShoppingList)
+    suspend fun update(shoppingItem: ShoppingItem)
+    suspend fun update(shoppingList: ShoppingList)
+    suspend fun delete(shoppingItem: ShoppingItem)
+    suspend fun delete(shoppingList: ShoppingList)
     suspend fun getShoppingLists(): Flow<List<ShoppingList>>
-    suspend fun getShoppingListById(id: Long): Flow<ShoppingList>
+    suspend fun getShoppingListById(id: Long): ShoppingList
     suspend fun getShoppingItemsByShoppingList(id: Long): Flow<List<ShoppingItem>>
 }

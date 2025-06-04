@@ -14,7 +14,9 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Pencil
 import com.composables.icons.lucide.Plus
+import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.ui.components.BaseScreen
 
@@ -47,9 +49,11 @@ fun ShoppingListViewScreen(
         actions = {
             IconButton(
                 onClick = {
-
+                    navRouter.navigateTo(Destination.AddEditShoppingList(shoppingListId = shoppingListId))
                 }
-            ) { }
+            ) {
+                Icon(imageVector = Lucide.Pencil, contentDescription = null)
+            }
         }
     ) {
         ShoppingListViewScreenContent(

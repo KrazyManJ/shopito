@@ -5,4 +5,5 @@ interface AddEditShoppingListAction {
     fun onDescriptionInput(desc: String)
     fun submit()
     fun loadShoppingListData(id: Long?)
+    fun deleteShoppingList()
 }
