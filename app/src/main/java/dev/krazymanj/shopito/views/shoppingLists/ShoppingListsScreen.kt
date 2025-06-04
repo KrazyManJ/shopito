@@ -1,5 +1,6 @@
 package dev.krazymanj.shopito.views.shoppingLists
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -53,7 +54,10 @@ fun ShoppingListsScreen(
         TemplateScreenContent(
             paddingValues = it,
             state = state.value,
-            actions = viewModel
+            actions = viewModel,
+            onShoppingListNav = { id ->
+                navRouter.navigateTo(Destination.ViewShoppingList(shoppingListId = id))
+            }
         )
     }
 }
@@ -62,7 +66,8 @@ fun ShoppingListsScreen(
 fun TemplateScreenContent(
     paddingValues: PaddingValues,
     state: ShoppingListsUIState,
-    actions: ShoppingListActions
+    actions: ShoppingListActions,
+    onShoppingListNav: (id: Long) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier.padding(paddingValues).padding(8.dp),
@@ -71,7 +76,11 @@ fun TemplateScreenContent(
         state.lists.forEach {
             item {
                 Card (
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth().clickable {
+                        it.id?.let {
+                            onShoppingListNav(it)
+                        }
+                    }
                 ){
                     Column(
                         modifier = Modifier.padding(8.dp)

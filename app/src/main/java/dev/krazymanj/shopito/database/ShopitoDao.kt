@@ -18,4 +18,10 @@ interface ShopitoDao {
 
     @Query("SELECT * FROM shopping_list")
     fun getShoppingLists(): Flow<List<ShoppingList>>
+
+    @Query("SELECT * FROM shopping_list WHERE id = :id")
+    fun getShoppingListById(id: Long): Flow<ShoppingList>
+
+    @Query("SELECT * FROM shopping_item WHERE listId = :id")
+    fun getShoppingItemsByShoppingList(id: Long): Flow<List<ShoppingItem>>
 }

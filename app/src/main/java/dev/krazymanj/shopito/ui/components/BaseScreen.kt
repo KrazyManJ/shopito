@@ -22,12 +22,13 @@ import com.composables.icons.lucide.ScrollText
 import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
+import kotlin.reflect.KClass
 
 data class NavigationItem(
     val label: Int,
     val icon: ImageVector,
     val route: Destination,
-    val displaySelectedOnRoutes: List<Destination>
+    val displaySelectedOnRoutes: List<KClass<out Destination>>
 )
 
 val navigationItems: List<NavigationItem> = listOf(
@@ -36,7 +37,7 @@ val navigationItems: List<NavigationItem> = listOf(
         icon = Lucide.ScrollText,
         route = Destination.ShoppingListsSummaryScreen,
         displaySelectedOnRoutes = listOf(
-            Destination.ShoppingListsSummaryScreen
+            Destination.ShoppingListsSummaryScreen::class
         )
     ),
     NavigationItem(
@@ -44,7 +45,8 @@ val navigationItems: List<NavigationItem> = listOf(
         icon = Lucide.ListChecks,
         route = Destination.ShoppingListsScreen,
         displaySelectedOnRoutes = listOf(
-            Destination.ShoppingListsScreen
+            Destination.ShoppingListsScreen::class,
+            Destination.ViewShoppingList::class
         )
     )
 )
@@ -83,7 +85,7 @@ fun BaseScreen(
             NavigationBar {
                 navigationItems.forEach {
                     NavigationBarItem(
-                        selected = it.displaySelectedOnRoutes.any { v -> navigationRouter.isCurrentRouteOfClass(v::class) },
+                        selected = it.displaySelectedOnRoutes.any { v -> navigationRouter.isCurrentRouteOfClass(v) },
                         onClick = {
                             if (!navigationRouter.isCurrentRouteOfClass(it.route::class)) {
                                 navigationRouter.navigateTo(it.route)

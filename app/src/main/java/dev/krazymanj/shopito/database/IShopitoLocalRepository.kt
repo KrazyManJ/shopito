@@ -8,4 +8,6 @@ interface IShopitoLocalRepository {
     suspend fun insert(shoppingItem: ShoppingItem)
     suspend fun insert(shoppingList: ShoppingList)
     suspend fun getShoppingLists(): Flow<List<ShoppingList>>
+    suspend fun getShoppingListById(id: Long): Flow<ShoppingList>
+    suspend fun getShoppingItemsByShoppingList(id: Long): Flow<List<ShoppingItem>>
 }
