@@ -10,4 +10,6 @@
     <string name="description_label">Description</string>
     <string name="save_label">Save</string>
     <string name="amount_label">Amount</string>
+    <string name="add_shopping_item_title">Add shopping item</string>
+    <string name="edit_shopping_item_title">Edit shopping item</string>
 </resources>

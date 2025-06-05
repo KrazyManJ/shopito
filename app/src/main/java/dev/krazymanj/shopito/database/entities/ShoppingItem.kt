@@ -29,6 +29,7 @@ data class ShoppingItem(
     @PrimaryKey(autoGenerate = true)
     var id: Long? = null
 ) {
+    fun isInDatabase(): Boolean = this.id != null
     companion object {
         fun default(): ShoppingItem = ShoppingItem("",0)
     }

@@ -17,6 +17,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Pencil
 import com.composables.icons.lucide.Plus
+import dev.krazymanj.shopito.database.entities.ShoppingItem
 import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.ui.components.BaseScreen
@@ -70,7 +71,13 @@ fun ShoppingListViewScreen(
         ShoppingListViewScreenContent(
             paddingValues = it,
             state = state.value,
-            actions = viewModel
+            actions = viewModel,
+            onEditButtonClick = { item ->
+                navRouter.navigateTo(Destination.AddEditShoppingItem(
+                    shoppingListId = shoppingListId,
+                    shoppingItemId = item.id
+                ))
+            }
         )
     }
 }
@@ -79,7 +86,8 @@ fun ShoppingListViewScreen(
 fun ShoppingListViewScreenContent(
     paddingValues: PaddingValues,
     state: ShoppingListViewUIState,
-    actions: ShoppingListViewActions
+    actions: ShoppingListViewActions,
+    onEditButtonClick: (ShoppingItem) -> Unit
 ) {
     LazyColumn(
         modifier = Modifier
@@ -90,7 +98,10 @@ fun ShoppingListViewScreenContent(
             item {
                 ShoppingItem(
                     shoppingItem = it,
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth(),
+                    onEditButtonClick = {
+                        onEditButtonClick(it)
+                    }
                 )
             }
         }

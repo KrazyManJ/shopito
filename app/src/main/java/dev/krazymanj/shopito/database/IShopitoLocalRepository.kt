@@ -14,4 +14,5 @@ interface IShopitoLocalRepository {
     suspend fun getShoppingLists(): Flow<List<ShoppingList>>
     suspend fun getShoppingListById(id: Long): ShoppingList
     suspend fun getShoppingItemsByShoppingList(id: Long): Flow<List<ShoppingItem>>
+    suspend fun getShoppingItemById(id: Long): ShoppingItem
 }

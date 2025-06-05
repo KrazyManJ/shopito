@@ -26,7 +26,13 @@ class AddEditShoppingItemViewModel @Inject constructor(private val repository: I
             )
         }
         else {
-            TODO("Edit not implemented")
+            viewModelScope.launch {
+                val item = repository.getShoppingItemById(shoppingItemId)
+                _state.value = _state.value.copy(
+                    shoppingItem = item,
+                    amountInput = item.amount.toString()
+                )
+            }
         }
     }
 
@@ -46,9 +52,15 @@ class AddEditShoppingItemViewModel @Inject constructor(private val repository: I
 
     override fun submit() {
         viewModelScope.launch {
-            repository.insert(_state.value.shoppingItem.copy(
+            val item = _state.value.shoppingItem.copy(
                 amount = _state.value.amountInput.toInt()
-            ))
+            )
+            if (_state.value.shoppingItem.isInDatabase()) {
+                repository.update(item)
+            }
+            else {
+                repository.insert(item)
+            }
             _state.value = _state.value.copy(
                 isSaved = true
             )

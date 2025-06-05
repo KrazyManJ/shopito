@@ -35,7 +35,10 @@ fun AddEditShoppingItemScreen(
     }
 
     BaseScreen(
-        topBarText = "Add/Edit Shopping Item Screen",
+        topBarText = stringResource(
+            if (shoppingItemId != null) R.string.edit_shopping_item_title
+            else R.string.add_shopping_item_title
+        ),
         navigationRouter = navRouter
     ) {
         AddEditShoppingItemScreenContent(
