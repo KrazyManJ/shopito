@@ -56,7 +56,7 @@ fun ShoppingItem(
                 verticalAlignment = Alignment.CenterVertically,
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                Text(shoppingItem.amount.toString())
+                Text(shoppingItem.amount.toString()+"x")
                 Checkbox(
                     checked = shoppingItem.isDone,
                     onCheckedChange = {
@@ -82,7 +82,10 @@ fun ShoppingItem(
                         }
                         IconButton(
                             onClick = {
-                                if (onDeleteButtonClick != null) onDeleteButtonClick()
+                                if (onDeleteButtonClick != null) {
+                                    opened = false
+                                    onDeleteButtonClick()
+                                }
                             }
                         ) {
                             Icon(imageVector = Lucide.Trash, contentDescription = null, tint = Color.Red)

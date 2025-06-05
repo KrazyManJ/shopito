@@ -95,7 +95,7 @@ fun BaseScreen(
                             Text(text = stringResource(it.label))
                         },
                         icon = {
-                            Image(
+                            Icon(
                                 imageVector = it.icon,
                                 contentDescription = null
                             )

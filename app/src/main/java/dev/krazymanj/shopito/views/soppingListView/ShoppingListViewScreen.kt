@@ -101,6 +101,9 @@ fun ShoppingListViewScreenContent(
                     modifier = Modifier.fillMaxWidth(),
                     onEditButtonClick = {
                         onEditButtonClick(it)
+                    },
+                    onDeleteButtonClick = {
+                        actions.deleteShoppingItem(it)
                     }
                 )
             }
