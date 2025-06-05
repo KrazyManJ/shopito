@@ -9,6 +9,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -27,11 +28,11 @@ fun ShoppingListViewScreen(
 ) {
     val viewModel = hiltViewModel<ShoppingListViewViewModel>()
 
-    val state = viewModel.templateUIState.collectAsStateWithLifecycle()
-
-    if (state.value.shoppingList == null) {
+    LaunchedEffect(shoppingListId) {
         viewModel.loadShoppingListData(shoppingListId)
     }
+
+    val state = viewModel.templateUIState.collectAsStateWithLifecycle()
 
     BaseScreen(
         topBarText = if (state.value.shoppingList != null) state.value.shoppingList!!.name else "...",
