@@ -28,4 +28,8 @@ data class ShoppingItem(
 
     @PrimaryKey(autoGenerate = true)
     var id: Long? = null
-)
+) {
+    companion object {
+        fun default(): ShoppingItem = ShoppingItem("",0)
+    }
+}

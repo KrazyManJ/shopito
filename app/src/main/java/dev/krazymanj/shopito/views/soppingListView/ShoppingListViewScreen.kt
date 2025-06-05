@@ -1,13 +1,13 @@
 package dev.krazymanj.shopito.views.soppingListView
 
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -20,6 +20,7 @@ import com.composables.icons.lucide.Plus
 import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.ui.components.BaseScreen
+import dev.krazymanj.shopito.ui.components.ShoppingItem
 
 @Composable
 fun ShoppingListViewScreen(
@@ -41,10 +42,19 @@ fun ShoppingListViewScreen(
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    viewModel.addMockupShoppingItem()
+                    navRouter.navigateTo(
+                        Destination.AddEditShoppingItem(
+                            shoppingListId = shoppingListId,
+                            shoppingItemId = null
+                        )
+                    )
                 }
             ) {
-                Icon(imageVector = Lucide.Plus, contentDescription = "add", modifier = Modifier.size(32.dp))
+                Icon(
+                    imageVector = Lucide.Plus,
+                    contentDescription = "add",
+                    modifier = Modifier.size(32.dp)
+                )
             }
         },
         actions = {
@@ -72,11 +82,16 @@ fun ShoppingListViewScreenContent(
     actions: ShoppingListViewActions
 ) {
     LazyColumn(
-        modifier = Modifier.padding(paddingValues).padding(8.dp)
+        modifier = Modifier
+            .padding(paddingValues)
+            .padding(32.dp)
     ) {
         state.shoppingItems.forEach {
             item {
-                Text(it.itemName)
+                ShoppingItem(
+                    shoppingItem = it,
+                    modifier = Modifier.fillMaxWidth()
+                )
             }
         }
     }

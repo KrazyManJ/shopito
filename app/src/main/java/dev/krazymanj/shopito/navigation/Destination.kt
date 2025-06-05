@@ -18,4 +18,10 @@ sealed class Destination {
     data class ViewShoppingList(
         val shoppingListId: Long
     ): Destination()
+
+    @Serializable
+    data class AddEditShoppingItem(
+        val shoppingListId: Long,
+        val shoppingItemId: Long?
+    ): Destination()
 }

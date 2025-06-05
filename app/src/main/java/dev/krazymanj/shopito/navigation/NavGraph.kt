@@ -7,6 +7,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import dev.krazymanj.shopito.views.addEditShoppingItem.AddEditShoppingItemScreen
 import dev.krazymanj.shopito.views.addEditShoppingList.AddEditShoppingListScreen
 import dev.krazymanj.shopito.views.shoppingLists.ShoppingListsScreen
 import dev.krazymanj.shopito.views.shoppingListsSummary.ShoppingListsSummaryScreen
@@ -35,6 +36,14 @@ fun NavGraph(
         composable<Destination.ViewShoppingList> {
             val args = it.toRoute<Destination.ViewShoppingList>()
             ShoppingListViewScreen(navRouter, args.shoppingListId)
+        }
+        composable<Destination.AddEditShoppingItem> {
+            val args = it.toRoute<Destination.AddEditShoppingItem>()
+            AddEditShoppingItemScreen(
+                navRouter = navRouter,
+                shoppingListId = args.shoppingListId,
+                shoppingItemId = args.shoppingItemId
+            )
         }
     }
 }
