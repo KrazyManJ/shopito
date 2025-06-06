@@ -5,6 +5,13 @@ plugins {
     alias(libs.plugins.ksp)
     alias(libs.plugins.hilt.android)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.secrets.gradle.plugin)
+}
+
+buildscript {
+    dependencies {
+        classpath(libs.secrets.gradle.plugin)
+    }
 }
 
 android {
@@ -42,6 +49,8 @@ android {
     }
 }
 
+
+
 dependencies {
 
     implementation(libs.androidx.core.ktx)
@@ -60,17 +69,37 @@ dependencies {
     debugImplementation(libs.androidx.ui.tooling)
     debugImplementation(libs.androidx.ui.test.manifest)
 
+    // Navigation
     implementation(libs.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
 
+    // Room
     implementation(libs.room.ktx)
     implementation(libs.room.viewmodel)
     implementation(libs.room.lifecycle)
     implementation(libs.room.runtime)
     ksp(libs.room.compiler.ksp)
+
+    // Hilt
     implementation(libs.hilt.android)
     implementation(libs.hilt.compose)
     ksp(libs.hilt.compiler.ksp)
 
+    // Lucide Icons
     implementation(libs.icons.lucide)
+
+    // Google Maps
+    implementation(libs.googlemap)
+    implementation(libs.googlemap.compose)
+    implementation(libs.googlemap.foundation)
+
+    // Moshi
+    implementation(libs.moshi)
+    ksp(libs.moshi.ksp)
+}
+
+secrets {
+    propertiesFileName = "secrets.properties"
+
+    defaultPropertiesFileName = "secrets.defaults.properties"
 }

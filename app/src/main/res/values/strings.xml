@@ -16,4 +16,5 @@
     <string name="cancel_label">Cancel</string>
     <string name="clear_label">Clear</string>
     <string name="date_label">Date</string>
+    <string name="location_label">Location</string>
 </resources>

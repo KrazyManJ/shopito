@@ -24,4 +24,11 @@ sealed class Destination {
         val shoppingListId: Long,
         val shoppingItemId: Long?
     ): Destination()
+
+    @Serializable
+    data class MapLocationPickerScreen(
+        val latitude: Double?,
+        val longitude: Double?
+    ) : Destination()
 }
+

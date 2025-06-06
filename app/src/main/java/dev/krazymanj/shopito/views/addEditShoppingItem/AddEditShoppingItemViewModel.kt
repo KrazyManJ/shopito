@@ -74,4 +74,13 @@ class AddEditShoppingItemViewModel @Inject constructor(private val repository: I
             )
         }
     }
+
+    override fun onLocationChanged(latitude: Double?, longitude: Double?) {
+        _state.value = _state.value.copy(
+            shoppingItem = _state.value.shoppingItem.copy(
+                latitude = latitude,
+                longitude = longitude
+            )
+        )
+    }
 }

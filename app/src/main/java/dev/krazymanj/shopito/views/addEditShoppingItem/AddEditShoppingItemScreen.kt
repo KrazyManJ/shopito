@@ -15,10 +15,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.composables.icons.lucide.Calendar
 import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Pin
+import com.squareup.moshi.JsonAdapter
+import com.squareup.moshi.Moshi
+import dev.krazymanj.shopito.Constants
 import dev.krazymanj.shopito.R
+import dev.krazymanj.shopito.extension.round
+import dev.krazymanj.shopito.model.Location
+import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.ui.components.BaseScreen
 import dev.krazymanj.shopito.ui.components.CustomDatePickerDialog
@@ -37,6 +46,19 @@ fun AddEditShoppingItemScreen(
         viewModel.loadShoppingListItem(shoppingListId, shoppingItemId)
     }
 
+    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
+        val mapLocationResult = navRouter.getValue<String>(Constants.LOCATION)
+        mapLocationResult?.value?.let {
+            val moshi: Moshi = Moshi.Builder().build()
+            val jsonAdapter: JsonAdapter<Location> = moshi.adapter(Location::class.java)
+            val location = jsonAdapter.fromJson(it)
+            navRouter.removeValue<Double>(Constants.LOCATION)
+            location?.let { loc ->
+                viewModel. onLocationChanged(loc.latitude, loc.longitude)
+            }
+        }
+    }
+
     val state = viewModel.templateUIState.collectAsStateWithLifecycle()
 
     if (state.value.isSaved) {
@@ -53,7 +75,8 @@ fun AddEditShoppingItemScreen(
         AddEditShoppingItemScreenContent(
             paddingValues = it,
             state = state.value,
-            actions = viewModel
+            actions = viewModel,
+            navRouter = navRouter
         )
     }
 }
@@ -62,7 +85,8 @@ fun AddEditShoppingItemScreen(
 fun AddEditShoppingItemScreenContent(
     paddingValues: PaddingValues,
     state: AddEditShoppingItemState,
-    actions: AddEditShoppingItemActions
+    actions: AddEditShoppingItemActions,
+    navRouter: INavigationRouter
 ) {
 
     var showDatePicker by remember {
@@ -107,6 +131,20 @@ fun AddEditShoppingItemScreenContent(
             }, onClearClick = {
                 actions.onBuyTimeChanged(null)
             })
+
+        InfoElement(
+            value = if (state.shoppingItem.hasLocation()) "${state.shoppingItem.latitude!!.round()}, ${state.shoppingItem.longitude!!.round()} " else null,
+            hint = stringResource(R.string.location_label),
+            leadingIcon = Lucide.Pin,
+            onClick = {
+                navRouter.navigateTo(Destination.MapLocationPickerScreen(
+                    state.shoppingItem.latitude,
+                    state.shoppingItem.longitude
+                ))
+            }, onClearClick = {
+                actions.onLocationChanged(null, null)
+            })
+
 
         Button(onClick = {
             actions.submit()

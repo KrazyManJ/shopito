@@ -8,4 +8,5 @@ interface AddEditShoppingItemActions {
     fun onBuyTimeChanged(buyTime: Long?)
 
     fun submit()
+    fun onLocationChanged(latitude: Double?, longitude: Double?)
 }

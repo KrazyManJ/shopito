@@ -23,13 +23,18 @@ data class ShoppingItem(
     var isDone: Boolean = false,
     var buyTime: Long? = null,
 
+    var latitude: Double? = null,
+    var longitude: Double? = null,
+
     @ColumnInfo(index = true)
     var listId: Long? = null,
 
     @PrimaryKey(autoGenerate = true)
     var id: Long? = null
 ) {
-    fun isInDatabase(): Boolean = this.id != null
+    fun isInDatabase(): Boolean = id != null
+
+    fun hasLocation(): Boolean = latitude != null && longitude != null
     companion object {
         fun default(): ShoppingItem = ShoppingItem("",0)
     }
