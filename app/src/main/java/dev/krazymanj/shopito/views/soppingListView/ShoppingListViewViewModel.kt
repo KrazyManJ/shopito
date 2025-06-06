@@ -18,6 +18,16 @@ class ShoppingListViewViewModel @Inject constructor(private val repository: ISho
 
     val templateUIState = _state.asStateFlow()
 
+    private suspend fun loadItems() {
+        _state.value.shoppingList?.id?.let {
+            repository.getShoppingItemsByShoppingList(it).collect { items ->
+                _state.value = _state.value.copy(
+                    shoppingItems = items
+                )
+            }
+        }
+    }
+
     override fun loadShoppingListData(shoppingListId: Long) {
         viewModelScope.launch {
             repository.getShoppingItemsByShoppingList(shoppingListId).collect {
@@ -32,13 +42,16 @@ class ShoppingListViewViewModel @Inject constructor(private val repository: ISho
     override fun deleteShoppingItem(shoppingItem: ShoppingItem) {
         viewModelScope.launch {
             repository.delete(shoppingItem)
-            _state.value.shoppingList?.id?.let {
-                repository.getShoppingItemsByShoppingList(it).collect { items ->
-                    _state.value = _state.value.copy(
-                        shoppingItems = items
-                    )
-                }
-            }
+            loadItems()
+        }
+    }
+
+    override fun changeItemCheckState(shoppingItem: ShoppingItem, state: Boolean) {
+        viewModelScope.launch {
+            repository.update(shoppingItem.copy(
+                isDone = state
+            ))
+            loadItems()
         }
     }
 }

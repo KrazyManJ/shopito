@@ -50,6 +50,14 @@ class AddEditShoppingItemViewModel @Inject constructor(private val repository: I
         )
     }
 
+    override fun onBuyTimeChanged(buyTime: Long?) {
+        _state.value = _state.value.copy(
+            shoppingItem = _state.value.shoppingItem.copy(
+                buyTime = buyTime
+            )
+        )
+    }
+
     override fun submit() {
         viewModelScope.launch {
             val item = _state.value.shoppingItem.copy(

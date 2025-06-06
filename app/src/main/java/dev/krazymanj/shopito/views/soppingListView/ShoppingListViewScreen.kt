@@ -99,6 +99,9 @@ fun ShoppingListViewScreenContent(
                 ShoppingItem(
                     shoppingItem = it,
                     modifier = Modifier.fillMaxWidth(),
+                    onCheckStateChange = { boolVal ->
+                        actions.changeItemCheckState(it, boolVal)
+                    },
                     onEditButtonClick = {
                         onEditButtonClick(it)
                     },

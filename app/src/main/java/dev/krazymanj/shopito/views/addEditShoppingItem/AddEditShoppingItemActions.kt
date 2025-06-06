@@ -5,6 +5,7 @@ interface AddEditShoppingItemActions {
 
     fun onItemNameChange(itemName: String)
     fun onAmountChange(amount: String)
+    fun onBuyTimeChanged(buyTime: Long?)
 
     fun submit()
 }

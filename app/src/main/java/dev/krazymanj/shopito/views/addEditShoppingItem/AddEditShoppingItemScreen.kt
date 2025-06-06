@@ -8,13 +8,22 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.composables.icons.lucide.Calendar
+import com.composables.icons.lucide.Lucide
 import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.ui.components.BaseScreen
+import dev.krazymanj.shopito.ui.components.CustomDatePickerDialog
+import dev.krazymanj.shopito.ui.components.InfoElement
+import dev.krazymanj.shopito.utils.DateUtils
 
 @Composable
 fun AddEditShoppingItemScreen(
@@ -55,6 +64,11 @@ fun AddEditShoppingItemScreenContent(
     state: AddEditShoppingItemState,
     actions: AddEditShoppingItemActions
 ) {
+
+    var showDatePicker by remember {
+        mutableStateOf(false)
+    }
+
     Column(
         modifier = Modifier.padding(paddingValues)
     ) {
@@ -76,6 +90,24 @@ fun AddEditShoppingItemScreenContent(
                 Text(stringResource(R.string.amount_label))
             }
         )
+        if (showDatePicker) {
+            CustomDatePickerDialog(
+                date = state.shoppingItem.buyTime,
+                onDateSelected = { actions.onBuyTimeChanged(it) },
+                onDismiss = { showDatePicker = false }
+            )
+        }
+
+        InfoElement(
+            value = if (state.shoppingItem.buyTime != null) DateUtils.getDateString(state.shoppingItem.buyTime!!) else null,
+            hint = stringResource(R.string.date_label),
+            leadingIcon = Lucide.Calendar,
+            onClick = {
+                showDatePicker = true
+            }, onClearClick = {
+                actions.onBuyTimeChanged(null)
+            })
+
         Button(onClick = {
             actions.submit()
         }) {
