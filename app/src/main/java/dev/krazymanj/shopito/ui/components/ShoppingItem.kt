@@ -69,26 +69,29 @@ fun ShoppingItem(
             Card(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                Box(
-                    modifier = Modifier.fillMaxWidth().padding(16.dp)
-                ) {
-                    Row(modifier = Modifier.align(Alignment.CenterEnd)) {
-                        IconButton(
-                            onClick = {
-                                if (onEditButtonClick != null) onEditButtonClick()
-                            }
-                        ) {
-                            Icon(imageVector = Lucide.Pencil, contentDescription = null)
-                        }
-                        IconButton(
-                            onClick = {
-                                if (onDeleteButtonClick != null) {
-                                    opened = false
-                                    onDeleteButtonClick()
+                Column {
+                    LocationAddressText(shoppingItem.latitude,shoppingItem.longitude)
+                    Box(
+                        modifier = Modifier.fillMaxWidth().padding(16.dp)
+                    ) {
+                        Row(modifier = Modifier.align(Alignment.CenterEnd)) {
+                            IconButton(
+                                onClick = {
+                                    if (onEditButtonClick != null) onEditButtonClick()
                                 }
+                            ) {
+                                Icon(imageVector = Lucide.Pencil, contentDescription = null)
                             }
-                        ) {
-                            Icon(imageVector = Lucide.Trash, contentDescription = null, tint = Color.Red)
+                            IconButton(
+                                onClick = {
+                                    if (onDeleteButtonClick != null) {
+                                        opened = false
+                                        onDeleteButtonClick()
+                                    }
+                                }
+                            ) {
+                                Icon(imageVector = Lucide.Trash, contentDescription = null, tint = Color.Red)
+                            }
                         }
                     }
                 }
