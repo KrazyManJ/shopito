@@ -51,6 +51,12 @@ interface ShopitoDao {
     suspend fun getShoppingItemById(id: Long): ShoppingItem
 
     @Transaction
-    @Query("SELECT * FROM shopping_item")
+    @Query("""
+        SELECT * 
+        FROM shopping_item
+        ORDER BY
+            CASE WHEN buyTime IS NULL THEN 1 ELSE 0 END,
+            buyTime ASC
+    """)
     fun getAllShoppingItemsWithLists(): Flow<List<ShoppingItemWithList>>
 }

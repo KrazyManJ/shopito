@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.krazymanj.shopito.database.IShopitoLocalRepository
+import dev.krazymanj.shopito.database.entities.ShoppingItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
@@ -32,6 +33,20 @@ class ShoppingListsSummaryViewModel @Inject constructor(private val repository: 
                     loading = true
                 )
             }
+        }
+    }
+
+    override fun deleteShoppingItem(shoppingItem: ShoppingItem) {
+        viewModelScope.launch {
+            repository.delete(shoppingItem)
+        }
+    }
+
+    override fun changeItemCheckState(shoppingItem: ShoppingItem, state: Boolean) {
+        viewModelScope.launch {
+            repository.update(shoppingItem.copy(
+                isDone = state
+            ))
         }
     }
 }

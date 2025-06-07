@@ -12,6 +12,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.krazymanj.shopito.R
+import dev.krazymanj.shopito.database.ShoppingItemWithList
+import dev.krazymanj.shopito.database.entities.ShoppingItem
+import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.ui.components.BaseScreen
 import dev.krazymanj.shopito.ui.components.PrettyTimeText
@@ -37,7 +40,14 @@ fun ShoppingListsSummaryScreen(
         ShoppingListsSummaryScreenContent(
             paddingValues = it,
             state = state.value,
-            actions = viewModel
+            actions = viewModel,
+            onEditButtonClick = { item ->
+                navRouter.navigateTo(
+                    Destination.AddEditShoppingItem(
+                    shoppingListId = item.list.id!!,
+                    shoppingItemId = item.item.id
+                ))
+            }
         )
     }
 }
@@ -46,7 +56,8 @@ fun ShoppingListsSummaryScreen(
 fun ShoppingListsSummaryScreenContent(
     paddingValues: PaddingValues,
     state: ShoppingListsSummaryUIState,
-    actions: ShoppingListsSummaryActions
+    actions: ShoppingListsSummaryActions,
+    onEditButtonClick: (ShoppingItemWithList) -> Unit
 ) {
     LazyColumn(
         Modifier.padding(paddingValues)
@@ -56,11 +67,20 @@ fun ShoppingListsSummaryScreenContent(
             item {
                 PrettyTimeText(buyTime)
             }
-            items(shoppingItems) { shoppingItemWithList ->
+            items(shoppingItems) {
                 ShoppingItem(
-                    shoppingItem = shoppingItemWithList.item,
+                    shoppingItem = it.item,
                     modifier = Modifier.fillMaxWidth(),
-                    shoppingList = shoppingItemWithList.list
+                    shoppingList = it.list,
+                    onCheckStateChange = { boolVal ->
+                        actions.changeItemCheckState(it.item, boolVal)
+                    },
+                    onEditButtonClick = {
+                        onEditButtonClick(it)
+                    },
+                    onDeleteButtonClick = {
+                        actions.deleteShoppingItem(it.item)
+                    }
                 )
             }
         }
@@ -76,6 +96,15 @@ fun ShoppingListsSummaryScreenContent(
                     it.item,
                     modifier = Modifier.fillMaxWidth(),
                     shoppingList = it.list,
+                    onCheckStateChange = { boolVal ->
+                        actions.changeItemCheckState(it.item, boolVal)
+                    },
+                    onEditButtonClick = {
+                        onEditButtonClick(it)
+                    },
+                    onDeleteButtonClick = {
+                        actions.deleteShoppingItem(it.item)
+                    }
                 )
             }
         }
