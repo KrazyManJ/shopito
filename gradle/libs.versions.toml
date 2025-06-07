@@ -29,6 +29,8 @@ googlemap_foundation = "1.7.8"
 
 moshi = "1.15.0"
 
+prettytime = "5.0.9.Final"
+
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -66,6 +68,7 @@ googlemap-foundation = { group = "androidx.compose.foundation", name = "foundati
 
 moshi = { group = "com.squareup.moshi", name = "moshi", version.ref = "moshi" }
 moshi-ksp = { group = "com.squareup.moshi", name = "moshi-kotlin-codegen", version.ref = "moshi" }
+prettytime = { group = "org.ocpsoft.prettytime", name = "prettytime", version.ref = "prettytime"}
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

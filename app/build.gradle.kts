@@ -96,6 +96,9 @@ dependencies {
     // Moshi
     implementation(libs.moshi)
     ksp(libs.moshi.ksp)
+
+    // PrettyTime
+    implementation(libs.prettytime)
 }
 
 secrets {
