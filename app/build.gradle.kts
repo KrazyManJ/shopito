@@ -99,6 +99,10 @@ dependencies {
 
     // PrettyTime
     implementation(libs.prettytime)
+
+    // Datastore
+    implementation(libs.datastore.core)
+    implementation(libs.datastore.preferences)
 }
 
 secrets {
