@@ -5,6 +5,8 @@ import android.location.Geocoder
 import android.location.Geocoder.GeocodeListener
 import android.os.Build
 import androidx.annotation.RequiresApi
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,11 +36,16 @@ fun LocationAddressText(
         loading = false
     }
 
-    Text(
-        text = when {
-            loading -> "Loading..."
-            address != null -> address!!.getAddressLine(0)
-            else -> "Unspecified"
+    Column {
+        Text(
+            text = when {
+                loading -> "Loading..."
+                address != null -> address!!.getAddressLine(0)
+                else -> "Unspecified"
+            }
+        )
+        address?.let {
+            OpenMapButton(latitude!!,longitude!!)
         }
-    )
+    }
 }
