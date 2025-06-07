@@ -10,6 +10,4 @@ data class ShoppingList(
 
     @PrimaryKey(autoGenerate = true)
     var id: Long? = null
-) {
-    fun isDefault(): Boolean = this == ShoppingList("","")
-}
+)

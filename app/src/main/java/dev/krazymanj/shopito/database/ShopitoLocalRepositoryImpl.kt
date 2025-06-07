@@ -3,6 +3,7 @@ package dev.krazymanj.shopito.database
 import dev.krazymanj.shopito.database.entities.ShoppingItem
 import dev.krazymanj.shopito.database.entities.ShoppingList
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
 class ShopitoLocalRepositoryImpl @Inject constructor(private val shopitoDao: ShopitoDao) :
@@ -32,7 +33,7 @@ class ShopitoLocalRepositoryImpl @Inject constructor(private val shopitoDao: Sho
     }
 
     override suspend fun getShoppingLists(): Flow<List<ShoppingList>> {
-        return shopitoDao.getShoppingLists()
+        return shopitoDao.getAllShoppingLists()
     }
 
     override suspend fun getShoppingListById(id: Long): ShoppingList {
@@ -45,5 +46,20 @@ class ShopitoLocalRepositoryImpl @Inject constructor(private val shopitoDao: Sho
 
     override suspend fun getShoppingItemById(id: Long): ShoppingItem {
         return shopitoDao.getShoppingItemById(id)
+    }
+
+    override suspend fun getShoppingItemsGroupedByDate(): Flow<Map<Long, List<ShoppingItemWithList>>> {
+        val now = System.currentTimeMillis()
+        return shopitoDao.getAllShoppingItemsWithLists().map { list ->
+            list
+                .filter { it.item.buyTime != null && (!it.item.isDone || it.item.buyTime!! >= now) }
+                .groupBy { it.item.buyTime ?: -1L }
+        }
+    }
+
+    override suspend fun getShoppingItemsWithoutBuyTime(): Flow<List<ShoppingItemWithList>> {
+        return shopitoDao.getAllShoppingItemsWithLists().map { list ->
+            list.filter { it.item.buyTime == null && !it.item.isDone}
+        }
     }
 }

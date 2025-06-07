@@ -24,6 +24,14 @@ class DateUtils {
             return format.format(calendar.getTime())
         }
 
+        fun isToday(date: Date): Boolean {
+            val calendarDate = Calendar.getInstance().apply { time = date }
+            val calendarNow = Calendar.getInstance()
+
+            return calendarDate.get(Calendar.YEAR) == calendarNow.get(Calendar.YEAR) &&
+                    calendarDate.get(Calendar.DAY_OF_YEAR) == calendarNow.get(Calendar.DAY_OF_YEAR)
+        }
+
     }
 
 }

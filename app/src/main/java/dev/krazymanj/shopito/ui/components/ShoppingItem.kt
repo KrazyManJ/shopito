@@ -21,16 +21,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Pencil
 import com.composables.icons.lucide.Trash
 import dev.krazymanj.shopito.database.entities.ShoppingItem
+import dev.krazymanj.shopito.database.entities.ShoppingList
+import dev.krazymanj.shopito.utils.DateUtils
 
 @Composable
 fun ShoppingItem(
     shoppingItem: ShoppingItem,
     modifier: Modifier = Modifier,
+    shoppingList: ShoppingList? = null,
     onEditButtonClick: (() -> Unit)? = null,
     onDeleteButtonClick: (() -> Unit)? = null,
     onCheckStateChange: ((Boolean) -> Unit)? = null,
@@ -42,6 +46,13 @@ fun ShoppingItem(
     if (opened) topModifier = topModifier.shadow(8.dp)
 
     Column {
+        shoppingList?.let {
+            Text(
+                text = "From "+shoppingList.name,
+                fontStyle = FontStyle.Italic,
+                modifier = Modifier.padding(start = 16.dp)
+            )
+        }
         Box(
             modifier = topModifier.clickable {
                 opened = !opened
@@ -70,7 +81,29 @@ fun ShoppingItem(
                 modifier = Modifier.fillMaxWidth()
             ) {
                 Column {
-                    LocationAddressText(shoppingItem.latitude,shoppingItem.longitude)
+                    Column {
+                        Column {
+                            Text("Buy Time")
+                            Row {
+                                Text(text =
+                                    if (shoppingItem.buyTime != null)
+                                        DateUtils.getDateString(shoppingItem.buyTime!!)
+                                    else
+                                        "Unspecified"
+                                )
+                                shoppingItem.buyTime?.let {
+                                    PrettyTimeText(it) { time ->
+                                        " (${time})"
+                                    }
+                                }
+                            }
+                        }
+                        Column {
+                            Text("Location")
+                            LocationAddressText(shoppingItem.latitude,shoppingItem.longitude)
+                        }
+                    }
+
                     Box(
                         modifier = Modifier.fillMaxWidth().padding(16.dp)
                     ) {

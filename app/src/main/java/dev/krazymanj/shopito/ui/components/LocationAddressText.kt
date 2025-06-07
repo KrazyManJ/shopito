@@ -2,11 +2,8 @@ package dev.krazymanj.shopito.ui.components
 
 import android.location.Address
 import android.location.Geocoder
-import android.location.Geocoder.GeocodeListener
-import android.os.Build
-import androidx.annotation.RequiresApi
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -14,6 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import java.util.Locale
 
@@ -36,13 +34,16 @@ fun LocationAddressText(
         loading = false
     }
 
-    Column {
+    Row(
+        Modifier.fillMaxWidth()
+    ) {
         Text(
             text = when {
                 loading -> "Loading..."
                 address != null -> address!!.getAddressLine(0)
                 else -> "Unspecified"
-            }
+            },
+            modifier = Modifier.weight(1f)
         )
         address?.let {
             OpenMapButton(latitude!!,longitude!!)
