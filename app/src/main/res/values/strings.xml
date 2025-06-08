@@ -20,4 +20,6 @@
     <string name="today_label">Today</string>
     <string name="error_empty_input">Input is empty</string>
     <string name="error_not_a_number">Error is not a number</string>
+    <string name="buy_time_label">Buy Time</string>
+    <string name="unspecified_label">Unspecified</string>
 </resources>

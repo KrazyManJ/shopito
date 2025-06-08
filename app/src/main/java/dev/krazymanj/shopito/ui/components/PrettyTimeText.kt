@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.material3.Text
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.utils.DateUtils
@@ -14,8 +15,9 @@ import java.util.Locale
 @Composable
 fun PrettyTimeText(
     timeMillis: Long?,
-    fallbackText: String = "X",
-    formatUnit: ((value: String) -> String)? = null
+    modifier: Modifier = Modifier,
+    fallbackText: String = stringResource(R.string.unspecified_label),
+    formatUnit: ((value: String) -> String)? = null,
 ) {
     val context = LocalContext.current
     val locale = getCurrentLocale(context)
@@ -30,7 +32,10 @@ fun PrettyTimeText(
         }
     } ?: fallbackText
 
-    Text(text = if (formatUnit != null) formatUnit(text) else text)
+    Text(
+        text = if (formatUnit != null) formatUnit(text) else text,
+        modifier = modifier.then(Modifier)
+    )
 }
 
 private fun getCurrentLocale(context: Context): Locale {

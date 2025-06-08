@@ -33,7 +33,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.ui.components.BaseScreen
-import dev.krazymanj.shopito.ui.theme.basicMargin
+import dev.krazymanj.shopito.ui.theme.spacing16
 
 @Composable
 fun MapLocationPickerScreen(
@@ -111,9 +111,9 @@ fun MapPositionPickerScreenContent(
         OutlinedButton(
             modifier = Modifier
                 .padding(
-                    start = basicMargin,
-                    end = basicMargin,
-                    bottom = basicMargin
+                    start = spacing16,
+                    end = spacing16,
+                    bottom = spacing16
                 )
                 .align(Alignment.BottomCenter),
             onClick = {

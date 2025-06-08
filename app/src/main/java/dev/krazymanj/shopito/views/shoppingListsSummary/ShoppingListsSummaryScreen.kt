@@ -1,10 +1,12 @@
 package dev.krazymanj.shopito.views.shoppingListsSummary
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -22,6 +24,9 @@ import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.ui.components.BaseScreen
 import dev.krazymanj.shopito.ui.components.PrettyTimeText
 import dev.krazymanj.shopito.ui.components.ShoppingItem
+import dev.krazymanj.shopito.ui.theme.spacing16
+import dev.krazymanj.shopito.ui.theme.spacing32
+import dev.krazymanj.shopito.ui.theme.spacing4
 
 @Composable
 fun ShoppingListsSummaryScreen(
@@ -72,12 +77,21 @@ fun ShoppingListsSummaryScreenContent(
     onEditButtonClick: (ShoppingItemWithList) -> Unit
 ) {
     LazyColumn(
-        Modifier.padding(paddingValues)
+        Modifier.padding(paddingValues).padding(spacing16),
+        verticalArrangement = Arrangement.spacedBy(spacing4)
     ) {
 
-        state.shoppingItemsWithDate.forEach { (buyTime,shoppingItems) ->
+        state.shoppingItemsWithDate.onEachIndexed { index, (buyTime,shoppingItems) ->
             item {
-                PrettyTimeText(buyTime)
+                PrettyTimeText(
+                    timeMillis = buyTime,
+                    modifier = if (index == 0) Modifier else Modifier.padding(top = spacing32)
+                )
+            }
+            item {
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = spacing4)
+                )
             }
             items(shoppingItems) {
                 ShoppingItem(
@@ -100,7 +114,13 @@ fun ShoppingListsSummaryScreenContent(
         if (state.shoppingItemsWithoutDate.isNotEmpty()) {
             item {
                 Text(
-                    text = "No Buy Time"
+                    text = "No Buy Time",
+                    modifier = Modifier.padding(top = spacing32)
+                )
+            }
+            item {
+                HorizontalDivider(
+                    modifier = Modifier.padding(vertical = spacing4)
                 )
             }
             items(state.shoppingItemsWithoutDate) {
