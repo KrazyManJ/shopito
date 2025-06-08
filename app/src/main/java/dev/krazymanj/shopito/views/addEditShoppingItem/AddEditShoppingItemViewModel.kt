@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.krazymanj.shopito.database.IShopitoLocalRepository
+import dev.krazymanj.shopito.database.entities.ItemKeyword
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -22,7 +23,7 @@ class AddEditShoppingItemViewModel @Inject constructor(private val repository: I
             _state.value = _state.value.copy(
                 shoppingItem = _state.value.shoppingItem.copy(
                     listId = shoppingListId
-                )
+                ),
             )
         }
         else {
@@ -31,6 +32,13 @@ class AddEditShoppingItemViewModel @Inject constructor(private val repository: I
                 _state.value = _state.value.copy(
                     shoppingItem = item,
                     amountInput = item.amount.toString()
+                )
+            }
+        }
+        viewModelScope.launch {
+            repository.getAllItemKeywords().collect {
+                _state.value = _state.value.copy(
+                    itemKeywords = it
                 )
             }
         }
@@ -69,6 +77,7 @@ class AddEditShoppingItemViewModel @Inject constructor(private val repository: I
             else {
                 repository.insert(item)
             }
+            repository.insert(ItemKeyword(item.itemName))
             _state.value = _state.value.copy(
                 isSaved = true
             )

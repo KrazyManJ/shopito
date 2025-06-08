@@ -32,6 +32,7 @@ import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.ui.components.BaseScreen
 import dev.krazymanj.shopito.ui.components.CustomDatePickerDialog
 import dev.krazymanj.shopito.ui.components.InfoElement
+import dev.krazymanj.shopito.ui.components.SuggestionTextField
 import dev.krazymanj.shopito.utils.DateUtils
 
 @Composable
@@ -89,15 +90,14 @@ fun AddEditShoppingItemScreenContent(
     navRouter: INavigationRouter
 ) {
 
-    var showDatePicker by remember {
-        mutableStateOf(false)
-    }
+    var showDatePicker by remember { mutableStateOf(false) }
 
     Column(
         modifier = Modifier.padding(paddingValues)
     ) {
-        OutlinedTextField(
-            value = state.shoppingItem.itemName,
+        SuggestionTextField(
+            text = state.shoppingItem.itemName,
+            suggestions = state.itemKeywords.map { it.value },
             onValueChange = {
                 actions.onItemNameChange(it)
             },
