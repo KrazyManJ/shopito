@@ -3,6 +3,7 @@ package dev.krazymanj.shopito.views.addEditShoppingList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.database.IShopitoLocalRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -19,7 +20,11 @@ class AddEditShoppingListViewModel @Inject constructor(private val repository: I
 
     override fun onNameInput(name: String) {
         _state.value = _state.value.copy(
-            shoppingList = _state.value.shoppingList.copy(name = name)
+            shoppingList = _state.value.shoppingList.copy(name = name),
+            nameInputError = when {
+                name.isBlank() -> R.string.error_empty_input
+                else -> null
+            }
         )
     }
 
@@ -30,6 +35,10 @@ class AddEditShoppingListViewModel @Inject constructor(private val repository: I
     }
 
     override fun submit() {
+        if (!_state.value.isInputValid()) {
+            onNameInput(_state.value.shoppingList.name)
+            return
+        }
         viewModelScope.launch {
             if (_state.value.shoppingList.id != null) {
                 repository.update(_state.value.shoppingList)

@@ -10,4 +10,8 @@ data class ShoppingList(
 
     @PrimaryKey(autoGenerate = true)
     var id: Long? = null
-)
+) {
+    companion object {
+        fun default(): ShoppingList = ShoppingList("","")
+    }
+}

@@ -87,19 +87,26 @@ fun AddEditShoppingListScreenContent(
             onValueChange = {
                 actions.onNameInput(it)
             },
-            label = { Text(stringResource(R.string.name_label)+"*") }
+            label = { Text(stringResource(R.string.name_label)+"*") },
+            isError = state.nameInputError != null,
+            supportingText = {
+                state.nameInputError?.let {
+                    Text(stringResource(it))
+                }
+            }
         )
         OutlinedTextField(
             value = state.shoppingList.description,
             onValueChange = {
                 actions.onDescriptionInput(it)
             },
-            label = { Text(stringResource(R.string.description_label)+"*") }
+            label = { Text(stringResource(R.string.description_label)) }
         )
         Button(
             onClick = {
                 actions.submit()
-            }
+            },
+            enabled = state.isInputValid()
         ) {
             Text(stringResource(R.string.save_label))
         }

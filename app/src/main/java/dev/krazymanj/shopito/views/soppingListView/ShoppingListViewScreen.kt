@@ -40,6 +40,9 @@ fun ShoppingListViewScreen(
         topBarText = if (state.value.shoppingList != null) state.value.shoppingList!!.name else "...",
         navigationRouter = navRouter,
         showBottomNavigationBar = true,
+        onBackClick = {
+            navRouter.returnBack()
+        },
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
