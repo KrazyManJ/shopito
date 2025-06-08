@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.composables.icons.lucide.Lucide
@@ -21,6 +22,8 @@ import com.composables.icons.lucide.Trash
 import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.ui.components.BaseScreen
+import dev.krazymanj.shopito.ui.theme.Primary
+import dev.krazymanj.shopito.ui.theme.spacing16
 
 @Composable
 fun ItemKeywordsListScreen(
@@ -56,7 +59,7 @@ fun ItemKeywordsListScreenContent(
     actions: ItemKeywordsListActions
 ) {
     LazyColumn(
-        modifier = Modifier.padding(paddingValues)
+        modifier = Modifier.padding(paddingValues).padding(spacing16)
     ) {
         items(state.itemKeywords) {
             Row(
@@ -74,7 +77,8 @@ fun ItemKeywordsListScreenContent(
                 ) {
                     Icon(
                         imageVector = Lucide.Trash,
-                        contentDescription = "Remove"
+                        contentDescription = stringResource(R.string.remove),
+                        tint = Primary
                     )
                 }
             }

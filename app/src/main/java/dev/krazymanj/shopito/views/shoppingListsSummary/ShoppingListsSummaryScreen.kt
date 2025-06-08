@@ -50,7 +50,7 @@ fun ShoppingListsSummaryScreen(
                     navRouter.navigateTo(Destination.SettingsScreen)
                 }
             ) {
-                Icon(imageVector = Lucide.Settings, contentDescription = "Settings")
+                Icon(imageVector = Lucide.Settings, contentDescription = stringResource(R.string.settings_title))
             }
         }
     ) {
