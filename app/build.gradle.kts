@@ -103,6 +103,9 @@ dependencies {
     // Datastore
     implementation(libs.datastore.core)
     implementation(libs.datastore.preferences)
+
+    // Splashscreen
+    implementation(libs.splashscreen)
 }
 
 secrets {

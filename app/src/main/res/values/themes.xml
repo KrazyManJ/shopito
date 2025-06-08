@@ -2,4 +2,12 @@
 <resources>
 
     <style name="Theme.Shopito" parent="android:Theme.Material.Light.NoActionBar" />
+
+    <style name="Theme.Shopito.Splash" parent="Theme.SplashScreen" >
+        <item name="windowSplashScreenBackground">@color/ic_launcher_background</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="windowSplashScreenAnimationDuration">300</item>
+        <item name="postSplashScreenTheme">@style/Theme.Shopito</item>
+    </style>
+
 </resources>
