@@ -96,8 +96,8 @@ fun AddEditShoppingItemScreenContent(
         modifier = Modifier.padding(paddingValues)
     ) {
         SuggestionTextField(
-            text = state.shoppingItem.itemName,
-            suggestions = state.itemKeywords.map { it.value },
+            value = state.shoppingItem.itemName,
+            suggestions = if (state.isSaved) emptyList() else state.itemKeywords.map { it.value },
             onValueChange = {
                 actions.onItemNameChange(it)
             },
