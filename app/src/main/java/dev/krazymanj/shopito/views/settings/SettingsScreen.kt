@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.ui.components.BaseScreen
 
@@ -37,7 +38,8 @@ fun SettingsScreen(
         SettingsScreenContent(
             paddingValues = it,
             state = state.value,
-            actions = viewModel
+            actions = viewModel,
+            navRouter = navRouter
         )
     }
 }
@@ -46,7 +48,8 @@ fun SettingsScreen(
 fun SettingsScreenContent(
     paddingValues: PaddingValues,
     state: SettingsUIState,
-    actions: SettingsActions
+    actions: SettingsActions,
+    navRouter: INavigationRouter
 ) {
     Column(
         modifier = Modifier.padding(paddingValues)
@@ -62,7 +65,7 @@ fun SettingsScreenContent(
         }
         Button(
             onClick = {
-
+                navRouter.navigateTo(Destination.ItemKeywordsListScreen)
             }
         ) {
             Text(text = "Open Item Keywords")
