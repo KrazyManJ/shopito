@@ -1,6 +1,5 @@
 package dev.krazymanj.shopito.ui.components
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.icons.Icons

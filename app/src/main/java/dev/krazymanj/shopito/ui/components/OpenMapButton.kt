@@ -10,8 +10,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.SquareArrowOutUpRight
+import dev.krazymanj.shopito.viewmodel.SettingsAccessorViewModel
 
 @Composable
 fun OpenMapButton(
@@ -19,11 +22,19 @@ fun OpenMapButton(
     longitude: Double,
     startNavigation: Boolean = false
 ) {
+    val viewModel = hiltViewModel<SettingsAccessorViewModel>()
+
+    val state = viewModel.state.collectAsStateWithLifecycle()
+
+    if (state.value.loading) {
+        viewModel.load()
+    }
+
     val context = LocalContext.current
 
     IconButton(onClick = {
         val uri = Uri.parse(
-            if (startNavigation)
+            if (state.value.startNavigationSetting)
                 "google.navigation:q=$latitude,$longitude"
             else
                 "geo:$latitude,$longitude?q=$latitude,$longitude"

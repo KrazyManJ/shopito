@@ -30,5 +30,11 @@ sealed class Destination {
         val latitude: Double?,
         val longitude: Double?
     ) : Destination()
+
+    @Serializable
+    data object SettingsScreen : Destination()
+
+    @Serializable
+    data object ItemKeywordsListScreen : Destination()
 }
 

@@ -10,6 +10,7 @@ import androidx.navigation.toRoute
 import dev.krazymanj.shopito.views.addEditShoppingItem.AddEditShoppingItemScreen
 import dev.krazymanj.shopito.views.addEditShoppingList.AddEditShoppingListScreen
 import dev.krazymanj.shopito.views.mapLocationPicker.MapLocationPickerScreen
+import dev.krazymanj.shopito.views.settings.SettingsScreen
 import dev.krazymanj.shopito.views.shoppingLists.ShoppingListsScreen
 import dev.krazymanj.shopito.views.shoppingListsSummary.ShoppingListsSummaryScreen
 import dev.krazymanj.shopito.views.soppingListView.ShoppingListViewScreen
@@ -49,6 +50,12 @@ fun NavGraph(
         composable<Destination.MapLocationPickerScreen> {
             val args = it.toRoute<Destination.MapLocationPickerScreen>()
             MapLocationPickerScreen(navRouter, args.latitude, args.longitude)
+        }
+        composable<Destination.SettingsScreen> {
+            SettingsScreen(navRouter)
+        }
+        composable<Destination.ItemKeywordsListScreen> {
+
         }
     }
 }
