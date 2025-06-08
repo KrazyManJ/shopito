@@ -18,12 +18,18 @@ android {
     namespace = "dev.krazymanj.shopito"
     compileSdk = 35
 
+    val versionMajor = 1
+    val versionMinor = 0
+    val versionPatch = 0
+    val myVersionCode = versionMajor * 10000 + versionMinor * 100 + versionPatch
+    val myVersionName = "${versionMajor}.${versionMinor}.${versionPatch}"
+
     defaultConfig {
         applicationId = "dev.krazymanj.shopito"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = myVersionCode
+        versionName = myVersionName
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
