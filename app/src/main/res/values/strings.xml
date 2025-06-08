@@ -18,4 +18,6 @@
     <string name="date_label">Date</string>
     <string name="location_label">Location</string>
     <string name="today_label">Today</string>
+    <string name="error_empty_input">Input is empty</string>
+    <string name="error_not_a_number">Error is not a number</string>
 </resources>

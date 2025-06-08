@@ -1,7 +1,10 @@
 package dev.krazymanj.shopito.views.addEditShoppingItem
 
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
@@ -13,6 +16,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
@@ -71,7 +76,10 @@ fun AddEditShoppingItemScreen(
             if (shoppingItemId != null) R.string.edit_shopping_item_title
             else R.string.add_shopping_item_title
         ),
-        navigationRouter = navRouter
+        navigationRouter = navRouter,
+        onBackClick = {
+            navRouter.returnBack()
+        }
     ) {
         AddEditShoppingItemScreenContent(
             paddingValues = it,
@@ -92,64 +100,84 @@ fun AddEditShoppingItemScreenContent(
 
     var showDatePicker by remember { mutableStateOf(false) }
 
-    Column(
-        modifier = Modifier.padding(paddingValues)
-    ) {
-        SuggestionTextField(
-            value = state.shoppingItem.itemName,
-            suggestions = if (state.isSaved) emptyList() else state.itemKeywords.map { it.value },
-            onValueChange = {
-                actions.onItemNameChange(it)
-            },
-            label = {
-                Text(stringResource(R.string.name_label))
+    val focusManager = LocalFocusManager.current
+
+    Box(
+        modifier = Modifier.fillMaxSize().pointerInput(Unit){
+            detectTapGestures {
+                focusManager.clearFocus()
             }
-        )
-        OutlinedTextField(
-            value = state.amountInput,
-            onValueChange = {
-                actions.onAmountChange(it)
-            },
-            label = {
-                Text(stringResource(R.string.amount_label))
-            }
-        )
-        if (showDatePicker) {
-            CustomDatePickerDialog(
-                date = state.shoppingItem.buyTime,
-                onDateSelected = { actions.onBuyTimeChanged(it) },
-                onDismiss = { showDatePicker = false }
-            )
         }
+    ){
+        Column(
+            modifier = Modifier.padding(paddingValues)
+        ) {
+            SuggestionTextField(
+                value = state.shoppingItem.itemName,
+                suggestions = if (state.isSaved) emptyList() else state.itemKeywords.map { it.value },
+                onValueChange = {
+                    actions.onItemNameChange(it)
+                },
+                label = {
+                    Text(stringResource(R.string.name_label))
+                },
+                errorMsgId = state.nameInputError,
+            )
+            OutlinedTextField(
+                value = state.amountInput,
+                onValueChange = {
+                    actions.onAmountChange(it)
+                },
+                label = {
+                    Text(stringResource(R.string.amount_label))
+                },
+                isError = state.amountInputError != null,
+                supportingText = {
+                    state.amountInputError?.let {
+                        Text(stringResource(it))
+                    }
+                }
+            )
+            if (showDatePicker) {
+                CustomDatePickerDialog(
+                    date = state.shoppingItem.buyTime,
+                    onDateSelected = { actions.onBuyTimeChanged(it) },
+                    onDismiss = { showDatePicker = false }
+                )
+            }
 
-        InfoElement(
-            value = if (state.shoppingItem.buyTime != null) DateUtils.getDateString(state.shoppingItem.buyTime!!) else null,
-            hint = stringResource(R.string.date_label),
-            leadingIcon = Lucide.Calendar,
-            onClick = {
-                showDatePicker = true
-            }, onClearClick = {
-                actions.onBuyTimeChanged(null)
-            })
+            InfoElement(
+                value = if (state.shoppingItem.buyTime != null) DateUtils.getDateString(state.shoppingItem.buyTime!!) else null,
+                hint = stringResource(R.string.date_label),
+                leadingIcon = Lucide.Calendar,
+                onClick = {
+                    showDatePicker = true
+                }, onClearClick = {
+                    actions.onBuyTimeChanged(null)
+                })
 
-        InfoElement(
-            value = if (state.shoppingItem.hasLocation()) "${state.shoppingItem.latitude!!.round()}, ${state.shoppingItem.longitude!!.round()} " else null,
-            hint = stringResource(R.string.location_label),
-            leadingIcon = Lucide.Pin,
-            onClick = {
-                navRouter.navigateTo(Destination.MapLocationPickerScreen(
-                    state.shoppingItem.latitude,
-                    state.shoppingItem.longitude
-                ))
-            }, onClearClick = {
-                actions.onLocationChanged(null, null)
-            })
+            InfoElement(
+                value = if (state.shoppingItem.hasLocation()) "${state.shoppingItem.latitude!!.round()}, ${state.shoppingItem.longitude!!.round()} " else null,
+                hint = stringResource(R.string.location_label),
+                leadingIcon = Lucide.Pin,
+                onClick = {
+                    navRouter.navigateTo(Destination.MapLocationPickerScreen(
+                        state.shoppingItem.latitude,
+                        state.shoppingItem.longitude
+                    ))
+                }, onClearClick = {
+                    actions.onLocationChanged(null, null)
+                })
 
 
-        Button(onClick = {
-            actions.submit()
-        }) {
-            Text(stringResource(R.string.save_label))
+            Button(
+                onClick = {
+                    actions.submit()
+                },
+                enabled = state.isInputValid()
+            ) {
+                Text(stringResource(R.string.save_label))
+            }
         }
     }
 }

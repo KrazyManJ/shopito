@@ -10,5 +10,10 @@ data class AddEditShoppingItemState(
 
     val amountInput: String = "0",
 
+    val nameInputError: Int? = null,
+    val amountInputError: Int? = null,
+
     val isSaved: Boolean = false,
-)
+){
+    fun isInputValid(): Boolean = shoppingItem.itemName.isNotBlank() && amountInput.toIntOrNull() != null
+}

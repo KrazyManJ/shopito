@@ -3,6 +3,7 @@ package dev.krazymanj.shopito.views.addEditShoppingItem
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.database.IShopitoLocalRepository
 import dev.krazymanj.shopito.database.entities.ItemKeyword
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -48,13 +49,22 @@ class AddEditShoppingItemViewModel @Inject constructor(private val repository: I
         _state.value = _state.value.copy(
             shoppingItem = _state.value.shoppingItem.copy(
                 itemName = itemName
-            )
+            ),
+            nameInputError = when {
+                itemName.isEmpty() -> R.string.error_empty_input
+                else -> null
+            }
         )
     }
 
     override fun onAmountChange(amount: String) {
         _state.value = _state.value.copy(
-            amountInput = amount
+            amountInput = amount,
+            amountInputError = when {
+                amount.isEmpty() -> R.string.error_empty_input
+                amount.toIntOrNull() == null -> R.string.error_not_a_number
+                else -> null
+            }
         )
     }
 
@@ -67,6 +77,11 @@ class AddEditShoppingItemViewModel @Inject constructor(private val repository: I
     }
 
     override fun submit() {
+        if (!_state.value.isInputValid()) {
+            onItemNameChange(_state.value.shoppingItem.itemName)
+            onAmountChange(_state.value.amountInput)
+            return
+        }
         viewModelScope.launch {
             val item = _state.value.shoppingItem.copy(
                 amount = _state.value.amountInput.toInt()
