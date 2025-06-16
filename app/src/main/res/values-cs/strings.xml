@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Shopito</string>
+    <string name="general_shopping_list_name">Obecný nákupní list</string>
+    <string name="general_shopping_list_description">Toto je obecný nákupní list</string>
+    <string name="navigation_lists_summary_label">Souhrn listů</string>
+    <string name="navigation_shopping_lists_label">Nákupní listy</string>
+    <string name="add_shopping_list_title">Přidat nákupní list</string>
+    <string name="edit_shopping_list_title">Upravit nákupní list</string>
+    <string name="name_label">Jméno</string>
+    <string name="description_label">Popis</string>
+    <string name="save_label">Uložit</string>
+    <string name="amount_label">Množství</string>
+    <string name="add_shopping_item_title">Přidat nákupní položku</string>
+    <string name="edit_shopping_item_title">Upravit nákupní položku</string>
+    <string name="select_label">Vybrat</string>
+    <string name="cancel_label">Zrušit</string>
+    <string name="clear_label">Vymazat</string>
+    <string name="date_label">Datum</string>
+    <string name="location_label">Lokace</string>
+    <string name="today_label">Dnes</string>
+    <string name="error_empty_input">Je prázdný</string>
+    <string name="error_not_a_number">Není číslo</string>
+    <string name="buy_time_label">Čas Nákupu</string>
+    <string name="unspecified_label">Nespecifikováno</string>
+    <string name="settings_title">Nastavení</string>
+    <string name="description_not_provided">Popis nebyl zadán</string>
+    <string name="add">Přidat</string>
+    <string name="remove">Odebrat</string>
+    <string name="setting_start_navigation">Při přesměrování na mapě, mám startovat navigaci napřímo?</string>
+    <string name="open_shopping_items_database">Otevři databázi nákupních položek</string>
+    <string name="version">Verze</string>
+    <string name="return_back">Odeber</string>
+    <string name="loading_label">Načítání...</string>
+    <string name="googlemaps_not_installed">Google mapy nejsou nainstalovány</string>
+    <string name="pick_location_title">Výběr lokace</string>
+</resources>

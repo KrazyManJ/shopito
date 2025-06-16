@@ -19,11 +19,18 @@
     <string name="location_label">Location</string>
     <string name="today_label">Today</string>
     <string name="error_empty_input">Input is empty</string>
-    <string name="error_not_a_number">Error is not a number</string>
+    <string name="error_not_a_number">Is not a number</string>
     <string name="buy_time_label">Buy Time</string>
     <string name="unspecified_label">Unspecified</string>
     <string name="settings_title">Settings</string>
     <string name="description_not_provided">Description not provided</string>
     <string name="add">Add</string>
     <string name="remove">Remove</string>
+    <string name="setting_start_navigation">On map redirect, start navigation immediately?</string>
+    <string name="open_shopping_items_database">Open Shopping Item Database</string>
+    <string name="version">Version</string>
+    <string name="return_back">Return back</string>
+    <string name="loading_label">Loading...</string>
+    <string name="googlemaps_not_installed">Google Maps is not installed</string>
+    <string name="pick_location_title">Location Picker</string>
 </resources>
