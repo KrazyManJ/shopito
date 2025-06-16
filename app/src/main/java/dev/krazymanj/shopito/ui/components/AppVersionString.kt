@@ -24,6 +24,6 @@ fun AppVersionString(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         Text(stringResource(R.string.app_name))
-        Text("Version: ${appInfo.versionName}")
+        Text(stringResource(R.string.version)+": ${appInfo.versionName}")
     }
 }

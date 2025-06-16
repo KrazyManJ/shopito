@@ -12,11 +12,13 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import com.composables.icons.lucide.ArrowLeft
 import com.composables.icons.lucide.Lucide
+import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.ui.theme.backgroundPrimaryColor
 import dev.krazymanj.shopito.ui.theme.spacing16
@@ -51,7 +53,7 @@ fun BaseScreen(
                 navigationIcon = {
                     onBackClick?.let {
                         IconButton(onClick = onBackClick) {
-                            Icon(imageVector = Lucide.ArrowLeft, contentDescription = "return")
+                            Icon(imageVector = Lucide.ArrowLeft, contentDescription = stringResource(R.string.return_back))
                         }
                     }
                 },

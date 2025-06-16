@@ -14,7 +14,6 @@ import androidx.compose.material3.CheckboxColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -30,7 +29,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Pencil
@@ -39,7 +37,6 @@ import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.database.entities.ShoppingItem
 import dev.krazymanj.shopito.database.entities.ShoppingList
 import dev.krazymanj.shopito.ui.theme.Primary
-import dev.krazymanj.shopito.ui.theme.ShopitoTheme
 import dev.krazymanj.shopito.ui.theme.backgroundPrimaryColor
 import dev.krazymanj.shopito.ui.theme.backgroundSecondaryColor
 import dev.krazymanj.shopito.ui.theme.spacing16
@@ -57,12 +54,12 @@ fun ShoppingItem(
     onDeleteButtonClick: (() -> Unit)? = null,
     onCheckStateChange: ((Boolean) -> Unit)? = null,
     forceOpen: Boolean = false
-){
+) {
     var opened by remember { mutableStateOf(forceOpen) }
 
     val shape = RoundedCornerShape(topStart = spacing16, topEnd = spacing16)
 
-    Column{
+    Column {
         Box(
             modifier = modifier.then(Modifier
                 .shadow(if (opened) 8.dp else 0.dp, shape)
@@ -77,7 +74,7 @@ fun ShoppingItem(
             ) {
                 shoppingList?.let {
                     Text(
-                        text = "> "+shoppingList.name,
+                        text = "> " + shoppingList.name,
                         color = textSecondaryColor(),
                         fontStyle = FontStyle.Italic,
                         style = MaterialTheme.typography.bodySmall,
@@ -103,7 +100,7 @@ fun ShoppingItem(
                 horizontalArrangement = Arrangement.spacedBy(spacing8)
             ) {
                 Text(
-                    text = shoppingItem.amount.toString()+"x",
+                    text = shoppingItem.amount.toString() + "x",
                     textDecoration = if (shoppingItem.isDone)
                         TextDecoration.LineThrough
                     else
@@ -171,7 +168,7 @@ fun ShoppingItem(
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Bold
                     )
-                    LocationAddressText(shoppingItem.latitude,shoppingItem.longitude)
+                    LocationAddressText(shoppingItem.latitude, shoppingItem.longitude)
                 }
             }
 
@@ -201,43 +198,6 @@ fun ShoppingItem(
                         )
                     }
                 }
-            }
-        }
-    }
-
-
-}
-
-@Preview
-@Composable
-private fun Preview() {
-    val list = ShoppingList("General shopping list", "Ahoj")
-    ShopitoTheme {
-        Scaffold(
-            containerColor = backgroundPrimaryColor()
-        ) {
-            Column(
-                Modifier.padding(it).padding(spacing16)
-            ) {
-                ShoppingItem(
-                    shoppingItem = ShoppingItem("Ahoj",5,false),
-                    modifier = Modifier.fillMaxWidth()
-                )
-                ShoppingItem(
-                    shoppingItem = ShoppingItem("Ahoj",5,false),
-                    modifier = Modifier.fillMaxWidth(),
-                    forceOpen = true
-                )
-                ShoppingItem(
-                    shoppingItem = ShoppingItem("Ahoj",5,true),
-                    shoppingList = list,
-                    modifier = Modifier.fillMaxWidth()
-                )
-                ShoppingItem(
-                    shoppingItem = ShoppingItem("Ahoj",5,true),
-                    modifier = Modifier.fillMaxWidth(),
-                    forceOpen = true
-                )
             }
         }
     }

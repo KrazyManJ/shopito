@@ -1,10 +1,12 @@
 package dev.krazymanj.shopito.views.addEditShoppingItem
 
 import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.OutlinedTextField
@@ -15,6 +17,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
@@ -38,6 +41,8 @@ import dev.krazymanj.shopito.ui.components.BaseScreen
 import dev.krazymanj.shopito.ui.components.CustomDatePickerDialog
 import dev.krazymanj.shopito.ui.components.InfoElement
 import dev.krazymanj.shopito.ui.components.SuggestionTextField
+import dev.krazymanj.shopito.ui.theme.spacing16
+import dev.krazymanj.shopito.ui.theme.spacing8
 import dev.krazymanj.shopito.utils.DateUtils
 
 @Composable
@@ -110,7 +115,8 @@ fun AddEditShoppingItemScreenContent(
         }
     ){
         Column(
-            modifier = Modifier.padding(paddingValues)
+            modifier = Modifier.padding(paddingValues).padding(spacing16),
+            verticalArrangement = Arrangement.spacedBy(spacing8)
         ) {
             SuggestionTextField(
                 value = state.shoppingItem.itemName,
@@ -121,7 +127,7 @@ fun AddEditShoppingItemScreenContent(
                 label = {
                     Text(stringResource(R.string.name_label))
                 },
-                errorMsgId = state.nameInputError,
+                errorMsgId = state.nameInputError
             )
             OutlinedTextField(
                 value = state.amountInput,
@@ -136,7 +142,8 @@ fun AddEditShoppingItemScreenContent(
                     state.amountInputError?.let {
                         Text(stringResource(it))
                     }
-                }
+                },
+                modifier = Modifier.fillMaxWidth()
             )
             if (showDatePicker) {
                 CustomDatePickerDialog(
@@ -170,13 +177,18 @@ fun AddEditShoppingItemScreenContent(
                 })
 
 
-            Button(
-                onClick = {
-                    actions.submit()
-                },
-                enabled = state.isInputValid()
+            Box(
+                modifier = Modifier.fillMaxWidth()
             ) {
-                Text(stringResource(R.string.save_label))
+                Button(
+                    onClick = {
+                        actions.submit()
+                    },
+                    enabled = state.isInputValid(),
+                    modifier = Modifier.align(Alignment.Center)
+                ) {
+                    Text(stringResource(R.string.save_label))
+                }
             }
         }
     }

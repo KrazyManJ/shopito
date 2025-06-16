@@ -1,11 +1,9 @@
 package dev.krazymanj.shopito.ui.components
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -13,7 +11,6 @@ import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -21,14 +18,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.ListTodo
 import com.composables.icons.lucide.Lucide
-import com.composables.icons.lucide.Plus
 import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.database.entities.ShoppingList
-import dev.krazymanj.shopito.ui.theme.ShopitoTheme
 import dev.krazymanj.shopito.ui.theme.backgroundSecondaryColor
 import dev.krazymanj.shopito.ui.theme.spacing16
 import dev.krazymanj.shopito.ui.theme.spacing8
@@ -40,7 +34,7 @@ fun ShoppingList(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Card (
+    Card(
         colors = CardColors(
             containerColor = backgroundSecondaryColor(),
             contentColor = textPrimaryColor(),
@@ -50,7 +44,7 @@ fun ShoppingList(
         modifier = Modifier
             .fillMaxWidth()
             .clickable { onClick() }
-    ){
+    ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(spacing16),
@@ -62,7 +56,9 @@ fun ShoppingList(
                 modifier = Modifier.size(32.dp)
             )
             Column(
-                modifier = Modifier.padding(8.dp).weight(1f),
+                modifier = Modifier
+                    .padding(8.dp)
+                    .weight(1f),
                 verticalArrangement = Arrangement.spacedBy(spacing8)
             ) {
                 Text(
@@ -74,26 +70,6 @@ fun ShoppingList(
                     style = MaterialTheme.typography.bodySmall,
                     fontStyle = if (shoppingList.description.isBlank()) FontStyle.Italic else null
                 )
-            }
-        }
-    }
-}
-
-@Preview
-@Composable
-private fun Preview() {
-    ShopitoTheme {
-        Scaffold {
-            Column(modifier = Modifier.padding(it)) {
-                ShoppingList(
-                    shoppingList = ShoppingList("Shopping list","Description"),
-                    onClick = {}
-                )
-                ShoppingList(
-                    shoppingList = ShoppingList("Shopping list",""),
-                    onClick = {}
-                )
-
             }
         }
     }

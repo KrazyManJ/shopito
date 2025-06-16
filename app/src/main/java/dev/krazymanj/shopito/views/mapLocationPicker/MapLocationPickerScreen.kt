@@ -1,12 +1,11 @@
 package dev.krazymanj.shopito.views.mapLocationPicker
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -16,7 +15,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.android.gms.maps.GoogleMap
@@ -52,7 +50,7 @@ fun MapLocationPickerScreen(
     }
 
     BaseScreen(
-        topBarText = "Template Screen",
+        topBarText = stringResource(R.string.pick_location_title),
         navigationRouter = navRouter,
         onBackClick = {
             navRouter.returnBack()
@@ -108,7 +106,9 @@ fun MapPositionPickerScreenContent(
             )
         }
 
-        OutlinedButton(
+
+
+        Button(
             modifier = Modifier
                 .padding(
                     start = spacing16,
@@ -119,7 +119,6 @@ fun MapPositionPickerScreenContent(
             onClick = {
                 navRouter.navigateBackWithLocationData(state.latitude, state.longitude)
             },
-            shape = RoundedCornerShape(10.dp),
         ) {
             Text(text = stringResource(R.string.save_label))
         }

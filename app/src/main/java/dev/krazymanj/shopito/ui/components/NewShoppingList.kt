@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardColors
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,8 +15,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.geometry.CornerRadius
-import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.geometry.RoundRect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
 import androidx.compose.ui.graphics.StrokeJoin
@@ -31,11 +28,8 @@ import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Plus
 import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.ui.theme.ShopitoTheme
-import dev.krazymanj.shopito.ui.theme.backgroundSecondaryColor
 import dev.krazymanj.shopito.ui.theme.spacing16
-import dev.krazymanj.shopito.ui.theme.spacing8
 import dev.krazymanj.shopito.ui.theme.textSecondaryColor
-import kotlin.io.path.Path
 
 @Composable
 fun NewShoppingList(
@@ -47,7 +41,7 @@ fun NewShoppingList(
     val strokePx = with(LocalDensity.current) { strokeWidth.toPx() }
     val cornerPx = with(LocalDensity.current) { cornerRadius.toPx() }
     val dashLengths = floatArrayOf(32f, 32f)
-    val color  = textSecondaryColor()
+    val color = textSecondaryColor()
 
     Card(
         colors = CardColors(
@@ -58,14 +52,14 @@ fun NewShoppingList(
         ),
         modifier = modifier.then(
             Modifier
-                .padding(strokeWidth/2)
+                .padding(strokeWidth / 2)
                 .fillMaxWidth()
                 .drawBehind {
                     drawRoundRect(
                         color = color,
                         style = Stroke(
                             width = strokePx,
-                            pathEffect = PathEffect.dashPathEffect(dashLengths,0f),
+                            pathEffect = PathEffect.dashPathEffect(dashLengths, 0f),
                             join = StrokeJoin.Round
                         ),
                         cornerRadius = CornerRadius(cornerPx)

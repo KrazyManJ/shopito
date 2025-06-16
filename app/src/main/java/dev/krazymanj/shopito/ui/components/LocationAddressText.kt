@@ -13,6 +13,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import dev.krazymanj.shopito.R
 import java.util.Locale
 
 @Composable
@@ -39,9 +41,9 @@ fun LocationAddressText(
     ) {
         Text(
             text = when {
-                loading -> "Loading..."
+                loading -> stringResource(R.string.loading_label)
                 address != null -> address!!.getAddressLine(0)
-                else -> "Unspecified"
+                else -> stringResource(R.string.unspecified_label)
             },
             modifier = Modifier.weight(1f)
         )

@@ -9,11 +9,13 @@ import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.SquareArrowOutUpRight
+import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.viewmodel.SettingsAccessorViewModel
 
 @Composable
@@ -32,6 +34,8 @@ fun OpenMapButton(
 
     val context = LocalContext.current
 
+    val label = stringResource(R.string.googlemaps_not_installed)
+
     IconButton(onClick = {
         val uri = Uri.parse(
             if (state.value.startNavigationSetting)
@@ -45,7 +49,7 @@ fun OpenMapButton(
         if (mapIntent.resolveActivity(context.packageManager) != null) {
             context.startActivity(mapIntent)
         } else {
-            Toast.makeText(context, "Google Maps is not installed", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, label, Toast.LENGTH_SHORT).show()
         }
     }) {
         Icon(
