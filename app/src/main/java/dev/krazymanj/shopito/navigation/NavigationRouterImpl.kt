@@ -26,13 +26,13 @@ class NavigationRouterImpl(private val navController: NavController) : INavigati
         return curDest.hasRoute(destinationClass)
     }
 
-    override fun navigateBackWithLocationData(latitude: Double?, longitude: Double?) {
+    override fun navigateBackWithLocationData(location: Location) {
         val moshi: Moshi = Moshi.Builder().build()
         val jsonAdapter: JsonAdapter<Location> = moshi.adapter(Location::class.java)
 
         navController.previousBackStackEntry
             ?.savedStateHandle
-            ?.set(Constants.LOCATION, jsonAdapter.toJson(Location(latitude, longitude)))
+            ?.set(Constants.LOCATION, jsonAdapter.toJson(location))
         returnBack()
     }
 
@@ -40,10 +40,9 @@ class NavigationRouterImpl(private val navController: NavController) : INavigati
         return navController.currentBackStackEntry?.savedStateHandle?.getLiveData(key)
     }
 
-    override fun <T> removeValue(key: String) {
+    override fun removeValue(key: String) {
         navController.currentBackStackEntry
             ?.savedStateHandle
-            ?.remove<T>(key)
-
+            ?.remove<Any>(key)
     }
 }

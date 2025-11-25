@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.database.IShopitoLocalRepository
 import dev.krazymanj.shopito.database.entities.ItemKeyword
+import dev.krazymanj.shopito.model.Location
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -99,11 +100,10 @@ class AddEditShoppingItemViewModel @Inject constructor(private val repository: I
         }
     }
 
-    override fun onLocationChanged(latitude: Double?, longitude: Double?) {
+    override fun onLocationChanged(location: Location?) {
         _state.value = _state.value.copy(
             shoppingItem = _state.value.shoppingItem.copy(
-                latitude = latitude,
-                longitude = longitude
+                location = location
             )
         )
     }

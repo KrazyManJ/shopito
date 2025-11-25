@@ -1,9 +1,11 @@
 package dev.krazymanj.shopito.database.entities
 
 import androidx.room.ColumnInfo
+import androidx.room.Embedded
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import dev.krazymanj.shopito.model.Location
 
 @Entity(
     tableName = "shopping_item",
@@ -23,8 +25,7 @@ data class ShoppingItem(
     var isDone: Boolean = false,
     var buyTime: Long? = null,
 
-    var latitude: Double? = null,
-    var longitude: Double? = null,
+    @Embedded val location: Location? = null,
 
     @ColumnInfo(index = true)
     var listId: Long? = null,
@@ -34,7 +35,6 @@ data class ShoppingItem(
 ) {
     fun isInDatabase(): Boolean = id != null
 
-    fun hasLocation(): Boolean = latitude != null && longitude != null
     companion object {
         fun default(): ShoppingItem = ShoppingItem("",0)
     }

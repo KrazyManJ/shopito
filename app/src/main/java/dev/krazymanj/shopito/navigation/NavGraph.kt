@@ -1,12 +1,16 @@
 package dev.krazymanj.shopito.navigation
 
+import android.net.Uri
+import android.os.Bundle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
+import dev.krazymanj.shopito.model.Location
 import dev.krazymanj.shopito.views.addEditShoppingItem.AddEditShoppingItemScreen
 import dev.krazymanj.shopito.views.addEditShoppingList.AddEditShoppingListScreen
 import dev.krazymanj.shopito.views.itemKeywordsList.ItemKeywordsListScreen
@@ -15,6 +19,11 @@ import dev.krazymanj.shopito.views.settings.SettingsScreen
 import dev.krazymanj.shopito.views.shoppingLists.ShoppingListsScreen
 import dev.krazymanj.shopito.views.shoppingListsSummary.ShoppingListsSummaryScreen
 import dev.krazymanj.shopito.views.soppingListView.ShoppingListViewScreen
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.serializer
+import kotlin.reflect.typeOf
+
+
 
 @Composable
 fun NavGraph(
@@ -25,6 +34,7 @@ fun NavGraph(
     NavHost(
         startDestination = startDestination,
         navController = navHostController,
+
     ) {
         composable<Destination.ShoppingListsSummaryScreen> {
             ShoppingListsSummaryScreen(navRouter)
@@ -48,9 +58,13 @@ fun NavGraph(
                 shoppingItemId = args.shoppingItemId
             )
         }
-        composable<Destination.MapLocationPickerScreen> {
+        composable<Destination.MapLocationPickerScreen>(
+            typeMap = mapOf(
+                typeOf<Location?>() to serializableNavType<Location?>(isNullableAllowed = true)
+            )
+        ) {
             val args = it.toRoute<Destination.MapLocationPickerScreen>()
-            MapLocationPickerScreen(navRouter, args.latitude, args.longitude)
+            MapLocationPickerScreen(navRouter, args.location)
         }
         composable<Destination.SettingsScreen> {
             SettingsScreen(navRouter)

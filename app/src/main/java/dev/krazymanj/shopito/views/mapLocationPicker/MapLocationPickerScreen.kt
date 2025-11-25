@@ -19,7 +19,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.model.CameraPosition
-import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.Marker
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapEffect
@@ -29,6 +28,7 @@ import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import dev.krazymanj.shopito.R
+import dev.krazymanj.shopito.model.Location
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.ui.elements.BaseScreen
 import dev.krazymanj.shopito.ui.theme.spacing16
@@ -36,16 +36,15 @@ import dev.krazymanj.shopito.ui.theme.spacing16
 @Composable
 fun MapLocationPickerScreen(
     navRouter: INavigationRouter,
-    latitude: Double?,
-    longitude: Double?
+    location: Location?
 ) {
     val viewModel = hiltViewModel<MapLocationPickerViewModel>()
 
     val state = viewModel.templateUIState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(latitude,longitude) {
-        if (latitude != null && longitude != null) {
-            viewModel.locationChanged(latitude, longitude)
+    LaunchedEffect(location) {
+        location?.let { loc ->
+            viewModel.locationChanged(loc)
         }
     }
 
@@ -80,7 +79,7 @@ fun MapPositionPickerScreenContent(
         )
     ) }
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(LatLng(state.latitude,state.longitude), 0f)
+        position = CameraPosition.fromLatLngZoom(state.location.toLatLng(), 0f)
     }
 
     Box(
@@ -94,14 +93,19 @@ fun MapPositionPickerScreenContent(
                 map.setOnMarkerDragListener(object : GoogleMap.OnMarkerDragListener{
                     override fun onMarkerDrag(p0: Marker) {}
                     override fun onMarkerDragEnd(p0: Marker) {
-                        actions.locationChanged(p0.position.latitude, p0.position.longitude)
+                        actions.locationChanged(Location(
+                            latitude = p0.position.latitude,
+                            longitude = p0.position.longitude
+                        ))
                     }
                     override fun onMarkerDragStart(p0: Marker) {}
                 })
             }
 
             Marker(
-                state = MarkerState(position = LatLng(state.latitude,state.longitude)),
+                state = MarkerState(
+                    position = state.location.toLatLng()
+                ),
                 draggable = true
             )
         }
@@ -117,7 +121,7 @@ fun MapPositionPickerScreenContent(
                 )
                 .align(Alignment.BottomCenter),
             onClick = {
-                navRouter.navigateBackWithLocationData(state.latitude, state.longitude)
+                navRouter.navigateBackWithLocationData(state.location)
             },
         ) {
             Text(text = stringResource(R.string.save_label))

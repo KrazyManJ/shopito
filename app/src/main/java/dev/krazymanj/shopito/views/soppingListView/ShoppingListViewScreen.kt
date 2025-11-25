@@ -45,9 +45,9 @@ fun ShoppingListViewScreen(
             val moshi: Moshi = Moshi.Builder().build()
             val jsonAdapter: JsonAdapter<Location> = moshi.adapter(Location::class.java)
             val location = jsonAdapter.fromJson(it)
-            navRouter.removeValue<Double>(Constants.LOCATION)
+            navRouter.removeValue(Constants.LOCATION)
             location?.let { loc ->
-                viewModel.onLocationChanged(loc.latitude, loc.longitude)
+                viewModel.onLocationChanged(loc)
             }
         }
     }
@@ -73,16 +73,14 @@ fun ShoppingListViewScreen(
             QuickAdd(
                 value = state.value.itemInput,
                 date = state.value.dateInput,
-                latitude = state.value.latitudeInput,
-                longitude = state.value.longitudeInput,
+                location = state.value.locationInput,
 
                 onValueChange = { viewModel.onItemInput(it) },
                 onAdd = { viewModel.addShoppingItem() },
                 onDateChange = { viewModel.onDateInput(it) },
                 onLocationChangeRequest = {
                     navRouter.navigateTo(Destination.MapLocationPickerScreen(
-                        state.value.latitudeInput,
-                        state.value.longitudeInput
+                        state.value.locationInput
                     ))
                 }
             )
@@ -113,7 +111,9 @@ fun ShoppingListViewScreenContent(
 
     if (state.isCreated) {
         LaunchedEffect(Unit) {
-            listState.animateScrollToItem(state.shoppingItems.size-1)
+            if (state.shoppingItems.size > 5) {
+                listState.animateScrollToItem(state.shoppingItems.size-1)
+            }
             actions.clearIsCreatedState()
         }
     }

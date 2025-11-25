@@ -1,7 +1,11 @@
 package dev.krazymanj.shopito.views.mapLocationPicker
 
+import dev.krazymanj.shopito.model.Location
+
 
 data class MapLocationPickerUIState(
-    val latitude: Double = 49.8175,
-    val longitude: Double = 15.4730
+    val location: Location = Location(
+        latitude = 49.8175,
+        longitude = 15.4730
+    )
 )

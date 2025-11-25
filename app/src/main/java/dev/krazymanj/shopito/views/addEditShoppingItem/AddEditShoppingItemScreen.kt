@@ -33,7 +33,6 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import dev.krazymanj.shopito.Constants
 import dev.krazymanj.shopito.R
-import dev.krazymanj.shopito.extension.round
 import dev.krazymanj.shopito.model.Location
 import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
@@ -63,9 +62,9 @@ fun AddEditShoppingItemScreen(
             val moshi: Moshi = Moshi.Builder().build()
             val jsonAdapter: JsonAdapter<Location> = moshi.adapter(Location::class.java)
             val location = jsonAdapter.fromJson(it)
-            navRouter.removeValue<Double>(Constants.LOCATION)
+            navRouter.removeValue(Constants.LOCATION)
             location?.let { loc ->
-                viewModel.onLocationChanged(loc.latitude, loc.longitude)
+                viewModel.onLocationChanged(loc)
             }
         }
     }
@@ -164,16 +163,15 @@ fun AddEditShoppingItemScreenContent(
                 })
 
             InfoElement(
-                value = if (state.shoppingItem.hasLocation()) "${state.shoppingItem.latitude!!.round()}, ${state.shoppingItem.longitude!!.round()} " else null,
+                value = state.shoppingItem.location?.toString(),
                 hint = stringResource(R.string.location_label),
                 leadingIcon = Lucide.Pin,
                 onClick = {
                     navRouter.navigateTo(Destination.MapLocationPickerScreen(
-                        state.shoppingItem.latitude,
-                        state.shoppingItem.longitude
+                        state.shoppingItem.location,
                     ))
                 }, onClearClick = {
-                    actions.onLocationChanged(null, null)
+                    actions.onLocationChanged(null)
                 })
 
 

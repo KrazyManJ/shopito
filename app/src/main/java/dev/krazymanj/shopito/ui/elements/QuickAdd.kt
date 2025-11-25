@@ -35,6 +35,7 @@ import com.composables.icons.lucide.ArrowUp
 import com.composables.icons.lucide.Calendar
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.MapPin
+import dev.krazymanj.shopito.model.Location
 import dev.krazymanj.shopito.ui.theme.Primary
 import dev.krazymanj.shopito.ui.theme.backgroundPrimaryColor
 import dev.krazymanj.shopito.ui.theme.spacing16
@@ -49,8 +50,7 @@ import dev.krazymanj.shopito.utils.DateUtils
 fun QuickAdd(
     value: String,
     date: Long?,
-    latitude: Double?,
-    longitude: Double?,
+    location: Location?,
 
     onValueChange: (String) -> Unit,
     onDateChange: (Long) -> Unit,
@@ -110,7 +110,7 @@ fun QuickAdd(
                 colors = PIN_COLORS
             )
             InputChip(
-                selected = latitude != null && longitude != null,
+                selected = location != null,
                 onClick = onLocationChangeRequest,
                 leadingIcon = {
                     Icon(
@@ -121,7 +121,7 @@ fun QuickAdd(
                 },
                 label = {
                     Text(text = when {
-                        latitude != null && longitude != null -> "Selected"
+                        location != null -> "Selected"
                         else -> "Location"
                     })
                 },
@@ -187,8 +187,7 @@ private fun Preview() {
     QuickAdd(
         value = value,
         date = null,
-        latitude = null,
-        longitude = null,
+        location = null,
         onValueChange = {
             value = it
         },

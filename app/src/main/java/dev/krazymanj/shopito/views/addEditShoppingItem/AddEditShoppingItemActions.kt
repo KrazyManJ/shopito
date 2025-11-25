@@ -1,5 +1,7 @@
 package dev.krazymanj.shopito.views.addEditShoppingItem
 
+import dev.krazymanj.shopito.model.Location
+
 interface AddEditShoppingItemActions {
     fun loadShoppingListItem(shoppingListId: Long ,shoppingItemId: Long?)
 
@@ -8,5 +10,5 @@ interface AddEditShoppingItemActions {
     fun onBuyTimeChanged(buyTime: Long?)
 
     fun submit()
-    fun onLocationChanged(latitude: Double?, longitude: Double?)
+    fun onLocationChanged(location: Location?)
 }

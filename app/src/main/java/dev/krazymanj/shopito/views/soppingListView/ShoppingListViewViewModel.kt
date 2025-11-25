@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.krazymanj.shopito.database.IShopitoLocalRepository
 import dev.krazymanj.shopito.database.entities.ShoppingItem
 import dev.krazymanj.shopito.extension.empty
+import dev.krazymanj.shopito.model.Location
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -99,8 +100,7 @@ class ShoppingListViewViewModel @Inject constructor(private val repository: ISho
                 itemName = text,
                 amount = amount,
                 buyTime = _state.value.dateInput,
-                latitude = _state.value.latitudeInput,
-                longitude = _state.value.longitudeInput,
+                location = _state.value.locationInput,
                 listId = _state.value.shoppingList!!.id
             ))
             _state.value = _state.value.copy(
@@ -123,10 +123,9 @@ class ShoppingListViewViewModel @Inject constructor(private val repository: ISho
         )
     }
 
-    fun onLocationChanged(latitude: Double?, longitude: Double?) {
+    fun onLocationChanged(location: Location) {
         _state.value = _state.value.copy(
-            latitudeInput = latitude,
-            longitudeInput = longitude
+            locationInput = location
         )
     }
 }

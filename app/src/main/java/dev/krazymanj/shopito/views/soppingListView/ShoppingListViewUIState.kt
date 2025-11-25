@@ -2,6 +2,7 @@ package dev.krazymanj.shopito.views.soppingListView
 
 import dev.krazymanj.shopito.database.entities.ShoppingItem
 import dev.krazymanj.shopito.database.entities.ShoppingList
+import dev.krazymanj.shopito.model.Location
 
 
 data class ShoppingListViewUIState(
@@ -10,8 +11,8 @@ data class ShoppingListViewUIState(
 
     val itemInput: String = "",
     val dateInput: Long? = null,
-    val latitudeInput: Double? = null,
-    val longitudeInput: Double? = null,
+
+    val locationInput: Location? = null,
 
     val isCreated: Boolean = false,
 )
