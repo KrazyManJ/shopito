@@ -37,10 +37,10 @@ import dev.krazymanj.shopito.extension.round
 import dev.krazymanj.shopito.model.Location
 import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
-import dev.krazymanj.shopito.ui.components.BaseScreen
-import dev.krazymanj.shopito.ui.components.CustomDatePickerDialog
-import dev.krazymanj.shopito.ui.components.InfoElement
-import dev.krazymanj.shopito.ui.components.SuggestionTextField
+import dev.krazymanj.shopito.ui.elements.BaseScreen
+import dev.krazymanj.shopito.ui.elements.CustomDatePickerDialog
+import dev.krazymanj.shopito.ui.elements.InfoElement
+import dev.krazymanj.shopito.ui.elements.SuggestionTextField
 import dev.krazymanj.shopito.ui.theme.spacing16
 import dev.krazymanj.shopito.ui.theme.spacing8
 import dev.krazymanj.shopito.utils.DateUtils
@@ -65,7 +65,7 @@ fun AddEditShoppingItemScreen(
             val location = jsonAdapter.fromJson(it)
             navRouter.removeValue<Double>(Constants.LOCATION)
             location?.let { loc ->
-                viewModel. onLocationChanged(loc.latitude, loc.longitude)
+                viewModel.onLocationChanged(loc.latitude, loc.longitude)
             }
         }
     }

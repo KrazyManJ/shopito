@@ -1,6 +1,5 @@
 package dev.krazymanj.shopito.views.itemKeywordsList
 
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -21,7 +20,7 @@ import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Trash
 import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.navigation.INavigationRouter
-import dev.krazymanj.shopito.ui.components.BaseScreen
+import dev.krazymanj.shopito.ui.elements.BaseScreen
 import dev.krazymanj.shopito.ui.theme.Primary
 import dev.krazymanj.shopito.ui.theme.spacing16
 

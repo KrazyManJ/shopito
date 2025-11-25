@@ -1,4 +1,4 @@
-package dev.krazymanj.shopito.ui.components
+package dev.krazymanj.shopito.ui.elements
 
 import android.content.Context
 import androidx.compose.runtime.Composable

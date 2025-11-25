@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.krazymanj.shopito.database.IShopitoLocalRepository
 import dev.krazymanj.shopito.database.entities.ShoppingItem
+import dev.krazymanj.shopito.extension.empty
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -53,5 +54,79 @@ class ShoppingListViewViewModel @Inject constructor(private val repository: ISho
             ))
             loadItems()
         }
+    }
+
+    fun onItemInput(itemInput: String) {
+        _state.value = _state.value.copy(
+           itemInput = itemInput
+        )
+    }
+
+    private fun extractLastAmount(input: String): Pair<String, Int> {
+
+        val regex = Regex("\\b(x\\d+|\\d+x)\\b", RegexOption.IGNORE_CASE)
+
+        val matches = regex.findAll(input)
+
+        val lastMatch = matches.lastOrNull() ?: return Pair(input, 1)
+
+        val numberPart = lastMatch.value.replace("x", "", ignoreCase = true)
+        val parsedNumber = numberPart.toIntOrNull() ?: 1
+
+        val range = lastMatch.range
+
+        val textBefore = input.substring(0, range.first).trim()
+        val textAfter = input.substring(range.last + 1).trim()
+
+        val cleanText = "$textBefore $textAfter"
+
+        return Pair(cleanText, parsedNumber)
+    }
+
+    fun addShoppingItem() {
+        val itemInput = _state.value.itemInput
+        if (itemInput.isEmpty()) {
+            return
+        }
+        if (_state.value.shoppingList == null) {
+            return
+        }
+
+        val (text, amount) = extractLastAmount(itemInput)
+
+        viewModelScope.launch {
+            repository.insert(ShoppingItem(
+                itemName = text,
+                amount = amount,
+                buyTime = _state.value.dateInput,
+                latitude = _state.value.latitudeInput,
+                longitude = _state.value.longitudeInput,
+                listId = _state.value.shoppingList!!.id
+            ))
+            _state.value = _state.value.copy(
+                itemInput = String.empty,
+                isCreated = true
+            )
+            loadItems()
+        }
+    }
+
+    override fun clearIsCreatedState() {
+        _state.value = _state.value.copy(
+            isCreated = false
+        )
+    }
+
+    fun onDateInput(date: Long) {
+        _state.value = _state.value.copy(
+            dateInput = date
+        )
+    }
+
+    fun onLocationChanged(latitude: Double?, longitude: Double?) {
+        _state.value = _state.value.copy(
+            latitudeInput = latitude,
+            longitudeInput = longitude
+        )
     }
 }

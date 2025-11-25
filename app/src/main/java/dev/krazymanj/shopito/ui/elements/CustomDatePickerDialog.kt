@@ -1,4 +1,4 @@
-package dev.krazymanj.shopito.ui.components
+package dev.krazymanj.shopito.ui.elements
 
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
@@ -25,10 +25,14 @@ fun CustomDatePickerDialog(
         modifier = modifier,
         onDismissRequest = { onDismiss() },
         confirmButton = {
-            Button(onClick = {
-                onDateSelected(datePickerState.selectedDateMillis!!)
-                onDismiss()
-            }
+            Button(
+                enabled = datePickerState.selectedDateMillis != null,
+                onClick = {
+                    datePickerState.selectedDateMillis?.let { millis ->
+                        onDateSelected(millis)
+                        onDismiss()
+                    }
+                }
             ) {
                 Text(text = stringResource(R.string.select_label))
             }

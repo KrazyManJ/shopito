@@ -1,7 +1,8 @@
-package dev.krazymanj.shopito.ui.components
+package dev.krazymanj.shopito.ui.elements
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -35,6 +36,7 @@ fun BaseScreen(
     actions: @Composable RowScope.() -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
     showBottomNavigationBar: Boolean = false,
+    customBottomBar: @Composable (() -> Unit)? = null,
     content: @Composable (paddingValues: PaddingValues) -> Unit,
 ) {
     Scaffold(
@@ -68,16 +70,17 @@ fun BaseScreen(
             )
         },
         bottomBar = {
-            if (!showBottomNavigationBar) {
-                return@Scaffold
+            if (showBottomNavigationBar) {
+                ShopitoNavigationBar(
+                    navigationRouter = navigationRouter
+                )
             }
-            ShopitoNavigationBar(
-                navigationRouter = navigationRouter
-            )
+            customBottomBar?.let { it() }
         },
         floatingActionButton = floatingActionButton,
         containerColor = backgroundPrimaryColor(),
-        contentColor = textPrimaryColor()
+        contentColor = textPrimaryColor(),
+        modifier = Modifier.imePadding()
     ) {
         content(it)
     }

@@ -6,23 +6,18 @@ import androidx.compose.ui.graphics.Color
 
 val Primary = Color(0xFFD53A3A)
 
-// LIGHT THEME
-val LightTextPrimary = Color(0xFF1c1c1c)
-val LightTextSecondary = Color(0xFF525252)
-val LightBackgroundPrimary = Color(0xFFEAEAEA)
-val LightBackgroundSecondary = Color(0xFFCDCDCD)
 
-// DARK THEME
-val DarkTextPrimary = Color(0xFFCDCDCD)
-val DarkTextSecondary = Color(0xFFA5A5A5)
-val DarkBackgroundPrimary = Color(0xFF1c1c1c)
-val DarkBackgroundSecondary = Color(0xFF232323)
+val LightTextPrimary = Color(0xFF2A2A2A)
+val LightTextSecondary = Color(0xFF5E5E5E)
+val LightBackgroundPrimary = Color(0xFFF2F0ED)
+val LightBackgroundSecondary = Color(0xFFDAD8D4)
+
 
 @Composable
-fun textPrimaryColor(): Color = if (isSystemInDarkTheme()) DarkTextPrimary else LightTextPrimary
+fun textPrimaryColor(): Color = if (isSystemInDarkTheme()) LightTextPrimary else LightTextPrimary
 @Composable
-fun textSecondaryColor(): Color = if (isSystemInDarkTheme()) DarkTextSecondary else LightTextSecondary
+fun textSecondaryColor(): Color = if (isSystemInDarkTheme()) LightTextSecondary else LightTextSecondary
 @Composable
-fun backgroundPrimaryColor(): Color = if (isSystemInDarkTheme()) DarkBackgroundPrimary else LightBackgroundPrimary
+fun backgroundPrimaryColor(): Color = if (isSystemInDarkTheme()) LightBackgroundPrimary else LightBackgroundPrimary
 @Composable
-fun backgroundSecondaryColor(): Color = if (isSystemInDarkTheme()) DarkBackgroundSecondary else LightBackgroundSecondary
+fun backgroundSecondaryColor(): Color = if (isSystemInDarkTheme()) LightBackgroundSecondary else LightBackgroundSecondary
