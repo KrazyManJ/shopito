@@ -23,7 +23,6 @@ private val LightColorScheme = lightColorScheme(
 @Composable
 fun ShopitoTheme(
     darkTheme: Boolean = isSystemInDarkTheme(),
-    // Dynamic color is available on Android 12+
     dynamicColor: Boolean = false,
     content: @Composable () -> Unit
 ) {
@@ -39,7 +38,6 @@ fun ShopitoTheme(
 
     MaterialTheme(
         colorScheme = colorScheme,
-        typography = Typography,
         content = content
     )
 }

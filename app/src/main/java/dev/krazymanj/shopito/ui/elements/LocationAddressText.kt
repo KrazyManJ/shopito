@@ -15,22 +15,22 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import dev.krazymanj.shopito.R
+import dev.krazymanj.shopito.model.Location
 import java.util.Locale
 
 @Composable
 fun LocationAddressText(
-    latitude: Double?,
-    longitude: Double?
+    location: Location?
 ) {
     var address by remember { mutableStateOf<Address?>(null) }
     var loading by remember { mutableStateOf(true) }
 
     val context = LocalContext.current
 
-    LaunchedEffect(latitude,longitude) {
-        if (latitude != null && longitude != null) {
+    LaunchedEffect(location) {
+        if (location != null) {
             val geocoder = Geocoder(context, Locale.getDefault())
-            val addressList = geocoder.getFromLocation(latitude,longitude,1)
+            val addressList = geocoder.getFromLocation(location.latitude, location.longitude,1)
             if (!addressList.isNullOrEmpty()) address = addressList[0]
         }
         loading = false
@@ -47,8 +47,8 @@ fun LocationAddressText(
             },
             modifier = Modifier.weight(1f)
         )
-        address?.let {
-            OpenMapButton(latitude!!,longitude!!)
+        location?.let {
+            OpenMapButton(it)
         }
     }
 }

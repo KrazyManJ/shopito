@@ -1,26 +1,21 @@
 package dev.krazymanj.shopito.navigation
 
-import android.net.Uri
-import android.os.Bundle
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.navigation.NavHostController
-import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import dev.krazymanj.shopito.model.Location
-import dev.krazymanj.shopito.views.addEditShoppingItem.AddEditShoppingItemScreen
-import dev.krazymanj.shopito.views.addEditShoppingList.AddEditShoppingListScreen
-import dev.krazymanj.shopito.views.itemKeywordsList.ItemKeywordsListScreen
-import dev.krazymanj.shopito.views.mapLocationPicker.MapLocationPickerScreen
-import dev.krazymanj.shopito.views.settings.SettingsScreen
-import dev.krazymanj.shopito.views.shoppingLists.ShoppingListsScreen
-import dev.krazymanj.shopito.views.shoppingListsSummary.ShoppingListsSummaryScreen
-import dev.krazymanj.shopito.views.soppingListView.ShoppingListViewScreen
-import kotlinx.serialization.json.Json
-import kotlinx.serialization.serializer
+import dev.krazymanj.shopito.ui.screens.addEditShoppingItem.AddEditShoppingItemScreen
+import dev.krazymanj.shopito.ui.screens.addEditShoppingList.AddEditShoppingListScreen
+import dev.krazymanj.shopito.ui.screens.itemKeywordsList.ItemKeywordsListScreen
+import dev.krazymanj.shopito.ui.screens.mapLocationPicker.MapLocationPickerScreen
+import dev.krazymanj.shopito.ui.screens.settings.SettingsScreen
+import dev.krazymanj.shopito.ui.screens.shoppingLists.ShoppingListsScreen
+import dev.krazymanj.shopito.ui.screens.shoppingListsSummary.ShoppingListsSummaryScreen
+import dev.krazymanj.shopito.ui.screens.shoppingListView.ShoppingListViewScreen
 import kotlin.reflect.typeOf
 
 

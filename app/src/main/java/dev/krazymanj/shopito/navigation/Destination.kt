@@ -1,6 +1,5 @@
 package dev.krazymanj.shopito.navigation
 
-import com.squareup.moshi.Json
 import dev.krazymanj.shopito.model.Location
 import kotlinx.serialization.Serializable
 
@@ -29,7 +28,6 @@ sealed class Destination {
 
     @Serializable
     data class MapLocationPickerScreen(
-        @Json(name = "location")
         val location: Location?
     ) : Destination()
 

@@ -1,7 +1,6 @@
 package dev.krazymanj.shopito.ui.elements
 
 import android.content.Intent
-import android.net.Uri
 import android.widget.Toast
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
@@ -11,22 +10,25 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.SquareArrowOutUpRight
 import dev.krazymanj.shopito.R
+import dev.krazymanj.shopito.model.Location
 import dev.krazymanj.shopito.viewmodel.SettingsAccessorViewModel
 
 @Composable
 fun OpenMapButton(
-    latitude: Double,
-    longitude: Double,
-    startNavigation: Boolean = false
+    location: Location
 ) {
     val viewModel = hiltViewModel<SettingsAccessorViewModel>()
 
     val state = viewModel.state.collectAsStateWithLifecycle()
+
+    val lat = location.latitude
+    val lon = location.longitude
 
     if (state.value.loading) {
         viewModel.load()
@@ -37,12 +39,10 @@ fun OpenMapButton(
     val label = stringResource(R.string.googlemaps_not_installed)
 
     IconButton(onClick = {
-        val uri = Uri.parse(
-            if (state.value.startNavigationSetting)
-                "google.navigation:q=$latitude,$longitude"
-            else
-                "geo:$latitude,$longitude?q=$latitude,$longitude"
-        )
+        val uri = if (state.value.startNavigationSetting)
+            "google.navigation:q=$lat,$lon".toUri()
+        else
+            "geo:$lat,$lon?q=$lat,$lon".toUri()
         val mapIntent = Intent(Intent.ACTION_VIEW, uri)
         mapIntent.setPackage("com.google.android.apps.maps")
 

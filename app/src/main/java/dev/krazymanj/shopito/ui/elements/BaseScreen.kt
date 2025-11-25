@@ -8,6 +8,7 @@ import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarColors
@@ -20,23 +21,20 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.composables.icons.lucide.ArrowLeft
 import com.composables.icons.lucide.Lucide
 import dev.krazymanj.shopito.R
-import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.ui.theme.backgroundPrimaryColor
 import dev.krazymanj.shopito.ui.theme.spacing16
 import dev.krazymanj.shopito.ui.theme.textPrimaryColor
-
 
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun BaseScreen(
     topBarText: String,
-    navigationRouter: INavigationRouter,
+    modifier: Modifier = Modifier,
     onBackClick: (() -> Unit)? = null,
     actions: @Composable RowScope.() -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
-    showBottomNavigationBar: Boolean = false,
-    customBottomBar: @Composable (() -> Unit)? = null,
+    bottomBar: @Composable () -> Unit = {},
     content: @Composable (paddingValues: PaddingValues) -> Unit,
 ) {
     Scaffold(
@@ -45,11 +43,12 @@ fun BaseScreen(
                 title = {
                     Text(
                         text = topBarText,
-                        fontWeight = FontWeight.W500,
+                        fontWeight = FontWeight.Bold,
                         overflow = TextOverflow.Ellipsis,
                         maxLines = 2,
                         modifier = Modifier.padding(horizontal = spacing16),
-                        textAlign = TextAlign.Center
+                        textAlign = TextAlign.Center,
+                        style = MaterialTheme.typography.headlineSmall,
                     )
                 },
                 navigationIcon = {
@@ -69,18 +68,11 @@ fun BaseScreen(
                 )
             )
         },
-        bottomBar = {
-            if (showBottomNavigationBar) {
-                ShopitoNavigationBar(
-                    navigationRouter = navigationRouter
-                )
-            }
-            customBottomBar?.let { it() }
-        },
+        bottomBar = bottomBar,
         floatingActionButton = floatingActionButton,
         containerColor = backgroundPrimaryColor(),
         contentColor = textPrimaryColor(),
-        modifier = Modifier.imePadding()
+        modifier = modifier.then(Modifier.imePadding())
     ) {
         content(it)
     }

@@ -168,7 +168,7 @@ fun ShoppingItem(
                         style = MaterialTheme.typography.labelSmall,
                         fontWeight = FontWeight.Bold
                     )
-                    LocationAddressText(shoppingItem.location?.latitude, shoppingItem.location?.longitude)
+                    LocationAddressText(shoppingItem.location)
                 }
             }
 
