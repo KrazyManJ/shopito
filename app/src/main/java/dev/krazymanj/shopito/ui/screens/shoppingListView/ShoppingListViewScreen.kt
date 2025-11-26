@@ -14,17 +14,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.compose.LifecycleEventEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Pencil
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
-import dev.krazymanj.shopito.Constants
-import dev.krazymanj.shopito.model.Location
 import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
+import dev.krazymanj.shopito.navigation.NavStateKey
+import dev.krazymanj.shopito.navigation.NavigationCurrentStateReceivedEffect
 import dev.krazymanj.shopito.ui.elements.BaseScreen
 import dev.krazymanj.shopito.ui.elements.QuickAdd
 import dev.krazymanj.shopito.ui.elements.ShoppingItem
@@ -44,25 +40,9 @@ fun ShoppingListViewScreen(
 
     val state = viewModel.templateUIState.collectAsStateWithLifecycle()
 
-    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
-        val mapLocationResult = navRouter.getValue<String>(Constants.LOCATION)
-        mapLocationResult?.value?.let {
-            val moshi: Moshi = Moshi.Builder().build()
-            val jsonAdapter: JsonAdapter<Location> = moshi.adapter(Location::class.java)
-            val location = jsonAdapter.fromJson(it)
-            navRouter.removeValue(Constants.LOCATION)
-            location?.let { loc ->
-                if (state.value.currentShownShoppingItem != null) {
-                    viewModel.changeCurrentViewingShoppingItemLocation(loc)
-                }
-                else {
-                    viewModel.onLocationChanged(loc)
-                }
-            }
-        }
+    NavigationCurrentStateReceivedEffect(navRouter, NavStateKey.LocationQuickAddResult) { location ->
+        viewModel.onLocationChanged(location)
     }
-
-
 
     val focusManager = LocalFocusManager.current
 
@@ -91,7 +71,8 @@ fun ShoppingListViewScreen(
                 onDateChange = { viewModel.onDateInput(it) },
                 onLocationChangeRequest = {
                     navRouter.navigateTo(Destination.MapLocationPickerScreen(
-                        state.value.locationInput
+                        state.value.locationInput,
+                        NavStateKey.LocationQuickAddResult
                     ))
                 },
                 onLocationClearRequest = {
@@ -135,34 +116,9 @@ fun ShoppingListViewScreenContent(
         ShoppingItemModalSheet(
             shoppingItem = shoppingItem,
             onDismiss = {
-                actions.updateCurrentViewingShoppingItem()
+                actions.openShoppingItemDetails(null)
             },
-            onItemNameChange = {
-                actions.changeCurrentViewingShoppingItemName(it)
-            },
-            onCheckStateChange = {
-                actions.changeCurrentViewingShoppingItemCheckState(it)
-            },
-            onAmountChange = {
-                actions.changeCurrentViewingShoppingItemAmount(it)
-            },
-            onDateChange = {
-                actions.changeCurrentViewingShoppingItemDate(it)
-            },
-            onLocationClearRequest = {
-                actions.changeCurrentViewingShoppingItemLocation(null)
-            },
-            onLocationChangeRequest = {
-                navRouter.navigateTo(Destination.MapLocationPickerScreen(
-                    state.currentShownShoppingItem.location
-                ))
-            },
-            onSave = {
-                actions.updateCurrentViewingShoppingItem()
-            },
-            onDelete = {
-                actions.deleteCurrentViewingShoppingItem()
-            }
+            navRouter = navRouter
         )
     }
 

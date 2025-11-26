@@ -22,7 +22,8 @@ sealed class Destination {
 
     @Serializable
     data class MapLocationPickerScreen(
-        val location: Location?
+        val location: Location?,
+        val navSource: NavStateKey<Location>
     ) : Destination()
 
     @Serializable

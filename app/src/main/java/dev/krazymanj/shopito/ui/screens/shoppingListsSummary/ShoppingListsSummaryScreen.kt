@@ -75,21 +75,15 @@ fun ShoppingListsSummaryScreenContent(
         ShoppingItemModalSheet(
             shoppingItem = shoppingItemWithList.item,
             shoppingList = shoppingItemWithList.list,
-            onItemNameChange = {},
-            onCheckStateChange = {},
-            onAmountChange = {},
-            onDateChange = {},
-            onLocationChangeRequest = {},
-            onLocationClearRequest = {},
             onDismiss = {
                 actions.setCurrentViewingShoppingItem(null)
+                actions.loadData()
             },
-            onSave = {},
-            onDelete = {},
             onShoppingListLinkClick = {
                 actions.setCurrentViewingShoppingItem(null)
                 navRouter.navigateTo(Destination.ViewShoppingList(shoppingListId = shoppingItemWithList.list.id!!))
-            }
+            },
+            navRouter = navRouter
         )
     }
 

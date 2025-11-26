@@ -1,5 +1,6 @@
 package dev.krazymanj.shopito.ui.elements.modal
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -21,6 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.composables.icons.lucide.ChevronRight
 import com.composables.icons.lucide.ListTodo
 import com.composables.icons.lucide.Lucide
@@ -28,6 +31,10 @@ import com.composables.icons.lucide.Save
 import com.composables.icons.lucide.Trash
 import dev.krazymanj.shopito.database.entities.ShoppingItem
 import dev.krazymanj.shopito.database.entities.ShoppingList
+import dev.krazymanj.shopito.navigation.Destination
+import dev.krazymanj.shopito.navigation.INavigationRouter
+import dev.krazymanj.shopito.navigation.NavStateKey
+import dev.krazymanj.shopito.navigation.NavigationCurrentStateReceivedEffect
 import dev.krazymanj.shopito.ui.elements.BorderFreeTextField
 import dev.krazymanj.shopito.ui.elements.ShopitoCheckbox
 import dev.krazymanj.shopito.ui.elements.chip.DatePickerChip
@@ -44,19 +51,31 @@ import dev.krazymanj.shopito.ui.theme.textSecondaryColor
 @Composable
 fun ShoppingItemModalSheet(
     shoppingItem: ShoppingItem,
-    onItemNameChange: (String) -> Unit,
-    onCheckStateChange: (Boolean) -> Unit,
-    onAmountChange: (Int) -> Unit,
-    onDateChange: (Long?) -> Unit,
-    onLocationChangeRequest: () -> Unit,
-    onLocationClearRequest: () -> Unit,
     onDismiss: () -> Unit,
-    onSave: () -> Unit,
-    onDelete: () -> Unit,
     modifier: Modifier = Modifier,
     shoppingList: ShoppingList? = null,
-    onShoppingListLinkClick: () -> Unit = {}
+    onShoppingListLinkClick: () -> Unit = {},
+    navRouter: INavigationRouter,
 ) {
+    val viewModel = hiltViewModel<ShoppingItemModalSheetViewModel>()
+
+    val state = viewModel.state.collectAsStateWithLifecycle()
+
+    NavigationCurrentStateReceivedEffect(navRouter, NavStateKey.LocationModalResult) { location ->
+        viewModel.updateItem(state.value.item.copy(location = location))
+    }
+
+    Log.i("Dismissed?", state.value.dismissed.toString())
+
+    if (state.value.dismissed) {
+        onDismiss()
+        viewModel.reset()
+    }
+
+    if (state.value.loading) {
+        viewModel.loadData(shoppingItem, shoppingList)
+    }
+
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         containerColor = backgroundPrimaryColor(),
@@ -66,7 +85,7 @@ fun ShoppingItemModalSheet(
         Column(
             modifier = Modifier.padding(spacing16)
         ) {
-            shoppingList?.let {
+            state.value.list?.let { shoppingList ->
                 Row {
                     Icon(imageVector = Lucide.ListTodo, contentDescription = null)
                     Icon(imageVector = Lucide.ChevronRight, contentDescription = null, tint = textSecondaryColor())
@@ -83,35 +102,42 @@ fun ShoppingItemModalSheet(
             Spacer(Modifier.height(spacing16))
             Row {
                 BorderFreeTextField(
-                    value = shoppingItem.itemName,
-                    onValueChange = onItemNameChange,
+                    value = state.value.item.itemName,
+                    onValueChange = { viewModel.updateItem(state.value.item.copy(itemName = it))},
                     placeholder = "",
                     textStyle = MaterialTheme.typography.headlineLarge,
                     modifier = Modifier.weight(1f)
                 )
                 Spacer(Modifier.width(spacing16))
                 ShopitoCheckbox(
-                    checked = shoppingItem.isDone,
-                    onCheckedChange = { onCheckStateChange(!shoppingItem.isDone) },
+                    checked = state.value.item.isDone,
+                    onCheckedChange = { viewModel.updateItem(state.value.item.copy(isDone = it))},
                     modifier = Modifier.width(40.dp).height(40.dp)
                 )
             }
             Spacer(Modifier.height(spacing32))
             DatePickerChip(
-                date = shoppingItem.buyTime,
+                date = state.value.item.buyTime,
                 onDateChange = {
-                    onDateChange(it)
+                    viewModel.updateItem(state.value.item.copy(buyTime = it))
                 }
             )
             LocationPickerChip(
-                location = shoppingItem.location,
-                onLocationChangeRequest = { onLocationChangeRequest() },
-                onLocationClearRequest = { onLocationClearRequest() }
+                location = state.value.item.location,
+                onLocationChangeRequest = {
+                    navRouter.navigateTo(Destination.MapLocationPickerScreen(
+                        state.value.item.location,
+                        NavStateKey.LocationModalResult
+                    ))
+                },
+                onLocationClearRequest = {
+                    viewModel.updateItem(state.value.item.copy(location = null))
+                }
             )
             Spacer(Modifier.height(spacing32))
             Row {
                 OutlinedButton(
-                    onClick = { onDelete() },
+                    onClick = { viewModel.delete() },
                     colors = ButtonDefaults.outlinedButtonColors().copy(
                         containerColor = backgroundPrimaryColor(),
                         contentColor = Primary
@@ -125,7 +151,7 @@ fun ShoppingItemModalSheet(
                     Text("Delete")
                 }
                 Spacer(modifier = Modifier.weight(1f))
-                Button(onClick = { onSave() }) {
+                Button(onClick = { viewModel.save() }) {
                     Icon(imageVector = Lucide.Save, contentDescription = null, Modifier.size(16.dp))
                     Spacer(Modifier.width(spacing8))
                     Text("Save Item")

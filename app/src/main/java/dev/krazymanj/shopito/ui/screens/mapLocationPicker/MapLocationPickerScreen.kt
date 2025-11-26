@@ -29,6 +29,7 @@ import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.model.Location
+import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.ui.elements.BaseScreen
 import dev.krazymanj.shopito.ui.theme.spacing16
@@ -36,14 +37,14 @@ import dev.krazymanj.shopito.ui.theme.spacing16
 @Composable
 fun MapLocationPickerScreen(
     navRouter: INavigationRouter,
-    location: Location?
+    route: Destination.MapLocationPickerScreen
 ) {
     val viewModel = hiltViewModel<MapLocationPickerViewModel>()
 
     val state = viewModel.templateUIState.collectAsStateWithLifecycle()
 
-    LaunchedEffect(location) {
-        location?.let { loc ->
+    LaunchedEffect(route.location) {
+        route.location?.let { loc ->
             viewModel.locationChanged(loc)
         }
     }
@@ -58,7 +59,8 @@ fun MapLocationPickerScreen(
             paddingValues = it,
             state = state.value,
             actions = viewModel,
-            navRouter = navRouter
+            navRouter = navRouter,
+            route = route
         )
     }
 }
@@ -69,7 +71,8 @@ fun MapPositionPickerScreenContent(
     paddingValues: PaddingValues,
     state: MapLocationPickerUIState,
     actions: MapLocationPickerActions,
-    navRouter: INavigationRouter
+    navRouter: INavigationRouter,
+    route: Destination.MapLocationPickerScreen
 ) {
     val mapUiSettings by remember { mutableStateOf(
         MapUiSettings(
@@ -120,7 +123,8 @@ fun MapPositionPickerScreenContent(
                 )
                 .align(Alignment.BottomCenter),
             onClick = {
-                navRouter.navigateBackWithLocationData(state.location)
+                navRouter.setPreviousState(route.navSource, state.location)
+                navRouter.returnBack()
             },
         ) {
             Text(text = stringResource(R.string.save_label))

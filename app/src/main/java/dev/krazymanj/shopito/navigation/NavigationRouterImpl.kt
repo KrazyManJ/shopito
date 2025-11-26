@@ -1,15 +1,13 @@
 package dev.krazymanj.shopito.navigation
 
-import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.navigation.NavDestination.Companion.hasRoute
-import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
-import dev.krazymanj.shopito.Constants
-import dev.krazymanj.shopito.model.Location
 import kotlin.reflect.KClass
 
 class NavigationRouterImpl(private val navController: NavController) : INavigationRouter {
+    private val moshi: Moshi = Moshi.Builder().build()
+
     override fun navigateTo(destination: Destination) {
         navController.navigate(destination)
     }
@@ -26,23 +24,48 @@ class NavigationRouterImpl(private val navController: NavController) : INavigati
         return curDest.hasRoute(destinationClass)
     }
 
-    override fun navigateBackWithLocationData(location: Location) {
-        val moshi: Moshi = Moshi.Builder().build()
-        val jsonAdapter: JsonAdapter<Location> = moshi.adapter(Location::class.java)
-
-        navController.previousBackStackEntry
-            ?.savedStateHandle
-            ?.set(Constants.LOCATION, jsonAdapter.toJson(location))
-        returnBack()
+    private fun isNativeType(value: Any?): Boolean {
+        return value == null || value is Int || value is String || value is Boolean ||
+                value is Float || value is Long || value is Double || value is android.os.Parcelable
     }
 
-    override fun <T> getValue(key: String): MutableLiveData<T>? {
-        return navController.currentBackStackEntry?.savedStateHandle?.getLiveData(key)
+    private fun isNativeClass(clazz: Class<*>): Boolean {
+        return clazz == Int::class.java || clazz == String::class.java ||
+                clazz == Boolean::class.java || android.os.Parcelable::class.java.isAssignableFrom(clazz)
     }
 
-    override fun removeValue(key: String) {
+    override fun <T> setPreviousState(key: NavStateKey<T>, value: T) {
+        val handle = navController.previousBackStackEntry?.savedStateHandle ?: return
+        if (isNativeType(value)) {
+            handle[key.key] = value
+        }
+        else {
+            val json = moshi.adapter<T>(value!!::class.java).toJson(value)
+            handle[key.key] = json
+        }
+    }
+
+    override fun <T> getCurrentState(
+        key: NavStateKey<T>,
+        clazz: Class<T>
+    ): T? {
+        val handle = navController.currentBackStackEntry?.savedStateHandle ?: return null
+
+        val rawValue = handle.get<String>(key.key) ?: return null
+
+        if (!isNativeClass(clazz)) {
+            return moshi.adapter(clazz).fromJson(rawValue)
+        }
+        @Suppress("UNCHECKED_CAST")
+        return rawValue as? T
+    }
+
+    override fun clearCurrentState(key: NavStateKey<*>) {
         navController.currentBackStackEntry
             ?.savedStateHandle
-            ?.remove<Any>(key)
+            ?.set<Any>(key.key, null)
+        navController.currentBackStackEntry
+            ?.savedStateHandle
+            ?.remove<Any>(key.key)
     }
 }
