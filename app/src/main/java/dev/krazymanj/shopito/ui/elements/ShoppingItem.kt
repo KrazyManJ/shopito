@@ -5,7 +5,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -19,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.ListTodo
 import com.composables.icons.lucide.Lucide
@@ -55,6 +55,7 @@ fun ShoppingItem(
         verticalAlignment = Alignment.CenterVertically
     ) {
         Column(
+            modifier = Modifier.weight(1f),
             verticalArrangement = Arrangement.Center
         ) {
             Text(
@@ -62,7 +63,9 @@ fun ShoppingItem(
                 style = MaterialTheme.typography.titleLarge,
                 fontWeight = FontWeight.Medium,
                 color = textColor,
-                textDecoration = textDecoration
+                textDecoration = textDecoration,
+                overflow = TextOverflow.Ellipsis,
+                maxLines = 1
             )
             shoppingList?.let { shoppingList ->
                 Row(
@@ -78,7 +81,6 @@ fun ShoppingItem(
                 }
             }
         }
-        Spacer(modifier = Modifier.weight(1f))
         Text(
             text = "${shoppingItem.amount}x",
             style = MaterialTheme.typography.bodyLarge,

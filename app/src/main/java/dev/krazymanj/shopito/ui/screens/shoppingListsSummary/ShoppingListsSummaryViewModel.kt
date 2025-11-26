@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.krazymanj.shopito.database.IShopitoLocalRepository
+import dev.krazymanj.shopito.database.ShoppingItemWithList
 import dev.krazymanj.shopito.database.entities.ShoppingItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -48,5 +49,11 @@ class ShoppingListsSummaryViewModel @Inject constructor(private val repository: 
                 isDone = state
             ))
         }
+    }
+
+    override fun setCurrentViewingShoppingItem(shoppingItem: ShoppingItemWithList?) {
+        _state.value = _state.value.copy(
+            currentShownShoppingItem = shoppingItem
+        )
     }
 }

@@ -7,4 +7,5 @@ data class ShoppingListsSummaryUIState(
     val loading: Boolean = true,
     val shoppingItemsWithDate: Map<Long, List<ShoppingItemWithList>> = emptyMap(),
     val shoppingItemsWithoutDate: List<ShoppingItemWithList> = emptyList(),
+    val currentShownShoppingItem: ShoppingItemWithList? = null,
 )

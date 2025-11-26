@@ -24,6 +24,7 @@ import dev.krazymanj.shopito.ui.elements.BaseScreen
 import dev.krazymanj.shopito.ui.elements.PrettyTimeText
 import dev.krazymanj.shopito.ui.elements.ShopitoNavigationBar
 import dev.krazymanj.shopito.ui.elements.ShoppingItem
+import dev.krazymanj.shopito.ui.elements.modal.ShoppingItemModalSheet
 import dev.krazymanj.shopito.ui.theme.spacing16
 import dev.krazymanj.shopito.ui.theme.spacing32
 import dev.krazymanj.shopito.ui.theme.spacing4
@@ -56,6 +57,7 @@ fun ShoppingListsSummaryScreen(
         ShoppingListsSummaryScreenContent(
             paddingValues = it,
             state = state.value,
+            navRouter = navRouter,
             actions = viewModel
         )
     }
@@ -64,9 +66,33 @@ fun ShoppingListsSummaryScreen(
 @Composable
 fun ShoppingListsSummaryScreenContent(
     paddingValues: PaddingValues,
+    navRouter: INavigationRouter,
     state: ShoppingListsSummaryUIState,
     actions: ShoppingListsSummaryActions
 ) {
+
+    state.currentShownShoppingItem?.let { shoppingItemWithList ->
+        ShoppingItemModalSheet(
+            shoppingItem = shoppingItemWithList.item,
+            shoppingList = shoppingItemWithList.list,
+            onItemNameChange = {},
+            onCheckStateChange = {},
+            onAmountChange = {},
+            onDateChange = {},
+            onLocationChangeRequest = {},
+            onLocationClearRequest = {},
+            onDismiss = {
+                actions.setCurrentViewingShoppingItem(null)
+            },
+            onSave = {},
+            onDelete = {},
+            onShoppingListLinkClick = {
+                actions.setCurrentViewingShoppingItem(null)
+                navRouter.navigateTo(Destination.ViewShoppingList(shoppingListId = shoppingItemWithList.list.id!!))
+            }
+        )
+    }
+
     LazyColumn(
         Modifier.padding(paddingValues).padding(spacing16),
         verticalArrangement = Arrangement.spacedBy(spacing4)
@@ -91,6 +117,9 @@ fun ShoppingListsSummaryScreenContent(
                     shoppingList = it.list,
                     onCheckStateChange = { boolVal ->
                         actions.changeItemCheckState(it.item, boolVal)
+                    },
+                    onClick = {
+                        actions.setCurrentViewingShoppingItem(it)
                     }
                 )
             }
@@ -115,6 +144,9 @@ fun ShoppingListsSummaryScreenContent(
                     shoppingList = it.list,
                     onCheckStateChange = { boolVal ->
                         actions.changeItemCheckState(it.item, boolVal)
+                    },
+                    onClick = {
+                        actions.setCurrentViewingShoppingItem(it)
                     }
                 )
             }

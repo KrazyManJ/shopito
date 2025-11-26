@@ -55,6 +55,7 @@ fun ShoppingItemModalSheet(
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
     shoppingList: ShoppingList? = null,
+    onShoppingListLinkClick: () -> Unit = {}
 ) {
     ModalBottomSheet(
         onDismissRequest = onDismiss,
@@ -74,11 +75,12 @@ fun ShoppingItemModalSheet(
                         color = Primary,
                         textDecoration = TextDecoration.Underline,
                         modifier = Modifier.clickable {
-
+                            onShoppingListLinkClick()
                         }
                     )
                 }
             }
+            Spacer(Modifier.height(spacing16))
             Row {
                 BorderFreeTextField(
                     value = shoppingItem.itemName,
@@ -87,6 +89,7 @@ fun ShoppingItemModalSheet(
                     textStyle = MaterialTheme.typography.headlineLarge,
                     modifier = Modifier.weight(1f)
                 )
+                Spacer(Modifier.width(spacing16))
                 ShopitoCheckbox(
                     checked = shoppingItem.isDone,
                     onCheckedChange = { onCheckStateChange(!shoppingItem.isDone) },
