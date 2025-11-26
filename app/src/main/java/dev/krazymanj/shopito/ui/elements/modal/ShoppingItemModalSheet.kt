@@ -1,6 +1,5 @@
 package dev.krazymanj.shopito.ui.elements.modal
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -64,8 +63,6 @@ fun ShoppingItemModalSheet(
     NavigationCurrentStateReceivedEffect(navRouter, NavStateKey.LocationModalResult) { location ->
         viewModel.updateItem(state.value.item.copy(location = location))
     }
-
-    Log.i("Dismissed?", state.value.dismissed.toString())
 
     if (state.value.dismissed) {
         onDismiss()

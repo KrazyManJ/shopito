@@ -1,7 +1,6 @@
 package dev.krazymanj.shopito.datastore
 
 import android.content.Context
-import android.util.Log
 import androidx.datastore.preferences.core.edit
 import kotlinx.coroutines.flow.first
 
@@ -13,7 +12,6 @@ class DataStoreRepositoryImpl(private val context: Context) : IDataStoreReposito
     }
 
     override suspend fun <T> set(key: DataStoreKeys<T>, value: T) {
-        Log.i("Datastore", "key ${key.key.name} set to $value")
         context.dataStore.edit { preferences ->
             preferences[key.key] = value
         }
