@@ -7,13 +7,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import com.composables.icons.lucide.Calendar
 import com.composables.icons.lucide.Lucide
-import dev.krazymanj.shopito.ui.elements.dialog.CustomDatePickerDialog
+import dev.krazymanj.shopito.ui.elements.modal.CustomDatePickerDialog
 import dev.krazymanj.shopito.utils.DateUtils
 
 @Composable
 fun DatePickerChip(
     date: Long?,
-    onDateChange: (Long) -> Unit
+    onDateChange: (Long?) -> Unit
 ) {
     var showDatePicker by remember { mutableStateOf(false) }
 
@@ -24,6 +24,9 @@ fun DatePickerChip(
         label = when {
             date != null -> DateUtils.getDateString(date)
             else -> "Date"
+        },
+        onXClick = {
+            onDateChange(null)
         }
     )
 

@@ -21,12 +21,6 @@ sealed class Destination {
     ): Destination()
 
     @Serializable
-    data class AddEditShoppingItem(
-        val shoppingListId: Long,
-        val shoppingItemId: Long?
-    ): Destination()
-
-    @Serializable
     data class MapLocationPickerScreen(
         val location: Location?
     ) : Destination()

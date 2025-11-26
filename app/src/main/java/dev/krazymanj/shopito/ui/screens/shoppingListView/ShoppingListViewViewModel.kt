@@ -117,15 +117,85 @@ class ShoppingListViewViewModel @Inject constructor(private val repository: ISho
         )
     }
 
-    fun onDateInput(date: Long) {
+    fun onDateInput(date: Long?) {
         _state.value = _state.value.copy(
             dateInput = date
         )
     }
 
-    fun onLocationChanged(location: Location) {
+    fun onLocationChanged(location: Location?) {
         _state.value = _state.value.copy(
             locationInput = location
         )
+    }
+
+    override fun openShoppingItemDetails(shoppingItem: ShoppingItem?) {
+        _state.value = _state.value.copy(
+            currentShownShoppingItem = shoppingItem
+        )
+    }
+
+    override fun changeCurrentViewingShoppingItemName(newName: String) {
+        _state.value = _state.value.copy(
+            currentShownShoppingItem = _state.value.currentShownShoppingItem?.copy(
+                itemName = newName
+            )
+        )
+    }
+
+    override fun changeCurrentViewingShoppingItemCheckState(newState: Boolean) {
+        _state.value = _state.value.copy(
+            currentShownShoppingItem = _state.value.currentShownShoppingItem?.copy(
+                isDone = newState
+            )
+        )
+    }
+
+    override fun changeCurrentViewingShoppingItemAmount(newAmount: Int) {
+        _state.value = _state.value.copy(
+            currentShownShoppingItem = _state.value.currentShownShoppingItem?.copy(
+                amount = newAmount
+            )
+        )
+    }
+
+    override fun changeCurrentViewingShoppingItemDate(newDate: Long?) {
+        _state.value = _state.value.copy(
+            currentShownShoppingItem = _state.value.currentShownShoppingItem?.copy(
+                buyTime = newDate
+            )
+        )
+    }
+
+    override fun changeCurrentViewingShoppingItemLocation(newLocation: Location?) {
+        _state.value = _state.value.copy(
+            currentShownShoppingItem = _state.value.currentShownShoppingItem?.copy(
+                location = newLocation
+            )
+        )
+    }
+
+    override fun updateCurrentViewingShoppingItem() {
+        viewModelScope.launch {
+            _state.value.currentShownShoppingItem?.let { shoppingItem ->
+                repository.update(shoppingItem)
+                _state.value = _state.value.copy(
+                    currentShownShoppingItem = null
+                )
+                loadItems()
+            }
+        }
+    }
+
+    override fun deleteCurrentViewingShoppingItem() {
+        viewModelScope.launch {
+            _state.value.currentShownShoppingItem?.let { shoppingItem ->
+                repository.delete(shoppingItem)
+                _state.value = _state.value.copy(
+                    currentShownShoppingItem = null
+                )
+                loadItems()
+            }
+        }
     }
 }

@@ -8,16 +8,14 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import dev.krazymanj.shopito.model.Location
-import dev.krazymanj.shopito.ui.screens.addEditShoppingItem.AddEditShoppingItemScreen
 import dev.krazymanj.shopito.ui.screens.addEditShoppingList.AddEditShoppingListScreen
 import dev.krazymanj.shopito.ui.screens.itemKeywordsList.ItemKeywordsListScreen
 import dev.krazymanj.shopito.ui.screens.mapLocationPicker.MapLocationPickerScreen
 import dev.krazymanj.shopito.ui.screens.settings.SettingsScreen
+import dev.krazymanj.shopito.ui.screens.shoppingListView.ShoppingListViewScreen
 import dev.krazymanj.shopito.ui.screens.shoppingLists.ShoppingListsScreen
 import dev.krazymanj.shopito.ui.screens.shoppingListsSummary.ShoppingListsSummaryScreen
-import dev.krazymanj.shopito.ui.screens.shoppingListView.ShoppingListViewScreen
 import kotlin.reflect.typeOf
-
 
 
 @Composable
@@ -44,14 +42,6 @@ fun NavGraph(
         composable<Destination.ViewShoppingList> {
             val args = it.toRoute<Destination.ViewShoppingList>()
             ShoppingListViewScreen(navRouter, args.shoppingListId)
-        }
-        composable<Destination.AddEditShoppingItem> {
-            val args = it.toRoute<Destination.AddEditShoppingItem>()
-            AddEditShoppingItemScreen(
-                navRouter = navRouter,
-                shoppingListId = args.shoppingListId,
-                shoppingItemId = args.shoppingItemId
-            )
         }
         composable<Destination.MapLocationPickerScreen>(
             typeMap = mapOf(

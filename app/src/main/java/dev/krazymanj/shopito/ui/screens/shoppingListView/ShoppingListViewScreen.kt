@@ -22,13 +22,13 @@ import com.composables.icons.lucide.Pencil
 import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import dev.krazymanj.shopito.Constants
-import dev.krazymanj.shopito.database.entities.ShoppingItem
 import dev.krazymanj.shopito.model.Location
 import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.ui.elements.BaseScreen
 import dev.krazymanj.shopito.ui.elements.QuickAdd
 import dev.krazymanj.shopito.ui.elements.ShoppingItem
+import dev.krazymanj.shopito.ui.elements.modal.ShoppingItemModalSheet
 import dev.krazymanj.shopito.ui.theme.spacing16
 
 @Composable
@@ -42,6 +42,8 @@ fun ShoppingListViewScreen(
         viewModel.loadShoppingListData(shoppingListId)
     }
 
+    val state = viewModel.templateUIState.collectAsStateWithLifecycle()
+
     LifecycleEventEffect(Lifecycle.Event.ON_RESUME) {
         val mapLocationResult = navRouter.getValue<String>(Constants.LOCATION)
         mapLocationResult?.value?.let {
@@ -50,12 +52,17 @@ fun ShoppingListViewScreen(
             val location = jsonAdapter.fromJson(it)
             navRouter.removeValue(Constants.LOCATION)
             location?.let { loc ->
-                viewModel.onLocationChanged(loc)
+                if (state.value.currentShownShoppingItem != null) {
+                    viewModel.changeCurrentViewingShoppingItemLocation(loc)
+                }
+                else {
+                    viewModel.onLocationChanged(loc)
+                }
             }
         }
     }
 
-    val state = viewModel.templateUIState.collectAsStateWithLifecycle()
+
 
     val focusManager = LocalFocusManager.current
 
@@ -86,6 +93,9 @@ fun ShoppingListViewScreen(
                     navRouter.navigateTo(Destination.MapLocationPickerScreen(
                         state.value.locationInput
                     ))
+                },
+                onLocationClearRequest = {
+                    viewModel.onLocationChanged(null)
                 }
             )
         },
@@ -97,14 +107,9 @@ fun ShoppingListViewScreen(
     ) {
         ShoppingListViewScreenContent(
             paddingValues = it,
+            navRouter = navRouter,
             state = state.value,
-            actions = viewModel,
-            onEditButtonClick = { item ->
-                navRouter.navigateTo(Destination.AddEditShoppingItem(
-                    shoppingListId = shoppingListId,
-                    shoppingItemId = item.id
-                ))
-            }
+            actions = viewModel
         )
     }
 }
@@ -112,9 +117,9 @@ fun ShoppingListViewScreen(
 @Composable
 fun ShoppingListViewScreenContent(
     paddingValues: PaddingValues,
+    navRouter: INavigationRouter,
     state: ShoppingListViewUIState,
-    actions: ShoppingListViewActions,
-    onEditButtonClick: (ShoppingItem) -> Unit
+    actions: ShoppingListViewActions
 ) {
     val listState = rememberLazyListState()
 
@@ -125,6 +130,40 @@ fun ShoppingListViewScreenContent(
             }
             actions.clearIsCreatedState()
         }
+    }
+    state.currentShownShoppingItem?.let { shoppingItem ->
+        ShoppingItemModalSheet(
+            shoppingItem = shoppingItem,
+            onDismiss = {
+                actions.updateCurrentViewingShoppingItem()
+            },
+            onItemNameChange = {
+                actions.changeCurrentViewingShoppingItemName(it)
+            },
+            onCheckStateChange = {
+                actions.changeCurrentViewingShoppingItemCheckState(it)
+            },
+            onAmountChange = {
+                actions.changeCurrentViewingShoppingItemAmount(it)
+            },
+            onDateChange = {
+                actions.changeCurrentViewingShoppingItemDate(it)
+            },
+            onLocationClearRequest = {
+                actions.changeCurrentViewingShoppingItemLocation(null)
+            },
+            onLocationChangeRequest = {
+                navRouter.navigateTo(Destination.MapLocationPickerScreen(
+                    state.currentShownShoppingItem.location
+                ))
+            },
+            onSave = {
+                actions.updateCurrentViewingShoppingItem()
+            },
+            onDelete = {
+                actions.deleteCurrentViewingShoppingItem()
+            }
+        )
     }
 
     LazyColumn(
@@ -141,11 +180,8 @@ fun ShoppingListViewScreenContent(
                     onCheckStateChange = { boolVal ->
                         actions.changeItemCheckState(it, boolVal)
                     },
-                    onEditButtonClick = {
-                        onEditButtonClick(it)
-                    },
-                    onDeleteButtonClick = {
-                        actions.deleteShoppingItem(it)
+                    onClick = {
+                        actions.openShoppingItemDetails(it)
                     }
                 )
             }

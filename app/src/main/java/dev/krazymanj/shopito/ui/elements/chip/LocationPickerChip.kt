@@ -8,7 +8,8 @@ import dev.krazymanj.shopito.model.Location
 @Composable
 fun LocationPickerChip(
     location: Location?,
-    onLocationChangeRequest: () -> Unit
+    onLocationChangeRequest: () -> Unit,
+    onLocationClearRequest: () -> Unit,
 ) {
     PickerChip(
         selected = location != null,
@@ -17,6 +18,7 @@ fun LocationPickerChip(
         label = when {
             location != null -> "Selected"
             else -> "Location"
-        }
+        },
+        onXClick = onLocationClearRequest
     )
 }

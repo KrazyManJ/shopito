@@ -18,7 +18,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Settings
 import dev.krazymanj.shopito.R
-import dev.krazymanj.shopito.database.ShoppingItemWithList
 import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.ui.elements.BaseScreen
@@ -57,14 +56,7 @@ fun ShoppingListsSummaryScreen(
         ShoppingListsSummaryScreenContent(
             paddingValues = it,
             state = state.value,
-            actions = viewModel,
-            onEditButtonClick = { item ->
-                navRouter.navigateTo(
-                    Destination.AddEditShoppingItem(
-                    shoppingListId = item.list.id!!,
-                    shoppingItemId = item.item.id
-                ))
-            }
+            actions = viewModel
         )
     }
 }
@@ -73,8 +65,7 @@ fun ShoppingListsSummaryScreen(
 fun ShoppingListsSummaryScreenContent(
     paddingValues: PaddingValues,
     state: ShoppingListsSummaryUIState,
-    actions: ShoppingListsSummaryActions,
-    onEditButtonClick: (ShoppingItemWithList) -> Unit
+    actions: ShoppingListsSummaryActions
 ) {
     LazyColumn(
         Modifier.padding(paddingValues).padding(spacing16),
@@ -100,12 +91,6 @@ fun ShoppingListsSummaryScreenContent(
                     shoppingList = it.list,
                     onCheckStateChange = { boolVal ->
                         actions.changeItemCheckState(it.item, boolVal)
-                    },
-                    onEditButtonClick = {
-                        onEditButtonClick(it)
-                    },
-                    onDeleteButtonClick = {
-                        actions.deleteShoppingItem(it.item)
                     }
                 )
             }
@@ -130,12 +115,6 @@ fun ShoppingListsSummaryScreenContent(
                     shoppingList = it.list,
                     onCheckStateChange = { boolVal ->
                         actions.changeItemCheckState(it.item, boolVal)
-                    },
-                    onEditButtonClick = {
-                        onEditButtonClick(it)
-                    },
-                    onDeleteButtonClick = {
-                        actions.deleteShoppingItem(it.item)
                     }
                 )
             }

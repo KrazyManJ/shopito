@@ -8,6 +8,7 @@ import dev.krazymanj.shopito.model.Location
 data class ShoppingListViewUIState(
     val shoppingList: ShoppingList? = null,
     val shoppingItems: List<ShoppingItem> = emptyList(),
+    val currentShownShoppingItem: ShoppingItem? = null,
 
     val itemInput: String = "",
     val dateInput: Long? = null,

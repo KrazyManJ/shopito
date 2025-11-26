@@ -7,19 +7,15 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonColors
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -42,8 +38,9 @@ fun QuickAdd(
     location: Location?,
 
     onValueChange: (String) -> Unit,
-    onDateChange: (Long) -> Unit,
+    onDateChange: (Long?) -> Unit,
     onLocationChangeRequest: () -> Unit,
+    onLocationClearRequest: () -> Unit,
 
     onAdd: () -> Unit,
     modifier: Modifier = Modifier
@@ -68,30 +65,18 @@ fun QuickAdd(
             )
             LocationPickerChip(
                 location = location,
-                onLocationChangeRequest = onLocationChangeRequest
+                onLocationChangeRequest = onLocationChangeRequest,
+                onLocationClearRequest = onLocationClearRequest
             )
         }
         Row(
             verticalAlignment = Alignment.CenterVertically
         ) {
-            BasicTextField(
+            BorderFreeTextField(
                 value = value,
                 onValueChange = onValueChange,
-                decorationBox = { innerTextField ->
-                    if (value.isEmpty()) {
-                        Text(
-                            text = "Add an Item (2x for two items)...",
-                            style = MaterialTheme.typography.bodyLarge,
-                            color = textSecondaryColor()
-                        )
-                    }
-                    innerTextField()
-                },
-                textStyle = MaterialTheme.typography.bodyLarge,
+                placeholder = "Add an Item (2x for two items)...",
                 modifier = Modifier.weight(1f),
-                cursorBrush = SolidColor(Primary),
-                singleLine = true,
-
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = { onAdd() })
             )
@@ -125,6 +110,7 @@ private fun Preview() {
         onValueChange = {},
         onAdd = {},
         onDateChange = {},
-        onLocationChangeRequest = {}
+        onLocationChangeRequest = {},
+        onLocationClearRequest = {}
     )
 }

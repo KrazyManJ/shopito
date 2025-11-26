@@ -1,4 +1,4 @@
-package dev.krazymanj.shopito.ui.elements.dialog
+package dev.krazymanj.shopito.ui.elements.modal
 
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
