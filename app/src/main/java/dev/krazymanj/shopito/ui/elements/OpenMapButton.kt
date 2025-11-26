@@ -14,7 +14,7 @@ import androidx.core.net.toUri
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.composables.icons.lucide.Lucide
-import com.composables.icons.lucide.SquareArrowOutUpRight
+import com.composables.icons.lucide.Navigation
 import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.model.Location
 import dev.krazymanj.shopito.viewmodel.SettingsAccessorViewModel
@@ -53,7 +53,7 @@ fun OpenMapButton(
         }
     }) {
         Icon(
-            imageVector = Lucide.SquareArrowOutUpRight,
+            imageVector = Lucide.Navigation,
             contentDescription = null,
             modifier = Modifier.size(16.dp)
         )

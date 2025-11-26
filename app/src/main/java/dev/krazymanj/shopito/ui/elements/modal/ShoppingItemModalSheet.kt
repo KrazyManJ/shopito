@@ -35,6 +35,7 @@ import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.navigation.NavStateKey
 import dev.krazymanj.shopito.navigation.NavigationCurrentStateReceivedEffect
 import dev.krazymanj.shopito.ui.elements.BorderFreeTextField
+import dev.krazymanj.shopito.ui.elements.OpenMapButton
 import dev.krazymanj.shopito.ui.elements.ShopitoCheckbox
 import dev.krazymanj.shopito.ui.elements.chip.DatePickerChip
 import dev.krazymanj.shopito.ui.elements.chip.LocationPickerChip
@@ -74,7 +75,10 @@ fun ShoppingItemModalSheet(
     }
 
     ModalBottomSheet(
-        onDismissRequest = onDismiss,
+        onDismissRequest = {
+            onDismiss()
+            viewModel.reset()
+        },
         containerColor = backgroundPrimaryColor(),
         contentColor = textPrimaryColor(),
         modifier = modifier.then(Modifier)
@@ -119,18 +123,24 @@ fun ShoppingItemModalSheet(
                     viewModel.updateItem(state.value.item.copy(buyTime = it))
                 }
             )
-            LocationPickerChip(
-                location = state.value.item.location,
-                onLocationChangeRequest = {
-                    navRouter.navigateTo(Destination.MapLocationPickerScreen(
-                        state.value.item.location,
-                        NavStateKey.LocationModalResult
-                    ))
-                },
-                onLocationClearRequest = {
-                    viewModel.updateItem(state.value.item.copy(location = null))
+            Row {
+                LocationPickerChip(
+                    location = state.value.item.location,
+                    onLocationChangeRequest = {
+                        navRouter.navigateTo(Destination.MapLocationPickerScreen(
+                            state.value.item.location,
+                            NavStateKey.LocationModalResult
+                        ))
+                    },
+                    onLocationClearRequest = {
+                        viewModel.updateItem(state.value.item.copy(location = null))
+                    },
+                    modifier = Modifier.weight(1f, fill = false)
+                )
+                state.value.item.location?.let { location ->
+                    OpenMapButton(location)
                 }
-            )
+            }
             Spacer(Modifier.height(spacing32))
             Row {
                 OutlinedButton(

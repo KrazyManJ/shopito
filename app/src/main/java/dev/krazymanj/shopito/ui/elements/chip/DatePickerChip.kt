@@ -27,7 +27,7 @@ fun DatePickerChip(
         },
         onXClick = {
             onDateChange(null)
-        }
+        },
     )
 
     if (showDatePicker) {

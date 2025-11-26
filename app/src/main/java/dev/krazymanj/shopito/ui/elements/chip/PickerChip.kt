@@ -10,6 +10,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Image
@@ -46,6 +47,7 @@ fun PickerChip(
     leadingIcon: ImageVector,
     label: String,
     onXClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     InputChip(
         selected = selected,
@@ -58,7 +60,11 @@ fun PickerChip(
             )
         },
         label = {
-            Text(text = label)
+            Text(
+                text = label,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis
+            )
         },
         trailingIcon = {
             if (selected) {
@@ -71,7 +77,8 @@ fun PickerChip(
                 )
             }
         },
-        colors = pickerChipColors()
+        colors = pickerChipColors(),
+        modifier = modifier.then(Modifier)
     )
 }
 
@@ -79,7 +86,7 @@ fun PickerChip(
 @Composable
 private fun Preview() {
     Column {
-        PickerChip(true,{}, Lucide.Image,"Chip",{})
-        PickerChip(false,{}, Lucide.Image,"Chip",{})
+        PickerChip(true, {}, Lucide.Image, "Chip", {},)
+        PickerChip(false, {}, Lucide.Image, "Chip", {},)
     }
 }

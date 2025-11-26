@@ -41,9 +41,10 @@ fun ShoppingList(
             disabledContainerColor = backgroundSecondaryColor(),
             disabledContentColor = textPrimaryColor()
         ),
-        modifier = Modifier
+        modifier = modifier.then(Modifier
             .fillMaxWidth()
             .clickable { onClick() }
+        )
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
