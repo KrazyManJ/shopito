@@ -76,13 +76,15 @@ fun BaseScreen(
         contentColor = textPrimaryColor(),
         modifier = modifier.then(Modifier.imePadding())
     ) {
-        if (placeholderScreenContent != null) {
+        if (showLoading) {
+            LoadingScreen()
+        }
+        else if (placeholderScreenContent != null) {
             PlaceHolderScreen(
                 content = placeholderScreenContent
             )
-        } else if (showLoading) {
-            LoadingScreen()
-        } else {
+        }
+        else {
             content(it)
         }
     }

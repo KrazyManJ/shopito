@@ -25,7 +25,7 @@ import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.navigation.NavStateKey
 import dev.krazymanj.shopito.navigation.NavigationCurrentStateReceivedEffect
-import dev.krazymanj.shopito.ui.elements.QuickAdd
+import dev.krazymanj.shopito.ui.elements.input.QuickAdd
 import dev.krazymanj.shopito.ui.elements.ShoppingItem
 import dev.krazymanj.shopito.ui.elements.modal.ShoppingItemModalSheet
 import dev.krazymanj.shopito.ui.elements.screen.BaseScreen
@@ -39,11 +39,11 @@ fun ShoppingListViewScreen(
 ) {
     val viewModel = hiltViewModel<ShoppingListViewViewModel>()
 
-    LaunchedEffect(shoppingListId) {
+    val state = viewModel.templateUIState.collectAsStateWithLifecycle()
+
+    if (state.value.isLoading) {
         viewModel.loadShoppingListData(shoppingListId)
     }
-
-    val state = viewModel.templateUIState.collectAsStateWithLifecycle()
 
     NavigationCurrentStateReceivedEffect(navRouter, NavStateKey.LocationQuickAddResult) { location ->
         viewModel.onLocationChanged(location)
@@ -56,6 +56,7 @@ fun ShoppingListViewScreen(
         onBackClick = {
             navRouter.returnBack()
         },
+        showLoading = state.value.isLoading,
         actions = {
             IconButton(
                 onClick = {
@@ -75,7 +76,6 @@ fun ShoppingListViewScreen(
                 value = state.value.itemInput,
                 date = state.value.dateInput,
                 location = state.value.locationInput,
-
                 onValueChange = { viewModel.onItemInput(it) },
                 onAdd = { viewModel.addShoppingItem() },
                 onDateChange = { viewModel.onDateInput(it) },

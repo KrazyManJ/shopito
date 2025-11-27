@@ -1,4 +1,4 @@
-package dev.krazymanj.shopito.ui.elements
+package dev.krazymanj.shopito.ui.elements.button
 
 import android.content.Intent
 import android.widget.Toast

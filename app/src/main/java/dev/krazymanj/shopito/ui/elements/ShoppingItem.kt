@@ -40,6 +40,7 @@ import com.composables.icons.lucide.Trash
 import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.database.entities.ShoppingItem
 import dev.krazymanj.shopito.database.entities.ShoppingList
+import dev.krazymanj.shopito.ui.elements.input.ShopitoCheckbox
 import dev.krazymanj.shopito.ui.theme.Primary
 import dev.krazymanj.shopito.ui.theme.backgroundPrimaryColor
 import dev.krazymanj.shopito.ui.theme.spacing16

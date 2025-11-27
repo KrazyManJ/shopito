@@ -6,6 +6,8 @@ import dev.krazymanj.shopito.model.Location
 
 
 data class ShoppingListViewUIState(
+    val isLoading: Boolean = true,
+
     val shoppingList: ShoppingList? = null,
     val shoppingItems: List<ShoppingItem> = emptyList(),
     val currentShownShoppingItem: ShoppingItem? = null,

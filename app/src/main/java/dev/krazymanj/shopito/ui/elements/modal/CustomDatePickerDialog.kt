@@ -2,6 +2,7 @@ package dev.krazymanj.shopito.ui.elements.modal
 
 import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
+import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
@@ -10,6 +11,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import dev.krazymanj.shopito.R
+import dev.krazymanj.shopito.ui.theme.backgroundPrimaryColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -24,6 +26,9 @@ fun CustomDatePickerDialog(
     DatePickerDialog(
         modifier = modifier,
         onDismissRequest = { onDismiss() },
+        colors = DatePickerDefaults.colors().copy(
+            containerColor = backgroundPrimaryColor(),
+        ),
         confirmButton = {
             Button(
                 enabled = datePickerState.selectedDateMillis != null,

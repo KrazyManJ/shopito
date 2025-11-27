@@ -35,7 +35,8 @@ class ShoppingListViewViewModel @Inject constructor(private val repository: ISho
             repository.getShoppingItemsByShoppingList(shoppingListId).collect {
                 _state.value = _state.value.copy(
                     shoppingList = repository.getShoppingListById(shoppingListId),
-                    shoppingItems = it
+                    shoppingItems = it,
+                    isLoading = false
                 )
             }
         }

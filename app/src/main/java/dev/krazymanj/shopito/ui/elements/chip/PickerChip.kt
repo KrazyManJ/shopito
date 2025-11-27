@@ -27,7 +27,7 @@ private fun pickerChipColors(): SelectableChipColors{
     return SelectableChipColors(
         containerColor = backgroundPrimaryColor(),
         labelColor = textPrimaryColor(),
-        leadingIconColor = textPrimaryColor(),
+        leadingIconColor = Primary,
         trailingIconColor = textPrimaryColor(),
         disabledContainerColor = backgroundPrimaryColor(),
         disabledLabelColor = textSecondaryColor(),

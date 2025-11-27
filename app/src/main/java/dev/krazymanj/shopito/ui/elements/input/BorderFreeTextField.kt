@@ -1,4 +1,4 @@
-package dev.krazymanj.shopito.ui.elements
+package dev.krazymanj.shopito.ui.elements.input
 
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions

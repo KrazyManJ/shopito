@@ -1,4 +1,4 @@
-package dev.krazymanj.shopito.ui.elements
+package dev.krazymanj.shopito.ui.elements.input
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState

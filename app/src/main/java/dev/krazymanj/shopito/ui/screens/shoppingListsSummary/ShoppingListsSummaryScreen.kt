@@ -39,13 +39,14 @@ fun ShoppingListsSummaryScreen(
 
     val state = viewModel.shoppingListsSummaryUIState.collectAsStateWithLifecycle()
 
-    if (state.value.loading) {
+    if (state.value.isLoading) {
         viewModel.loadData()
     }
 
     BaseScreen(
         topBarText = stringResource(R.string.navigation_lists_summary_label),
         bottomBar = { ShopitoNavigationBar(navRouter) },
+        showLoading = state.value.isLoading,
         placeholderScreenContent = if (state.value.hasNoData()) PlaceholderScreenContent(
             icon = Lucide.StickyNote,
             title = stringResource(R.string.summary_placeholder_title),
