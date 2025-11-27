@@ -1,5 +1,6 @@
 package dev.krazymanj.shopito.ui.screens.shoppingListsSummary
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -12,6 +13,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -70,6 +72,7 @@ fun ShoppingListsSummaryScreenContent(
     state: ShoppingListsSummaryUIState,
     actions: ShoppingListsSummaryActions
 ) {
+    val context = LocalContext.current
 
     state.currentShownShoppingItem?.let { shoppingItemWithList ->
         ShoppingItemModalSheet(
@@ -104,7 +107,10 @@ fun ShoppingListsSummaryScreenContent(
                     modifier = Modifier.padding(vertical = spacing4)
                 )
             }
-            items(shoppingItems) {
+            items(
+                items = shoppingItems,
+                key = { it.item.id!! }
+            ) {
                 ShoppingItem(
                     shoppingItem = it.item,
                     modifier = Modifier.fillMaxWidth(),
@@ -114,6 +120,9 @@ fun ShoppingListsSummaryScreenContent(
                     },
                     onClick = {
                         actions.setCurrentViewingShoppingItem(it)
+                    },
+                    onDelete = {
+                        actions.deleteShoppingItem(it.item)
                     }
                 )
             }
@@ -131,7 +140,10 @@ fun ShoppingListsSummaryScreenContent(
                     modifier = Modifier.padding(vertical = spacing4)
                 )
             }
-            items(state.shoppingItemsWithoutDate) {
+            items(
+                items = state.shoppingItemsWithoutDate,
+                key = { it.item.id!! }
+            ) {
                 ShoppingItem(
                     it.item,
                     modifier = Modifier.fillMaxWidth(),
@@ -141,6 +153,9 @@ fun ShoppingListsSummaryScreenContent(
                     },
                     onClick = {
                         actions.setCurrentViewingShoppingItem(it)
+                    },
+                    onDelete = {
+                        actions.deleteShoppingItem(it.item)
                     }
                 )
             }

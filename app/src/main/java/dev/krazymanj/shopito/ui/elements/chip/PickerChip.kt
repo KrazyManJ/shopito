@@ -5,13 +5,14 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.InputChip
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SelectableChipColors
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Image
 import com.composables.icons.lucide.Lucide
@@ -34,9 +35,9 @@ private fun pickerChipColors(): SelectableChipColors{
         disabledTrailingIconColor = textSecondaryColor(),
         selectedContainerColor = Primary,
         disabledSelectedContainerColor = textSecondaryColor(),
-        selectedLabelColor = backgroundPrimaryColor(),
-        selectedLeadingIconColor = backgroundPrimaryColor(),
-        selectedTrailingIconColor = backgroundPrimaryColor()
+        selectedLabelColor = MaterialTheme.colorScheme.onPrimary,
+        selectedLeadingIconColor = MaterialTheme.colorScheme.onPrimary,
+        selectedTrailingIconColor = MaterialTheme.colorScheme.onPrimary
     )
 }
 
@@ -82,7 +83,7 @@ fun PickerChip(
     )
 }
 
-@Preview
+@PreviewLightDark
 @Composable
 private fun Preview() {
     Column {

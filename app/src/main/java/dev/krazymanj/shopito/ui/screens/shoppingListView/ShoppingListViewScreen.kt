@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -128,19 +129,23 @@ fun ShoppingListViewScreenContent(
             .padding(spacing16),
         state = listState
     ) {
-        state.shoppingItems.forEach {
-            item {
-                ShoppingItem(
-                    shoppingItem = it,
-                    modifier = Modifier.fillMaxWidth(),
-                    onCheckStateChange = { boolVal ->
-                        actions.changeItemCheckState(it, boolVal)
-                    },
-                    onClick = {
-                        actions.openShoppingItemDetails(it)
-                    }
-                )
-            }
+        items(
+            items = state.shoppingItems,
+            key = { item -> item.id!! }
+        ) {
+            ShoppingItem(
+                shoppingItem = it,
+                modifier = Modifier.fillMaxWidth(),
+                onCheckStateChange = { boolVal ->
+                    actions.changeItemCheckState(it, boolVal)
+                },
+                onClick = {
+                    actions.openShoppingItemDetails(it)
+                },
+                onDelete = {
+                    actions.deleteShoppingItem(it)
+                }
+            )
         }
     }
 }
