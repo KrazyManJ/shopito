@@ -10,8 +10,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.MapPin
+import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.model.Location
 import java.util.Locale
 
@@ -39,8 +41,8 @@ fun LocationPickerChip(
         onClick = onLocationChangeRequest,
         leadingIcon = Lucide.MapPin,
         label = when {
-            location != null -> address?.getAddressLine(0) ?: "Loading"
-            else -> "Location"
+            location != null -> address?.getAddressLine(0) ?: stringResource(R.string.loading_label)
+            else -> stringResource(R.string.location_label)
         },
         onXClick = onLocationClearRequest,
         modifier = modifier.then(Modifier)

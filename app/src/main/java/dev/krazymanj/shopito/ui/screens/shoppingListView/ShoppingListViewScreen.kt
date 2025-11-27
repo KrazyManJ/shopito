@@ -14,18 +14,22 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Pencil
+import com.composables.icons.lucide.StickyNote
+import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.navigation.NavStateKey
 import dev.krazymanj.shopito.navigation.NavigationCurrentStateReceivedEffect
-import dev.krazymanj.shopito.ui.elements.BaseScreen
 import dev.krazymanj.shopito.ui.elements.QuickAdd
 import dev.krazymanj.shopito.ui.elements.ShoppingItem
 import dev.krazymanj.shopito.ui.elements.modal.ShoppingItemModalSheet
+import dev.krazymanj.shopito.ui.elements.screen.BaseScreen
+import dev.krazymanj.shopito.ui.elements.screen.PlaceholderScreenContent
 import dev.krazymanj.shopito.ui.theme.spacing16
 
 @Composable
@@ -61,6 +65,11 @@ fun ShoppingListViewScreen(
                 Icon(imageVector = Lucide.Pencil, contentDescription = null)
             }
         },
+        placeholderScreenContent = if (state.value.shoppingItems.isEmpty()) PlaceholderScreenContent(
+            icon = Lucide.StickyNote,
+            title = stringResource(R.string.list_placeholder_title),
+            text = stringResource(R.string.list_placeholder_text)
+        ) else null,
         bottomBar = {
             QuickAdd(
                 value = state.value.itemInput,

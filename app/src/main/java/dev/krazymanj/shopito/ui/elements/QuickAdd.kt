@@ -16,11 +16,13 @@ import androidx.compose.material3.IconButtonColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.ArrowUp
 import com.composables.icons.lucide.Lucide
+import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.model.Location
 import dev.krazymanj.shopito.ui.elements.chip.DatePickerChip
 import dev.krazymanj.shopito.ui.elements.chip.LocationPickerChip
@@ -75,7 +77,7 @@ fun QuickAdd(
             BorderFreeTextField(
                 value = value,
                 onValueChange = onValueChange,
-                placeholder = "Add an Item (2x for two items)...",
+                placeholder = stringResource(R.string.quick_add_placeholder),
                 modifier = Modifier.weight(1f),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = { onAdd() })

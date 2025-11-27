@@ -8,4 +8,8 @@ data class ShoppingListsSummaryUIState(
     val shoppingItemsWithDate: Map<Long, List<ShoppingItemWithList>> = emptyMap(),
     val shoppingItemsWithoutDate: List<ShoppingItemWithList> = emptyList(),
     val currentShownShoppingItem: ShoppingItemWithList? = null,
-)
+) {
+    fun hasNoData(): Boolean {
+        return shoppingItemsWithDate.isEmpty() && shoppingItemsWithoutDate.isEmpty()
+    }
+}

@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Shopito</string>
     <string name="general_shopping_list_name">Obecný nákupní list</string>
     <string name="general_shopping_list_description">Toto je obecný nákupní list</string>
     <string name="navigation_lists_summary_label">Souhrn listů</string>
@@ -34,4 +33,11 @@
     <string name="loading_label">Načítání...</string>
     <string name="googlemaps_not_installed">Google mapy nejsou nainstalovány</string>
     <string name="pick_location_title">Výběr lokace</string>
+    <string name="shopping_item_database">Databáze nákupních položek</string>
+    <string name="quick_add_placeholder">Přidej zboží (2x pro dva kusy)</string>
+    <string name="summary_placeholder_title">Žádné zboží ke koupi</string>
+    <string name="summary_placeholder_text">Jestli jsi nový v Shopito, vlož své zboží do nákupního seznamu</string>
+    <string name="no_buy_time">Bez  času nákupu</string>
+    <string name="list_placeholder_title">Žádné zboží v seznamu</string>
+    <string name="list_placeholder_text">Vlož položky skrze spodní panel</string>
 </resources>

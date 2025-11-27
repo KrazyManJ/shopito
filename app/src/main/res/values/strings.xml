@@ -33,4 +33,11 @@
     <string name="loading_label">Loading...</string>
     <string name="googlemaps_not_installed">Google Maps is not installed</string>
     <string name="pick_location_title">Location Picker</string>
+    <string name="shopping_item_database">Shopping Item Database</string>
+    <string name="quick_add_placeholder">Add an Item (2x for two items)...</string>
+    <string name="summary_placeholder_title">No items to buy</string>
+    <string name="summary_placeholder_text">If you are new to Shopito, create your first item in Shopping Lists!</string>
+    <string name="no_buy_time">No buy time</string>
+    <string name="list_placeholder_title">No items in list</string>
+    <string name="list_placeholder_text">Add new items via bottom bar</string>
 </resources>

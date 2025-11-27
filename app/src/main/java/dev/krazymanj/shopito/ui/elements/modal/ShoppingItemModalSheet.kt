@@ -19,6 +19,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -28,6 +29,7 @@ import com.composables.icons.lucide.ListTodo
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Save
 import com.composables.icons.lucide.Trash
+import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.database.entities.ShoppingItem
 import dev.krazymanj.shopito.database.entities.ShoppingList
 import dev.krazymanj.shopito.navigation.Destination
@@ -155,13 +157,13 @@ fun ShoppingItemModalSheet(
                 ) {
                     Icon(imageVector = Lucide.Trash, contentDescription = null, Modifier.size(16.dp))
                     Spacer(Modifier.width(spacing8))
-                    Text("Delete")
+                    Text(stringResource(R.string.remove))
                 }
                 Spacer(modifier = Modifier.weight(1f))
                 Button(onClick = { viewModel.save() }) {
                     Icon(imageVector = Lucide.Save, contentDescription = null, Modifier.size(16.dp))
                     Spacer(Modifier.width(spacing8))
-                    Text("Save Item")
+                    Text(stringResource(R.string.save_label))
                 }
             }
         }

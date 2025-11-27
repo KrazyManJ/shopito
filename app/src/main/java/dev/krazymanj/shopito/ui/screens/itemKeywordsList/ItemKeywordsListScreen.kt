@@ -20,7 +20,7 @@ import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Trash
 import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.navigation.INavigationRouter
-import dev.krazymanj.shopito.ui.elements.BaseScreen
+import dev.krazymanj.shopito.ui.elements.screen.BaseScreen
 import dev.krazymanj.shopito.ui.theme.Primary
 import dev.krazymanj.shopito.ui.theme.spacing16
 
@@ -37,7 +37,7 @@ fun ItemKeywordsListScreen(
     val state = viewModel.itemKeywordsListUIState.collectAsStateWithLifecycle()
 
     BaseScreen(
-        topBarText = "Shopping Item Database",
+        topBarText = stringResource(R.string.shopping_item_database),
         onBackClick = {
             navRouter.returnBack()
         }
@@ -57,7 +57,9 @@ fun ItemKeywordsListScreenContent(
     actions: ItemKeywordsListActions
 ) {
     LazyColumn(
-        modifier = Modifier.padding(paddingValues).padding(spacing16)
+        modifier = Modifier
+            .padding(paddingValues)
+            .padding(spacing16)
     ) {
         items(state.itemKeywords) {
             Row(

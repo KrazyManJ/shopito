@@ -29,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
@@ -36,6 +37,7 @@ import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.ListTodo
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Trash
+import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.database.entities.ShoppingItem
 import dev.krazymanj.shopito.database.entities.ShoppingList
 import dev.krazymanj.shopito.ui.theme.Primary
@@ -97,7 +99,7 @@ fun ShoppingItem(
                 ) {
                     Icon(
                         imageVector = Lucide.Trash,
-                        contentDescription = "Delete",
+                        contentDescription = stringResource(R.string.remove),
                         tint = MaterialTheme.colorScheme.onPrimary
                     )
                 }

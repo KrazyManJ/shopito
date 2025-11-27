@@ -22,7 +22,7 @@ import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.ui.elements.AppVersionString
-import dev.krazymanj.shopito.ui.elements.BaseScreen
+import dev.krazymanj.shopito.ui.elements.screen.BaseScreen
 import dev.krazymanj.shopito.ui.theme.spacing16
 import dev.krazymanj.shopito.ui.theme.spacing64
 
@@ -40,7 +40,7 @@ fun SettingsScreen(
     }
 
     BaseScreen(
-        topBarText = "Settings",
+        topBarText = stringResource(R.string.settings_title),
         onBackClick = {
             navRouter.returnBack()
         }

@@ -1,6 +1,5 @@
 package dev.krazymanj.shopito.ui.screens.shoppingListsSummary
 
-import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -13,20 +12,21 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Settings
+import com.composables.icons.lucide.StickyNote
 import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
-import dev.krazymanj.shopito.ui.elements.BaseScreen
 import dev.krazymanj.shopito.ui.elements.PrettyTimeText
 import dev.krazymanj.shopito.ui.elements.ShopitoNavigationBar
 import dev.krazymanj.shopito.ui.elements.ShoppingItem
 import dev.krazymanj.shopito.ui.elements.modal.ShoppingItemModalSheet
+import dev.krazymanj.shopito.ui.elements.screen.BaseScreen
+import dev.krazymanj.shopito.ui.elements.screen.PlaceholderScreenContent
 import dev.krazymanj.shopito.ui.theme.spacing16
 import dev.krazymanj.shopito.ui.theme.spacing32
 import dev.krazymanj.shopito.ui.theme.spacing4
@@ -46,6 +46,11 @@ fun ShoppingListsSummaryScreen(
     BaseScreen(
         topBarText = stringResource(R.string.navigation_lists_summary_label),
         bottomBar = { ShopitoNavigationBar(navRouter) },
+        placeholderScreenContent = if (state.value.hasNoData()) PlaceholderScreenContent(
+            icon = Lucide.StickyNote,
+            title = stringResource(R.string.summary_placeholder_title),
+            text = stringResource(R.string.summary_placeholder_text)
+        ) else null,
         actions = {
             IconButton(
                 onClick = {
@@ -72,8 +77,6 @@ fun ShoppingListsSummaryScreenContent(
     state: ShoppingListsSummaryUIState,
     actions: ShoppingListsSummaryActions
 ) {
-    val context = LocalContext.current
-
     state.currentShownShoppingItem?.let { shoppingItemWithList ->
         ShoppingItemModalSheet(
             shoppingItem = shoppingItemWithList.item,
@@ -91,7 +94,9 @@ fun ShoppingListsSummaryScreenContent(
     }
 
     LazyColumn(
-        Modifier.padding(paddingValues).padding(spacing16),
+        Modifier
+            .padding(paddingValues)
+            .padding(spacing16),
         verticalArrangement = Arrangement.spacedBy(spacing4)
     ) {
 
@@ -131,7 +136,7 @@ fun ShoppingListsSummaryScreenContent(
         if (state.shoppingItemsWithoutDate.isNotEmpty()) {
             item {
                 Text(
-                    text = "No Buy Time",
+                    text = stringResource(R.string.no_buy_time),
                     modifier = Modifier.padding(top = spacing32)
                 )
             }

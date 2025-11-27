@@ -14,9 +14,9 @@ val LightBackgroundSecondary = Color(0xFFDAD8D4)
 
 
 val DarkTextPrimary = Color(0xFFF2F0ED)
-val DarkTextSecondary = Color(0xFFDAD8D4)
-val DarkBackgroundPrimary = Color(0xFF2A2A2A)
-val DarkBackgroundSecondary = Color(0xFF5E5E5E)
+val DarkTextSecondary = Color(0xFFAAA9A7)
+val DarkBackgroundPrimary = Color(0xFF181717)
+val DarkBackgroundSecondary = Color(0xFF343434)
 
 @Composable
 fun textPrimaryColor(): Color = if (isSystemInDarkTheme()) DarkTextPrimary else LightTextPrimary

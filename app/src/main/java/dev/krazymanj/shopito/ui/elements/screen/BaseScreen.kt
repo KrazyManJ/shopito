@@ -1,4 +1,4 @@
-package dev.krazymanj.shopito.ui.elements
+package dev.krazymanj.shopito.ui.elements.screen
 
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.RowScope
@@ -32,6 +32,8 @@ fun BaseScreen(
     topBarText: String,
     modifier: Modifier = Modifier,
     onBackClick: (() -> Unit)? = null,
+    showLoading: Boolean = false,
+    placeholderScreenContent: PlaceholderScreenContent? = null,
     actions: @Composable RowScope.() -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
@@ -74,6 +76,14 @@ fun BaseScreen(
         contentColor = textPrimaryColor(),
         modifier = modifier.then(Modifier.imePadding())
     ) {
-        content(it)
+        if (placeholderScreenContent != null) {
+            PlaceHolderScreen(
+                content = placeholderScreenContent
+            )
+        } else if (showLoading) {
+            LoadingScreen()
+        } else {
+            content(it)
+        }
     }
 }

@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.text.TextStyle
 import dev.krazymanj.shopito.ui.theme.Primary
+import dev.krazymanj.shopito.ui.theme.textPrimaryColor
 import dev.krazymanj.shopito.ui.theme.textSecondaryColor
 
 @Composable
@@ -20,7 +21,9 @@ fun BorderFreeTextField(
     modifier: Modifier = Modifier,
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     keyboardActions: KeyboardActions = KeyboardActions.Default,
-    textStyle: TextStyle = MaterialTheme.typography.bodyLarge
+    textStyle: TextStyle = MaterialTheme.typography.bodyLarge.copy(
+        color = textPrimaryColor()
+    )
 ) {
     BasicTextField(
         value = value,
@@ -41,7 +44,5 @@ fun BorderFreeTextField(
         singleLine = true,
         keyboardOptions = keyboardOptions,
         keyboardActions = keyboardActions
-//        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-//        keyboardActions = KeyboardActions(onDone = { onAdd() })
     )
 }

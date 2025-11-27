@@ -16,7 +16,7 @@ import com.composables.icons.lucide.Settings
 import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
-import dev.krazymanj.shopito.ui.elements.BaseScreen
+import dev.krazymanj.shopito.ui.elements.screen.BaseScreen
 import dev.krazymanj.shopito.ui.elements.NewShoppingList
 import dev.krazymanj.shopito.ui.elements.ShopitoNavigationBar
 import dev.krazymanj.shopito.ui.elements.ShoppingList
@@ -28,7 +28,7 @@ fun ShoppingListsScreen(
 ) {
     val viewModel = hiltViewModel<ShoppingListsViewModel>()
 
-    val state = viewModel.shoppingListsUIState.collectAsStateWithLifecycle()
+    val state = viewModel.state.collectAsStateWithLifecycle()
 
     if (state.value.loading){
         viewModel.loadLists()
