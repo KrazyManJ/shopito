@@ -1,6 +1,5 @@
 package dev.krazymanj.shopito.ui.screens.shoppingListView
 
-import android.util.Log
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -152,12 +151,10 @@ fun ShoppingListViewScreenContent(
             actions.clearIsCreatedState()
         }
     }
-    Log.i("Test", "Current value: ${state.currentShownShoppingItem}")
     state.currentShownShoppingItem?.let { shoppingItem ->
         ShoppingItemModalSheet(
             shoppingItem = shoppingItem,
             onDismissRequest = {
-                Log.i("Test", "Shopping item set to null")
                 actions.openShoppingItemDetails(null)
             },
             navRouter = navRouter

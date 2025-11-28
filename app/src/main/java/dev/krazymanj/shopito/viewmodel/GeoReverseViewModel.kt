@@ -44,13 +44,13 @@ class GeoReverseViewModel @Inject constructor(
             val lastFiveLocations = dataStore.get(DataStoreKey.LastFiveLocations)
             val matchingSavedLocation = lastFiveLocations.firstOrNull { it.location == location }
 
-//            matchingSavedLocation?.let { savedLocation ->
-//                _state.update { it.copy(
-//                    locationLabel = savedLocation.label,
-//                    isLoading = false
-//                ) }
-//                return@launch
-//            }
+            matchingSavedLocation?.let { savedLocation ->
+                _state.update { it.copy(
+                    locationLabel = savedLocation.label,
+                    isLoading = false
+                ) }
+                return@launch
+            }
 
             val result = withContext(Dispatchers.IO) {
                 repository.reverse(location)

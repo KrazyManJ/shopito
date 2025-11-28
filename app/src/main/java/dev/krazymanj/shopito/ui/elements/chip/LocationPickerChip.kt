@@ -1,6 +1,5 @@
 package dev.krazymanj.shopito.ui.elements.chip
 
-import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -29,10 +28,6 @@ fun LocationPickerChip(
             viewModel.reverse(location)
         }
     }
-
-    // TODO: If location is one of saved in preferences, display label from that rather than fetching again (or if no internet connection)
-
-    Log.i("Test", "Location label: ${state.value.locationLabel}")
 
     PickerChip(
         selected = location != null,
