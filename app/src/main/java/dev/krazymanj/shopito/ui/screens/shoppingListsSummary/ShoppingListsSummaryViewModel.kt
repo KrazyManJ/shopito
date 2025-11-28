@@ -20,11 +20,13 @@ class ShoppingListsSummaryViewModel @Inject constructor(private val repository: 
 
     val shoppingListsSummaryUIState = _state.asStateFlow()
 
-    override fun loadData() {
-        _state.value = _state.value.copy(
-            isLoading = true
-        )
+    override fun loadData(withLoadingState: Boolean) {
         viewModelScope.launch {
+            if (withLoadingState) {
+                _state.value = _state.value.copy(
+                    isLoading = true
+                )
+            }
             combine(
                 repository.getShoppingItemsGroupedByDate(),
                 repository.getShoppingItemsWithoutBuyTime()

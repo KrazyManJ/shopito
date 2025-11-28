@@ -35,16 +35,6 @@ class ShoppingListViewViewModel @Inject constructor(
 
     val templateUIState = _state.asStateFlow()
 
-    private suspend fun loadItems() {
-        _state.value.shoppingList?.id?.let {
-            repository.getShoppingItemsByShoppingList(it).collect { items ->
-                _state.value = _state.value.copy(
-                    shoppingItems = items
-                )
-            }
-        }
-    }
-
     override fun loadShoppingListData(shoppingListId: Long) {
         viewModelScope.launch {
             repository.getShoppingItemsByShoppingList(shoppingListId).collect {
@@ -60,7 +50,6 @@ class ShoppingListViewViewModel @Inject constructor(
     override fun deleteShoppingItem(shoppingItem: ShoppingItem) {
         viewModelScope.launch {
             repository.delete(shoppingItem)
-            loadItems()
         }
     }
 
@@ -69,7 +58,6 @@ class ShoppingListViewViewModel @Inject constructor(
             repository.update(shoppingItem.copy(
                 isDone = state
             ))
-            loadItems()
         }
     }
 
@@ -123,7 +111,6 @@ class ShoppingListViewViewModel @Inject constructor(
                 itemInput = String.empty,
                 isCreated = true
             )
-            loadItems()
         }
     }
 

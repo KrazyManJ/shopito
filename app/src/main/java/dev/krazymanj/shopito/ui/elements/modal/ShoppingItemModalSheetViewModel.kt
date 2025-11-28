@@ -54,18 +54,12 @@ class ShoppingItemModalSheetViewModel @Inject constructor(
     fun save() {
         viewModelScope.launch {
             repository.update(_state.value.item)
-            _state.value = _state.value.copy(
-                dismissed = true
-            )
         }
     }
 
-    fun delete() {
+    fun remove() {
         viewModelScope.launch {
             repository.delete(_state.value.item)
-            _state.value = _state.value.copy(
-                dismissed = true
-            )
         }
     }
 

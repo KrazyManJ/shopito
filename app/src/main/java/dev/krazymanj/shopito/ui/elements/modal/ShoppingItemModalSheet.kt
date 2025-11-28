@@ -63,7 +63,7 @@ import kotlin.math.max
 @Composable
 fun ShoppingItemModalSheet(
     shoppingItem: ShoppingItem,
-    onDismissRequest: (updated: Boolean) -> Unit,
+    onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
     shoppingList: ShoppingList? = null,
     onShoppingListLinkClick: () -> Unit = {},
@@ -80,16 +80,6 @@ fun ShoppingItemModalSheet(
         viewModel.updateItemLocation(location)
         scope.launch {
             sheetState.show()
-        }
-    }
-
-    if (state.value.dismissed) {
-        LaunchedEffect(Unit) {
-            scope.launch {
-                sheetState.hide()
-                onDismissRequest(true)
-                viewModel.reset()
-            }
         }
     }
 
@@ -129,7 +119,7 @@ fun ShoppingItemModalSheet(
 
     ModalBottomSheet(
         onDismissRequest = {
-            onDismissRequest(false)
+            onDismissRequest()
             viewModel.reset()
         },
         containerColor = backgroundPrimaryColor(),
@@ -208,9 +198,11 @@ fun ShoppingItemModalSheet(
             Row {
                 OutlinedButton(
                     onClick = {
+                        viewModel.remove()
                         scope.launch {
                             sheetState.hide()
-                            viewModel.delete()
+                            viewModel.reset()
+                            onDismissRequest()
                         }
                     },
                     colors = ButtonDefaults.outlinedButtonColors().copy(
@@ -226,12 +218,16 @@ fun ShoppingItemModalSheet(
                     Text(stringResource(R.string.remove))
                 }
                 Spacer(modifier = Modifier.weight(1f))
-                Button(onClick = {
-                    scope.launch {
-                        sheetState.hide()
+                Button(
+                    onClick = {
                         viewModel.save()
+                        scope.launch {
+                            sheetState.hide()
+                            viewModel.reset()
+                            onDismissRequest()
+                        }
                     }
-                }) {
+                ) {
                     Icon(imageVector = Lucide.Save, contentDescription = null, Modifier.size(16.dp))
                     Spacer(Modifier.width(spacing8))
                     Text(stringResource(R.string.save_label))

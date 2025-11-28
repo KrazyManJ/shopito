@@ -4,7 +4,7 @@ import dev.krazymanj.shopito.database.ShoppingItemWithList
 import dev.krazymanj.shopito.database.entities.ShoppingItem
 
 interface ShoppingListsSummaryActions {
-    fun loadData()
+    fun loadData(withLoadingState: Boolean = true)
     fun deleteShoppingItem(shoppingItem: ShoppingItem)
     fun changeItemCheckState(shoppingItem: ShoppingItem, state: Boolean)
     fun setCurrentViewingShoppingItem(shoppingItem: ShoppingItemWithList?)

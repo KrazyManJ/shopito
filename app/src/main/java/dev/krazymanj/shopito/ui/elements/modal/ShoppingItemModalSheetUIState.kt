@@ -8,6 +8,5 @@ data class ShoppingItemModalSheetUIState(
     val loading: Boolean = true,
     val item: ShoppingItem = ShoppingItem.default(),
     val list: ShoppingList? = null,
-    val placesOptions: Set<SavedLocation> = linkedSetOf(),
-    val dismissed: Boolean = false
+    val placesOptions: Set<SavedLocation> = linkedSetOf()
 )

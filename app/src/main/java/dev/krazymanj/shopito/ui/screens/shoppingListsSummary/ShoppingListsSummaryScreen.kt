@@ -65,8 +65,22 @@ fun ShoppingListsSummaryScreen(
         ShoppingListsSummaryScreenContent(
             paddingValues = it,
             state = state.value,
-            navRouter = navRouter,
             actions = viewModel
+        )
+    }
+
+    state.value.currentShownShoppingItem?.let { shoppingItemWithList ->
+        ShoppingItemModalSheet(
+            shoppingItem = shoppingItemWithList.item,
+            shoppingList = shoppingItemWithList.list,
+            onDismissRequest = {
+                viewModel.setCurrentViewingShoppingItem(null)
+            },
+            onShoppingListLinkClick = {
+                viewModel.setCurrentViewingShoppingItem(null)
+                navRouter.navigateTo(Destination.ViewShoppingList(shoppingListId = shoppingItemWithList.list.id!!))
+            },
+            navRouter = navRouter
         )
     }
 }
@@ -74,28 +88,9 @@ fun ShoppingListsSummaryScreen(
 @Composable
 fun ShoppingListsSummaryScreenContent(
     paddingValues: PaddingValues,
-    navRouter: INavigationRouter,
     state: ShoppingListsSummaryUIState,
     actions: ShoppingListsSummaryActions
 ) {
-    state.currentShownShoppingItem?.let { shoppingItemWithList ->
-        ShoppingItemModalSheet(
-            shoppingItem = shoppingItemWithList.item,
-            shoppingList = shoppingItemWithList.list,
-            onDismissRequest = { updated ->
-                actions.setCurrentViewingShoppingItem(null)
-                if (updated) {
-                    actions.loadData()
-                }
-            },
-            onShoppingListLinkClick = {
-                actions.setCurrentViewingShoppingItem(null)
-                navRouter.navigateTo(Destination.ViewShoppingList(shoppingListId = shoppingItemWithList.list.id!!))
-            },
-            navRouter = navRouter
-        )
-    }
-
     LazyColumn(
         Modifier
             .padding(paddingValues)

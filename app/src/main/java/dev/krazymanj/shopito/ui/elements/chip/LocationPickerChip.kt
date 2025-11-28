@@ -2,6 +2,7 @@ package dev.krazymanj.shopito.ui.elements.chip
 
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -21,7 +22,7 @@ fun LocationPickerChip(
 ) {
     val viewModel = hiltViewModel<GeoReverseViewModel>()
 
-    val state = viewModel.state.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(location) {
         if (location != null) {
@@ -35,10 +36,10 @@ fun LocationPickerChip(
         leadingIcon = Lucide.MapPin,
         label = when {
             location == null -> stringResource(R.string.location_label)
-            state.value.locationLabel != null -> state.value.locationLabel!!
+            state.locationLabel != null -> state.locationLabel!!
             else -> stringResource(R.string.location_label)
         },
-        showLoading = state.value.isLoading,
+        showLoading = state.isLoading && location != null,
         onXClick = onLocationClearRequest,
         modifier = modifier.then(Modifier)
     )

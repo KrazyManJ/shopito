@@ -83,6 +83,16 @@ fun ShoppingListViewScreen(
         )
     }
 
+    state.value.currentShownShoppingItem?.let { shoppingItem ->
+        ShoppingItemModalSheet(
+            shoppingItem = shoppingItem,
+            onDismissRequest = {
+                viewModel.openShoppingItemDetails(null)
+            },
+            navRouter = navRouter
+        )
+    }
+
     BaseScreen(
         topBarText = if (state.value.shoppingList != null) state.value.shoppingList!!.name else "...",
         onBackClick = {
@@ -127,7 +137,6 @@ fun ShoppingListViewScreen(
     ) {
         ShoppingListViewScreenContent(
             paddingValues = it,
-            navRouter = navRouter,
             state = state.value,
             actions = viewModel
         )
@@ -137,7 +146,6 @@ fun ShoppingListViewScreen(
 @Composable
 fun ShoppingListViewScreenContent(
     paddingValues: PaddingValues,
-    navRouter: INavigationRouter,
     state: ShoppingListViewUIState,
     actions: ShoppingListViewActions
 ) {
@@ -150,15 +158,6 @@ fun ShoppingListViewScreenContent(
             }
             actions.clearIsCreatedState()
         }
-    }
-    state.currentShownShoppingItem?.let { shoppingItem ->
-        ShoppingItemModalSheet(
-            shoppingItem = shoppingItem,
-            onDismissRequest = {
-                actions.openShoppingItemDetails(null)
-            },
-            navRouter = navRouter
-        )
     }
 
     LazyColumn(
