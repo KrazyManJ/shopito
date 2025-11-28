@@ -52,6 +52,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
 }
 
@@ -101,6 +102,7 @@ dependencies {
 
     // Moshi
     implementation(libs.moshi)
+    implementation(libs.moshi.kotlin)
     ksp(libs.moshi.ksp)
 
     // PrettyTime
@@ -112,10 +114,16 @@ dependencies {
 
     // Splashscreen
     implementation(libs.splashscreen)
+
+    // Retrofit
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.moshi)
+    implementation(libs.retrofit.okhtt3)
 }
 
 secrets {
     propertiesFileName = "secrets.properties"
 
     defaultPropertiesFileName = "secrets.defaults.properties"
+
 }

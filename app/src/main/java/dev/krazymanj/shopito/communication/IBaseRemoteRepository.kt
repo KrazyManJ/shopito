@@ -1,0 +1,45 @@
+package dev.krazymanj.shopito.communication
+
+import retrofit2.Response
+import java.io.InterruptedIOException
+import java.net.SocketTimeoutException
+import java.net.UnknownHostException
+
+interface IBaseRemoteRepository {
+
+    suspend fun <T: Any> processResponse(
+        request: suspend () -> Response<T>
+    ): CommunicationResult<T> {
+
+        try {
+            val call = request()
+            if (call.isSuccessful){
+                return if (call.body() != null){
+                    CommunicationResult.Success(call.body()!!)
+                } else {
+                    CommunicationResult.Error(
+                        CommunicationError(
+                            code = call.code(),
+                            message = call.errorBody().toString()
+                        )
+                    )
+                }
+            } else {
+                return CommunicationResult.Error(
+                    CommunicationError(
+                        code = call.code(),
+                        message = call.errorBody().toString()
+                    )
+                )
+            }
+        } catch (unknownHostException: UnknownHostException) {
+            return CommunicationResult.ConnectionError()
+        } catch (socketEx: SocketTimeoutException){
+            return CommunicationResult.ConnectionError()
+        } catch (interruptedEx: InterruptedIOException){
+            return CommunicationResult.ConnectionError()
+        } catch (exception: Exception){
+            return CommunicationResult.Exception(exception)
+        }
+    }
+}

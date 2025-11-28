@@ -1,21 +1,16 @@
 package dev.krazymanj.shopito.ui.elements.chip
 
-import android.location.Address
-import android.location.Geocoder
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.MapPin
 import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.model.Location
-import java.util.Locale
+import dev.krazymanj.shopito.viewmodel.GeoReverseViewModel
 
 @Composable
 fun LocationPickerChip(
@@ -24,15 +19,13 @@ fun LocationPickerChip(
     onLocationClearRequest: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    val context = LocalContext.current
+    val viewModel = hiltViewModel<GeoReverseViewModel>()
 
-    var address by remember { mutableStateOf<Address?>(null) }
+    val state = viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(location) {
         if (location != null) {
-            val geocoder = Geocoder(context, Locale.getDefault())
-            val addressList = geocoder.getFromLocation(location.latitude, location.longitude,1)
-            if (!addressList.isNullOrEmpty()) address = addressList[0]
+            viewModel.reverse(location)
         }
     }
 
@@ -41,7 +34,9 @@ fun LocationPickerChip(
         onClick = onLocationChangeRequest,
         leadingIcon = Lucide.MapPin,
         label = when {
-            location != null -> address?.getAddressLine(0) ?: stringResource(R.string.loading_label)
+            location == null -> stringResource(R.string.location_label)
+            state.value.isLoading -> stringResource(R.string.loading_label)
+            state.value.data != null -> state.value.data?.displayName ?: state.value.data!!.error!!
             else -> stringResource(R.string.location_label)
         },
         onXClick = onLocationClearRequest,

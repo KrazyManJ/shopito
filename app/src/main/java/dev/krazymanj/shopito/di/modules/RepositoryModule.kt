@@ -1,4 +1,4 @@
-package dev.krazymanj.shopito.di
+package dev.krazymanj.shopito.di.modules
 
 import dagger.Module
 import dagger.Provides

@@ -100,7 +100,6 @@ fun ShoppingListsSummaryScreenContent(
             .padding(spacing16),
         verticalArrangement = Arrangement.spacedBy(spacing4)
     ) {
-
         state.shoppingItemsWithDate.onEachIndexed { index, (buyTime,shoppingItems) ->
             item {
                 PrettyTimeText(
