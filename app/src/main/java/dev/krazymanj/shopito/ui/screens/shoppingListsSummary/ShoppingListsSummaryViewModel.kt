@@ -9,6 +9,7 @@ import dev.krazymanj.shopito.database.entities.ShoppingItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -18,7 +19,7 @@ class ShoppingListsSummaryViewModel @Inject constructor(private val repository: 
 
     private val _state : MutableStateFlow<ShoppingListsSummaryUIState> = MutableStateFlow(value = ShoppingListsSummaryUIState())
 
-    val shoppingListsSummaryUIState = _state.asStateFlow()
+    val state = _state.asStateFlow()
 
     override fun loadData(withLoadingState: Boolean) {
         viewModelScope.launch {
@@ -46,6 +47,7 @@ class ShoppingListsSummaryViewModel @Inject constructor(private val repository: 
         viewModelScope.launch {
             repository.delete(shoppingItem)
         }
+        saveLastDeletedItem(shoppingItem)
     }
 
     override fun changeItemCheckState(shoppingItem: ShoppingItem, state: Boolean) {
@@ -60,5 +62,19 @@ class ShoppingListsSummaryViewModel @Inject constructor(private val repository: 
         _state.value = _state.value.copy(
             currentShownShoppingItem = shoppingItem
         )
+    }
+
+    override fun saveLastDeletedItem(shoppingItem: ShoppingItem) {
+        _state.update { it.copy(
+            lastDeletedItem = shoppingItem
+        ) }
+    }
+
+    override fun addBackDeletedItem() {
+        viewModelScope.launch {
+            _state.value.lastDeletedItem?.let {
+                repository.insert(it)
+            }
+        }
     }
 }

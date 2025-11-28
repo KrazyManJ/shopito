@@ -64,6 +64,7 @@ import kotlin.math.max
 fun ShoppingItemModalSheet(
     shoppingItem: ShoppingItem,
     onDismissRequest: () -> Unit,
+    onAfterRemove: (ShoppingItem) -> Unit,
     modifier: Modifier = Modifier,
     shoppingList: ShoppingList? = null,
     onShoppingListLinkClick: () -> Unit = {},
@@ -71,7 +72,7 @@ fun ShoppingItemModalSheet(
 ) {
     val viewModel = hiltViewModel<ShoppingItemModalSheetViewModel>()
 
-    val state = viewModel.state.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     val sheetState = rememberModalBottomSheetState()
     val scope = rememberCoroutineScope()
@@ -83,7 +84,7 @@ fun ShoppingItemModalSheet(
         }
     }
 
-    if (state.value.loading) {
+    if (state.loading) {
         viewModel.loadData(shoppingItem, shoppingList)
     }
 
@@ -94,19 +95,19 @@ fun ShoppingItemModalSheet(
             viewModel.loadPlacesOptions()
         }
         LocationOptionsDialog(
-            options = state.value.placesOptions,
-            selectedLocation = state.value.item.location,
+            options = state.placesOptions,
+            selectedLocation = state.item.location,
             onDismissRequest = {
                 locationOptionsVisible = false
             },
             onSelected = {
-                viewModel.updateItem(state.value.item.copy(location = it.location))
+                viewModel.updateItem(state.item.copy(location = it.location))
             },
             onMapPickerClicked = {
                 scope.launch {
                     sheetState.hide()
                     navRouter.navigateTo(Destination.MapLocationPickerScreen(
-                        state.value.item.location,
+                        state.item.location,
                         NavStateKey.LocationModalResult
                     ))
                 }
@@ -130,7 +131,7 @@ fun ShoppingItemModalSheet(
         Column(
             modifier = Modifier.padding(spacing16)
         ) {
-            state.value.list?.let { shoppingList ->
+            state.list?.let { shoppingList ->
                 Row {
                     Icon(imageVector = Lucide.ListTodo, contentDescription = null)
                     Icon(imageVector = Lucide.ChevronRight, contentDescription = null, tint = textSecondaryColor())
@@ -151,8 +152,8 @@ fun ShoppingItemModalSheet(
             Spacer(Modifier.height(spacing16))
             Row {
                 BorderFreeTextField(
-                    value = state.value.item.itemName,
-                    onValueChange = { viewModel.updateItem(state.value.item.copy(itemName = it))},
+                    value = state.item.itemName,
+                    onValueChange = { viewModel.updateItem(state.item.copy(itemName = it))},
                     placeholder = "",
                     textStyle = MaterialTheme.typography.headlineLarge.copy(
                         color = textPrimaryColor()
@@ -161,36 +162,36 @@ fun ShoppingItemModalSheet(
                 )
                 Spacer(Modifier.width(spacing16))
                 ShopitoCheckbox(
-                    checked = state.value.item.isDone,
-                    onCheckedChange = { viewModel.updateItem(state.value.item.copy(isDone = it))},
+                    checked = state.item.isDone,
+                    onCheckedChange = { viewModel.updateItem(state.item.copy(isDone = it))},
                     modifier = Modifier.width(40.dp).height(40.dp)
                 )
             }
             Spacer(Modifier.height(spacing16))
             AmountPicker(
-                value = state.value.item.amount,
-                onIncrement = { viewModel.updateItem(state.value.item.copy(amount = state.value.item.amount+1))},
-                onDecrement = { viewModel.updateItem(state.value.item.copy(amount = max(1, state.value.item.amount-1))) }
+                value = state.item.amount,
+                onIncrement = { viewModel.updateItem(state.item.copy(amount = state.item.amount+1))},
+                onDecrement = { viewModel.updateItem(state.item.copy(amount = max(1, state.item.amount-1))) }
             )
             Spacer(Modifier.height(spacing32))
             DatePickerChip(
-                date = state.value.item.buyTime,
+                date = state.item.buyTime,
                 onDateChange = {
-                    viewModel.updateItem(state.value.item.copy(buyTime = it))
+                    viewModel.updateItem(state.item.copy(buyTime = it))
                 }
             )
             Row {
                 LocationPickerChip(
-                    location = state.value.item.location,
+                    location = state.item.location,
                     onLocationChangeRequest = {
                         locationOptionsVisible = true
                     },
                     onLocationClearRequest = {
-                        viewModel.updateItem(state.value.item.copy(location = null))
+                        viewModel.updateItem(state.item.copy(location = null))
                     },
                     modifier = Modifier.weight(1f, fill = false)
                 )
-                state.value.item.location?.let { location ->
+                state.item.location?.let { location ->
                     OpenMapButton(location)
                 }
             }
@@ -199,6 +200,7 @@ fun ShoppingItemModalSheet(
                 OutlinedButton(
                     onClick = {
                         viewModel.remove()
+                        onAfterRemove(state.item)
                         scope.launch {
                             sheetState.hide()
                             viewModel.reset()

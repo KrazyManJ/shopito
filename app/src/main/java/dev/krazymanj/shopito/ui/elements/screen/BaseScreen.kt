@@ -10,6 +10,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Snackbar
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBarColors
 import androidx.compose.runtime.Composable
@@ -21,6 +24,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.composables.icons.lucide.ArrowLeft
 import com.composables.icons.lucide.Lucide
 import dev.krazymanj.shopito.R
+import dev.krazymanj.shopito.ui.theme.Primary
 import dev.krazymanj.shopito.ui.theme.backgroundPrimaryColor
 import dev.krazymanj.shopito.ui.theme.spacing16
 import dev.krazymanj.shopito.ui.theme.textPrimaryColor
@@ -37,6 +41,7 @@ fun BaseScreen(
     actions: @Composable RowScope.() -> Unit = {},
     floatingActionButton: @Composable () -> Unit = {},
     bottomBar: @Composable () -> Unit = {},
+    snackbarHostState: SnackbarHostState? = null,
     content: @Composable (paddingValues: PaddingValues) -> Unit,
 ) {
     Scaffold(
@@ -74,6 +79,14 @@ fun BaseScreen(
         floatingActionButton = floatingActionButton,
         containerColor = backgroundPrimaryColor(),
         contentColor = textPrimaryColor(),
+        snackbarHost = {
+            snackbarHostState?.let { SnackbarHost(hostState = it) { data ->
+                Snackbar(
+                    snackbarData = data,
+                    actionColor = Primary
+                )
+            } }
+        },
         modifier = modifier.then(Modifier.imePadding())
     ) {
         if (showLoading) {

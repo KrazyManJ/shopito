@@ -20,4 +20,5 @@ data class ShoppingListViewUIState(
     val locationInput: Location? = null,
 
     val isCreated: Boolean = false,
+    val lastDeletedItem: ShoppingItem? = null,
 )

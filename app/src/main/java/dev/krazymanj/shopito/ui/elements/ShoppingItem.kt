@@ -18,9 +18,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismissBox
+import androidx.compose.material3.SwipeToDismissBoxState
 import androidx.compose.material3.SwipeToDismissBoxValue
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberSwipeToDismissBoxState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -30,6 +30,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -58,7 +59,7 @@ fun ShoppingItem(
     onCheckStateChange: (Boolean) -> Unit,
     shoppingList: ShoppingList? = null,
     onClick: () -> Unit = {},
-    onDelete: () -> Unit,
+    onRemove: () -> Unit,
 ) {
     val textColor = if (shoppingItem.isDone) textSecondaryColor() else textPrimaryColor()
     val textDecoration = if (shoppingItem.isDone) TextDecoration.LineThrough else TextDecoration.None
@@ -72,23 +73,29 @@ fun ShoppingItem(
     LaunchedEffect(isRemoved, shoppingItem) {
         if (isRemoved) {
             delay(fadeTime.toLong())
-            onDelete()
+            onRemove()
         }
     }
 
-    val dismissState = rememberSwipeToDismissBoxState(
-        confirmValueChange = { dismissValue ->
-            when (dismissValue) {
-                SwipeToDismissBoxValue.EndToStart -> {
-                    isRemoved = true
-                    true
+    val density = LocalDensity.current
+    val dismissState = remember(key1 = shoppingItem){
+        SwipeToDismissBoxState (
+            density = density,
+            initialValue = SwipeToDismissBoxValue.Settled,
+            confirmValueChange = { dismissValue ->
+                when (dismissValue) {
+                    SwipeToDismissBoxValue.EndToStart -> {
+                        isRemoved = true
+                        true
+                    }
+                    else -> {
+                        false
+                    }
                 }
-                else -> {
-                    false
-                }
-            }
-        },
-    )
+            },
+            positionalThreshold = { with(density) { 56.dp.toPx() } }
+        )
+    }
 
     AnimatedVisibility(
         visible = !isRemoved,

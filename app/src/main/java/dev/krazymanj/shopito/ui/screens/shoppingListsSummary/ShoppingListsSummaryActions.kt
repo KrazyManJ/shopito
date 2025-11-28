@@ -8,4 +8,6 @@ interface ShoppingListsSummaryActions {
     fun deleteShoppingItem(shoppingItem: ShoppingItem)
     fun changeItemCheckState(shoppingItem: ShoppingItem, state: Boolean)
     fun setCurrentViewingShoppingItem(shoppingItem: ShoppingItemWithList?)
+    fun saveLastDeletedItem(shoppingItem: ShoppingItem)
+    fun addBackDeletedItem()
 }

@@ -8,4 +8,6 @@ interface ShoppingListViewActions {
     fun changeItemCheckState(shoppingItem: ShoppingItem, state: Boolean)
     fun clearIsCreatedState()
     fun openShoppingItemDetails(shoppingItem: ShoppingItem?)
+    fun saveLastDeletedItem(shoppingItem: ShoppingItem)
+    fun addBackDeletedItem()
 }

@@ -9,14 +9,17 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -25,6 +28,7 @@ import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Pencil
 import com.composables.icons.lucide.StickyNote
 import dev.krazymanj.shopito.R
+import dev.krazymanj.shopito.extension.showDeletedMessage
 import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.navigation.NavStateKey
@@ -36,6 +40,7 @@ import dev.krazymanj.shopito.ui.elements.modal.ShoppingItemModalSheet
 import dev.krazymanj.shopito.ui.elements.screen.BaseScreen
 import dev.krazymanj.shopito.ui.elements.screen.PlaceholderScreenContent
 import dev.krazymanj.shopito.ui.theme.spacing16
+import kotlinx.coroutines.launch
 
 @Composable
 fun ShoppingListViewScreen(
@@ -83,13 +88,24 @@ fun ShoppingListViewScreen(
         )
     }
 
+    val snackbarHostState = remember { SnackbarHostState() }
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
+
     state.value.currentShownShoppingItem?.let { shoppingItem ->
         ShoppingItemModalSheet(
             shoppingItem = shoppingItem,
             onDismissRequest = {
                 viewModel.openShoppingItemDetails(null)
             },
-            navRouter = navRouter
+            navRouter = navRouter,
+            onAfterRemove = {
+                scope.launch {
+                    snackbarHostState.showDeletedMessage(it,context) {
+                        viewModel.addBackDeletedItem()
+                    }
+                }
+            }
         )
     }
 
@@ -129,6 +145,7 @@ fun ShoppingListViewScreen(
                 }
             )
         },
+        snackbarHostState = snackbarHostState,
         modifier = Modifier.pointerInput(Unit) {
             detectTapGestures(onTap = {
                 focusManager.clearFocus()
@@ -137,6 +154,7 @@ fun ShoppingListViewScreen(
     ) {
         ShoppingListViewScreenContent(
             paddingValues = it,
+            snackbarHostState = snackbarHostState,
             state = state.value,
             actions = viewModel
         )
@@ -146,10 +164,14 @@ fun ShoppingListViewScreen(
 @Composable
 fun ShoppingListViewScreenContent(
     paddingValues: PaddingValues,
+    snackbarHostState: SnackbarHostState,
     state: ShoppingListViewUIState,
-    actions: ShoppingListViewActions
+    actions: ShoppingListViewActions,
 ) {
     val listState = rememberLazyListState()
+
+    val context = LocalContext.current
+    val scope = rememberCoroutineScope()
 
     if (state.isCreated) {
         LaunchedEffect(Unit) {
@@ -179,8 +201,13 @@ fun ShoppingListViewScreenContent(
                 onClick = {
                     actions.openShoppingItemDetails(it)
                 },
-                onDelete = {
-                    actions.deleteShoppingItem(it)
+                onRemove = {
+                    scope.launch {
+                        actions.deleteShoppingItem(it)
+                        snackbarHostState.showDeletedMessage(it,context) {
+                            actions.addBackDeletedItem()
+                        }
+                    }
                 }
             )
         }

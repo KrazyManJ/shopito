@@ -40,4 +40,6 @@
     <string name="no_buy_time">Bez  času nákupu</string>
     <string name="list_placeholder_title">Žádné zboží v seznamu</string>
     <string name="list_placeholder_text">Vlož položky skrze spodní panel</string>
+    <string name="item_deleted">Položka \"%1$s\" smazána</string>
+    <string name="undo">Vrátit</string>
 </resources>

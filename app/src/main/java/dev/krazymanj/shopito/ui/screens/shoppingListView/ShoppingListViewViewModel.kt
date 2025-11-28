@@ -50,6 +50,7 @@ class ShoppingListViewViewModel @Inject constructor(
     override fun deleteShoppingItem(shoppingItem: ShoppingItem) {
         viewModelScope.launch {
             repository.delete(shoppingItem)
+            saveLastDeletedItem(shoppingItem)
         }
     }
 
@@ -189,6 +190,20 @@ class ShoppingListViewViewModel @Inject constructor(
             set.remove(savedLocation)
             dataStore.set(DataStoreKey.LastFiveLocations, set)
             loadPlacesOptions()
+        }
+    }
+
+    override fun saveLastDeletedItem(shoppingItem: ShoppingItem) {
+        _state.update { it.copy(
+            lastDeletedItem = shoppingItem
+        ) }
+    }
+
+    override fun addBackDeletedItem() {
+        viewModelScope.launch {
+            _state.value.lastDeletedItem?.let {
+                repository.insert(it)
+            }
         }
     }
 }

@@ -40,4 +40,6 @@
     <string name="no_buy_time">No buy time</string>
     <string name="list_placeholder_title">No items in list</string>
     <string name="list_placeholder_text">Add new items via bottom bar</string>
+    <string name="item_deleted">Item \"%1$s\" deleted</string>
+    <string name="undo">Undo</string>
 </resources>
