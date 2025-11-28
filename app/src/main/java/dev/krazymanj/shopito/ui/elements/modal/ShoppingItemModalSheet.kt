@@ -36,12 +36,12 @@ import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.navigation.NavStateKey
 import dev.krazymanj.shopito.navigation.NavigationCurrentStateReceivedEffect
-import dev.krazymanj.shopito.ui.elements.input.AmountPicker
-import dev.krazymanj.shopito.ui.elements.input.BorderFreeTextField
 import dev.krazymanj.shopito.ui.elements.button.OpenMapButton
-import dev.krazymanj.shopito.ui.elements.input.ShopitoCheckbox
 import dev.krazymanj.shopito.ui.elements.chip.DatePickerChip
 import dev.krazymanj.shopito.ui.elements.chip.LocationPickerChip
+import dev.krazymanj.shopito.ui.elements.input.AmountPicker
+import dev.krazymanj.shopito.ui.elements.input.BorderFreeTextField
+import dev.krazymanj.shopito.ui.elements.input.ShopitoCheckbox
 import dev.krazymanj.shopito.ui.theme.Primary
 import dev.krazymanj.shopito.ui.theme.backgroundPrimaryColor
 import dev.krazymanj.shopito.ui.theme.spacing16
@@ -110,7 +110,9 @@ fun ShoppingItemModalSheet(
                     value = state.value.item.itemName,
                     onValueChange = { viewModel.updateItem(state.value.item.copy(itemName = it))},
                     placeholder = "",
-                    textStyle = MaterialTheme.typography.headlineLarge,
+                    textStyle = MaterialTheme.typography.headlineLarge.copy(
+                        color = textPrimaryColor()
+                    ),
                     modifier = Modifier.weight(1f)
                 )
                 Spacer(Modifier.width(spacing16))

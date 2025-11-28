@@ -12,7 +12,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Shape
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.vector.ImageVector
+import dev.krazymanj.shopito.ui.theme.textPrimaryColor
+import dev.krazymanj.shopito.ui.theme.textSecondaryColor
 import kotlinx.coroutines.delay
 
 @Composable
@@ -49,7 +52,14 @@ fun RepeatingOutlinedIconButton(
         shape = shape,
         onClick = {},
         modifier = modifier,
-        interactionSource = interactionSource
+        interactionSource = interactionSource,
+        colors = IconButtonDefaults.outlinedIconButtonColors(
+            contentColor = textPrimaryColor(),
+            disabledContentColor = textSecondaryColor(),
+        ),
+        border = IconButtonDefaults.outlinedIconButtonBorder(true).copy(
+            brush = SolidColor(if (enabled) textPrimaryColor() else textSecondaryColor())
+        )
     ) {
         Icon(
             imageVector = icon,

@@ -14,7 +14,7 @@ val LightBackgroundSecondary = Color(0xFFDAD8D4)
 
 
 val DarkTextPrimary = Color(0xFFF2F0ED)
-val DarkTextSecondary = Color(0xFFAAA9A7)
+val DarkTextSecondary = Color(0xFF717070)
 val DarkBackgroundPrimary = Color(0xFF181717)
 val DarkBackgroundSecondary = Color(0xFF343434)
 
