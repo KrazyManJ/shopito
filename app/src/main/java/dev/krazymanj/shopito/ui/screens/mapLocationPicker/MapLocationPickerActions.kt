@@ -4,4 +4,5 @@ import dev.krazymanj.shopito.model.Location
 
 interface MapLocationPickerActions {
     fun locationChanged(location: Location)
+    fun setInitialized()
 }
