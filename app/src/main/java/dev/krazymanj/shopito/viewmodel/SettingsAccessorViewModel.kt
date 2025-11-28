@@ -3,7 +3,7 @@ package dev.krazymanj.shopito.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.krazymanj.shopito.datastore.DataStoreKeys
+import dev.krazymanj.shopito.datastore.DataStoreKey
 import dev.krazymanj.shopito.datastore.IDataStoreRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 data class SettingsAccessorUIState(
     val loading: Boolean = true,
-    val startNavigationSetting: Boolean = DataStoreKeys.GoogleMapsStartNavigationKey.default
+    val startNavigationSetting: Boolean = DataStoreKey.GoogleMapsStartNavigationKey.default
 )
 
 @HiltViewModel
@@ -25,7 +25,7 @@ class SettingsAccessorViewModel @Inject constructor(private val dataStore: IData
     fun load() {
         viewModelScope.launch {
             _state.value = _state.value.copy(
-                startNavigationSetting = dataStore.get(DataStoreKeys.GoogleMapsStartNavigationKey),
+                startNavigationSetting = dataStore.get(DataStoreKey.GoogleMapsStartNavigationKey),
                 loading = false
             )
         }

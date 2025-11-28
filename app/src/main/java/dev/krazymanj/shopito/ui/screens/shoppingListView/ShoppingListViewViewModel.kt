@@ -3,17 +3,32 @@ package dev.krazymanj.shopito.ui.screens.shoppingListView
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.krazymanj.shopito.communication.CommunicationResult
+import dev.krazymanj.shopito.communication.IGeoReverseRepository
 import dev.krazymanj.shopito.database.IShopitoLocalRepository
 import dev.krazymanj.shopito.database.entities.ShoppingItem
+import dev.krazymanj.shopito.datastore.DataStoreKey
+import dev.krazymanj.shopito.datastore.IDataStoreRepository
 import dev.krazymanj.shopito.extension.empty
+import dev.krazymanj.shopito.extension.removeFirstItem
+import dev.krazymanj.shopito.model.GeoReverseResponse
 import dev.krazymanj.shopito.model.Location
+import dev.krazymanj.shopito.model.SavedLocation
+import dev.krazymanj.shopito.ui.elements.modal.MAX_OPTIONS
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
-class ShoppingListViewViewModel @Inject constructor(private val repository: IShopitoLocalRepository) : ViewModel(),
+class ShoppingListViewViewModel @Inject constructor(
+    private val repository: IShopitoLocalRepository,
+    private val dataStore: IDataStoreRepository,
+    private val geoReverseRepository: IGeoReverseRepository
+) : ViewModel(),
     ShoppingListViewActions {
 
     private val _state : MutableStateFlow<ShoppingListViewUIState> = MutableStateFlow(value = ShoppingListViewUIState())
@@ -134,5 +149,59 @@ class ShoppingListViewViewModel @Inject constructor(private val repository: ISho
         _state.value = _state.value.copy(
             currentShownShoppingItem = shoppingItem
         )
+    }
+
+    fun loadPlacesOptions() {
+        viewModelScope.launch {
+            _state.update { it.copy(
+                placesOptions = dataStore.get(DataStoreKey.LastFiveLocations)
+            ) }
+        }
+    }
+
+    private suspend fun saveToHistory(savedLocation: SavedLocation) {
+        val set = dataStore.get(DataStoreKey.LastFiveLocations) as LinkedHashSet<SavedLocation>
+        set.add(savedLocation)
+        if (set.size > MAX_OPTIONS) {
+            set.removeFirstItem()
+        }
+        dataStore.set(DataStoreKey.LastFiveLocations, set)
+    }
+
+    fun updateItemLocation(location: Location) {
+        viewModelScope.launch {
+            val result = withContext(Dispatchers.IO) {
+                geoReverseRepository.reverse(location)
+            }
+            when (result) {
+                is CommunicationResult.ConnectionError, is CommunicationResult.Error, is CommunicationResult.Exception -> {
+                    return@launch
+                }
+                is CommunicationResult.Success<GeoReverseResponse> -> {
+                    val data = result.data
+                    if (data.error != null) {
+                        return@launch
+                    }
+
+                    val loc = Location(data.lat!!, data.lon!!)
+                    onLocationChanged(
+                        location = loc
+                    )
+                    saveToHistory(SavedLocation(
+                        label = data.displayName!!,
+                        location = loc
+                    ))
+                }
+            }
+        }
+    }
+
+    fun deleteFromHistory(savedLocation: SavedLocation){
+        viewModelScope.launch {
+            val set = dataStore.get(DataStoreKey.LastFiveLocations) as LinkedHashSet<SavedLocation>
+            set.remove(savedLocation)
+            dataStore.set(DataStoreKey.LastFiveLocations, set)
+            loadPlacesOptions()
+        }
     }
 }

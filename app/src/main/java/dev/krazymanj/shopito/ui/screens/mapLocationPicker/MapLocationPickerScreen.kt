@@ -4,13 +4,16 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -35,6 +38,8 @@ import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.ui.elements.screen.BaseScreen
 import dev.krazymanj.shopito.ui.theme.Primary
+import dev.krazymanj.shopito.ui.theme.spacing32
+import dev.krazymanj.shopito.ui.theme.spacing8
 
 @Composable
 fun MapLocationPickerScreen(
@@ -131,14 +136,20 @@ fun MapPositionPickerScreenContent(
 
         Button(
             modifier = Modifier
-                .padding(16.dp)
-                .align(Alignment.BottomCenter),
+                .padding(spacing32)
+                .align(Alignment.BottomCenter)
+                .fillMaxWidth(),
             onClick = {
                 navRouter.setPreviousState(route.navSource, state.location)
                 navRouter.returnBack()
             },
+            shape = RoundedCornerShape(16.dp)
         ) {
-            Text(text = stringResource(R.string.save_label))
+            Text(
+                text = stringResource(R.string.save_label),
+                modifier = Modifier.padding(spacing8),
+                style = MaterialTheme.typography.labelLarge
+            )
         }
     }
 }

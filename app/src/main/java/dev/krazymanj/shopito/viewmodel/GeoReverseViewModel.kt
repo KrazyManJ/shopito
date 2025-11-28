@@ -5,6 +5,8 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.krazymanj.shopito.communication.CommunicationResult
 import dev.krazymanj.shopito.communication.IGeoReverseRepository
+import dev.krazymanj.shopito.datastore.DataStoreKey
+import dev.krazymanj.shopito.datastore.IDataStoreRepository
 import dev.krazymanj.shopito.model.GeoReverseResponse
 import dev.krazymanj.shopito.model.Location
 import kotlinx.coroutines.Dispatchers
@@ -19,11 +21,14 @@ data class GeoReverseUIState(
     val isLoading: Boolean = true,
     val error: Int? = null,
     val lastProcessedLocation: Location? = null,
-    val data: GeoReverseResponse? = null
+    val locationLabel: String? = null,
 )
 
 @HiltViewModel
-class GeoReverseViewModel @Inject constructor(private val repository: IGeoReverseRepository) : ViewModel() {
+class GeoReverseViewModel @Inject constructor(
+    private val repository: IGeoReverseRepository,
+    private val dataStore: IDataStoreRepository
+) : ViewModel() {
     private val _state : MutableStateFlow<GeoReverseUIState> = MutableStateFlow(value = GeoReverseUIState())
 
     val state = _state.asStateFlow()
@@ -36,6 +41,17 @@ class GeoReverseViewModel @Inject constructor(private val repository: IGeoRevers
             lastProcessedLocation = location
         ) }
         viewModelScope.launch {
+            val lastFiveLocations = dataStore.get(DataStoreKey.LastFiveLocations)
+            val matchingSavedLocation = lastFiveLocations.firstOrNull { it.location == location }
+
+//            matchingSavedLocation?.let { savedLocation ->
+//                _state.update { it.copy(
+//                    locationLabel = savedLocation.label,
+//                    isLoading = false
+//                ) }
+//                return@launch
+//            }
+
             val result = withContext(Dispatchers.IO) {
                 repository.reverse(location)
             }
@@ -58,7 +74,7 @@ class GeoReverseViewModel @Inject constructor(private val repository: IGeoRevers
                 }
                 is CommunicationResult.Success<GeoReverseResponse> -> {
                     _state.update { it.copy(
-                        data = result.data,
+                        locationLabel = result.data.displayName ?: result.data.error,
                         isLoading = false
                     ) }
                 }

@@ -82,9 +82,11 @@ fun ShoppingListsSummaryScreenContent(
         ShoppingItemModalSheet(
             shoppingItem = shoppingItemWithList.item,
             shoppingList = shoppingItemWithList.list,
-            onDismiss = {
+            onDismissRequest = { updated ->
                 actions.setCurrentViewingShoppingItem(null)
-                actions.loadData()
+                if (updated) {
+                    actions.loadData()
+                }
             },
             onShoppingListLinkClick = {
                 actions.setCurrentViewingShoppingItem(null)

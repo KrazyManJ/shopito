@@ -16,7 +16,14 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
@@ -49,13 +56,14 @@ import dev.krazymanj.shopito.ui.theme.spacing32
 import dev.krazymanj.shopito.ui.theme.spacing8
 import dev.krazymanj.shopito.ui.theme.textPrimaryColor
 import dev.krazymanj.shopito.ui.theme.textSecondaryColor
+import kotlinx.coroutines.launch
 import kotlin.math.max
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ShoppingItemModalSheet(
     shoppingItem: ShoppingItem,
-    onDismiss: () -> Unit,
+    onDismissRequest: (updated: Boolean) -> Unit,
     modifier: Modifier = Modifier,
     shoppingList: ShoppingList? = null,
     onShoppingListLinkClick: () -> Unit = {},
@@ -65,27 +73,69 @@ fun ShoppingItemModalSheet(
 
     val state = viewModel.state.collectAsStateWithLifecycle()
 
+    val sheetState = rememberModalBottomSheetState()
+    val scope = rememberCoroutineScope()
+
     NavigationCurrentStateReceivedEffect(navRouter, NavStateKey.LocationModalResult) { location ->
-        viewModel.updateItem(state.value.item.copy(location = location))
+        viewModel.updateItemLocation(location)
+        scope.launch {
+            sheetState.show()
+        }
     }
 
     if (state.value.dismissed) {
-        onDismiss()
-        viewModel.reset()
+        LaunchedEffect(Unit) {
+            scope.launch {
+                sheetState.hide()
+                onDismissRequest(true)
+                viewModel.reset()
+            }
+        }
     }
 
     if (state.value.loading) {
         viewModel.loadData(shoppingItem, shoppingList)
     }
 
+    var locationOptionsVisible by remember { mutableStateOf(false) }
+
+    if (locationOptionsVisible) {
+        LaunchedEffect(Unit) {
+            viewModel.loadPlacesOptions()
+        }
+        LocationOptionsDialog(
+            options = state.value.placesOptions,
+            selectedLocation = state.value.item.location,
+            onDismissRequest = {
+                locationOptionsVisible = false
+            },
+            onSelected = {
+                viewModel.updateItem(state.value.item.copy(location = it.location))
+            },
+            onMapPickerClicked = {
+                scope.launch {
+                    sheetState.hide()
+                    navRouter.navigateTo(Destination.MapLocationPickerScreen(
+                        state.value.item.location,
+                        NavStateKey.LocationModalResult
+                    ))
+                }
+            },
+            onDeleteRequest = {
+                viewModel.deleteFromHistory(it)
+            }
+        )
+    }
+
     ModalBottomSheet(
         onDismissRequest = {
-            onDismiss()
+            onDismissRequest(false)
             viewModel.reset()
         },
         containerColor = backgroundPrimaryColor(),
         contentColor = textPrimaryColor(),
-        modifier = modifier.then(Modifier)
+        modifier = modifier.then(Modifier),
+        sheetState = sheetState
     ) {
         Column(
             modifier = Modifier.padding(spacing16)
@@ -99,7 +149,11 @@ fun ShoppingItemModalSheet(
                         color = Primary,
                         textDecoration = TextDecoration.Underline,
                         modifier = Modifier.clickable {
-                            onShoppingListLinkClick()
+                            scope.launch {
+                                sheetState.hide()
+                                onShoppingListLinkClick()
+                                viewModel.reset()
+                            }
                         }
                     )
                 }
@@ -139,10 +193,7 @@ fun ShoppingItemModalSheet(
                 LocationPickerChip(
                     location = state.value.item.location,
                     onLocationChangeRequest = {
-                        navRouter.navigateTo(Destination.MapLocationPickerScreen(
-                            state.value.item.location,
-                            NavStateKey.LocationModalResult
-                        ))
+                        locationOptionsVisible = true
                     },
                     onLocationClearRequest = {
                         viewModel.updateItem(state.value.item.copy(location = null))
@@ -156,7 +207,12 @@ fun ShoppingItemModalSheet(
             Spacer(Modifier.height(spacing32))
             Row {
                 OutlinedButton(
-                    onClick = { viewModel.delete() },
+                    onClick = {
+                        scope.launch {
+                            sheetState.hide()
+                            viewModel.delete()
+                        }
+                    },
                     colors = ButtonDefaults.outlinedButtonColors().copy(
                         containerColor = backgroundPrimaryColor(),
                         contentColor = Primary
@@ -170,7 +226,12 @@ fun ShoppingItemModalSheet(
                     Text(stringResource(R.string.remove))
                 }
                 Spacer(modifier = Modifier.weight(1f))
-                Button(onClick = { viewModel.save() }) {
+                Button(onClick = {
+                    scope.launch {
+                        sheetState.hide()
+                        viewModel.save()
+                    }
+                }) {
                     Icon(imageVector = Lucide.Save, contentDescription = null, Modifier.size(16.dp))
                     Spacer(Modifier.width(spacing8))
                     Text(stringResource(R.string.save_label))
@@ -178,5 +239,4 @@ fun ShoppingItemModalSheet(
             }
         }
     }
-
 }

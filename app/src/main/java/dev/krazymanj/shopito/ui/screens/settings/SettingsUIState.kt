@@ -1,9 +1,9 @@
 package dev.krazymanj.shopito.ui.screens.settings
 
-import dev.krazymanj.shopito.datastore.DataStoreKeys
+import dev.krazymanj.shopito.datastore.DataStoreKey
 
 
 data class SettingsUIState(
     val loading: Boolean = true,
-    val startNavigationSetting: Boolean = DataStoreKeys.GoogleMapsStartNavigationKey.default
+    val startNavigationSetting: Boolean = DataStoreKey.GoogleMapsStartNavigationKey.default
 )

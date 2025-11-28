@@ -1,5 +1,6 @@
 package dev.krazymanj.shopito.ui.elements.chip
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
@@ -29,16 +30,20 @@ fun LocationPickerChip(
         }
     }
 
+    // TODO: If location is one of saved in preferences, display label from that rather than fetching again (or if no internet connection)
+
+    Log.i("Test", "Location label: ${state.value.locationLabel}")
+
     PickerChip(
         selected = location != null,
         onClick = onLocationChangeRequest,
         leadingIcon = Lucide.MapPin,
         label = when {
             location == null -> stringResource(R.string.location_label)
-            state.value.isLoading -> stringResource(R.string.loading_label)
-            state.value.data != null -> state.value.data?.displayName ?: state.value.data!!.error!!
+            state.value.locationLabel != null -> state.value.locationLabel!!
             else -> stringResource(R.string.location_label)
         },
+        showLoading = state.value.isLoading,
         onXClick = onLocationClearRequest,
         modifier = modifier.then(Modifier)
     )

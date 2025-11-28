@@ -1,5 +1,6 @@
 package dev.krazymanj.shopito.ui.screens.shoppingListView
 
+import android.util.Log
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -11,6 +12,10 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalFocusManager
@@ -25,8 +30,9 @@ import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.navigation.NavStateKey
 import dev.krazymanj.shopito.navigation.NavigationCurrentStateReceivedEffect
-import dev.krazymanj.shopito.ui.elements.input.QuickAdd
 import dev.krazymanj.shopito.ui.elements.ShoppingItem
+import dev.krazymanj.shopito.ui.elements.input.QuickAdd
+import dev.krazymanj.shopito.ui.elements.modal.LocationOptionsDialog
 import dev.krazymanj.shopito.ui.elements.modal.ShoppingItemModalSheet
 import dev.krazymanj.shopito.ui.elements.screen.BaseScreen
 import dev.krazymanj.shopito.ui.elements.screen.PlaceholderScreenContent
@@ -46,10 +52,37 @@ fun ShoppingListViewScreen(
     }
 
     NavigationCurrentStateReceivedEffect(navRouter, NavStateKey.LocationQuickAddResult) { location ->
-        viewModel.onLocationChanged(location)
+        viewModel.updateItemLocation(location)
     }
 
     val focusManager = LocalFocusManager.current
+
+    var locationOptionsVisible by remember { mutableStateOf(false) }
+
+    if (locationOptionsVisible) {
+        LaunchedEffect(Unit) {
+            viewModel.loadPlacesOptions()
+        }
+        LocationOptionsDialog(
+            options = state.value.placesOptions,
+            selectedLocation = state.value.locationInput,
+            onDismissRequest = {
+                locationOptionsVisible = false
+            },
+            onSelected = {
+                viewModel.onLocationChanged(it.location)
+            },
+            onMapPickerClicked = {
+                navRouter.navigateTo(Destination.MapLocationPickerScreen(
+                    state.value.locationInput,
+                    NavStateKey.LocationQuickAddResult
+                ))
+            },
+            onDeleteRequest = {
+                viewModel.deleteFromHistory(it)
+            }
+        )
+    }
 
     BaseScreen(
         topBarText = if (state.value.shoppingList != null) state.value.shoppingList!!.name else "...",
@@ -80,10 +113,7 @@ fun ShoppingListViewScreen(
                 onAdd = { viewModel.addShoppingItem() },
                 onDateChange = { viewModel.onDateInput(it) },
                 onLocationChangeRequest = {
-                    navRouter.navigateTo(Destination.MapLocationPickerScreen(
-                        state.value.locationInput,
-                        NavStateKey.LocationQuickAddResult
-                    ))
+                    locationOptionsVisible = true
                 },
                 onLocationClearRequest = {
                     viewModel.onLocationChanged(null)
@@ -122,10 +152,12 @@ fun ShoppingListViewScreenContent(
             actions.clearIsCreatedState()
         }
     }
+    Log.i("Test", "Current value: ${state.currentShownShoppingItem}")
     state.currentShownShoppingItem?.let { shoppingItem ->
         ShoppingItemModalSheet(
             shoppingItem = shoppingItem,
-            onDismiss = {
+            onDismissRequest = {
+                Log.i("Test", "Shopping item set to null")
                 actions.openShoppingItemDetails(null)
             },
             navRouter = navRouter

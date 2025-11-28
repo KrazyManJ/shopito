@@ -1,8 +1,11 @@
 package dev.krazymanj.shopito.ui.elements.chip
 
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.InputChip
 import androidx.compose.material3.MaterialTheme
@@ -19,6 +22,7 @@ import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.X
 import dev.krazymanj.shopito.ui.theme.Primary
 import dev.krazymanj.shopito.ui.theme.backgroundPrimaryColor
+import dev.krazymanj.shopito.ui.theme.spacing16
 import dev.krazymanj.shopito.ui.theme.textPrimaryColor
 import dev.krazymanj.shopito.ui.theme.textSecondaryColor
 
@@ -49,6 +53,7 @@ fun PickerChip(
     label: String,
     onXClick: () -> Unit,
     modifier: Modifier = Modifier,
+    showLoading: Boolean = false,
 ) {
     InputChip(
         selected = selected,
@@ -61,11 +66,22 @@ fun PickerChip(
             )
         },
         label = {
-            Text(
-                text = label,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis
-            )
+            if (showLoading) {
+                Box(modifier = Modifier.padding(horizontal = spacing16)) {
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        modifier = Modifier.size(16.dp),
+                        strokeWidth = 2.dp
+                    )
+                }
+            }
+            else {
+                Text(
+                    text = label,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis
+                )
+            }
         },
         trailingIcon = {
             if (selected) {
@@ -88,6 +104,7 @@ fun PickerChip(
 private fun Preview() {
     Column {
         PickerChip(true, {}, Lucide.Image, "Chip", {},)
+        PickerChip(true, {}, Lucide.Image, "Chip", {}, showLoading = true)
         PickerChip(false, {}, Lucide.Image, "Chip", {},)
     }
 }
