@@ -16,9 +16,12 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -42,6 +45,8 @@ import dev.krazymanj.shopito.ui.theme.spacing4
 import dev.krazymanj.shopito.ui.theme.spacing8
 import dev.krazymanj.shopito.ui.theme.textPrimaryColor
 import dev.krazymanj.shopito.ui.theme.textSecondaryColor
+import dev.krazymanj.shopito.utils.ConnectionState
+import dev.krazymanj.shopito.utils.rememberConnectivityState
 
 @Composable
 fun LocationOptionsDialog(
@@ -52,6 +57,8 @@ fun LocationOptionsDialog(
     onMapPickerClicked: () -> Unit,
     onDeleteRequest: (SavedLocation) -> Unit
 ) {
+    val connectionState by rememberConnectivityState()
+
     Dialog(
         onDismissRequest = onDismissRequest
     ) {
@@ -74,6 +81,7 @@ fun LocationOptionsDialog(
                 Spacer(Modifier.height(spacing16))
                 OptionItem(
                     showBottomBorder = options.isNotEmpty(),
+                    enabled = connectionState == ConnectionState.Available,
                     onClick = {
                         onDismissRequest()
                         onMapPickerClicked()
@@ -140,21 +148,31 @@ private fun OptionItem(
     showBottomBorder: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    enabled: Boolean = true,
     onXClick: (() -> Unit)? = null,
     content: @Composable () -> Unit,
 ) {
     Row(
         modifier = modifier.then(Modifier
             .padding(vertical = spacing16, horizontal = spacing4)
-            .clickable{ onClick() }
+            .then(
+                other = if (enabled)
+                    Modifier.clickable { onClick() }
+                else
+                    Modifier
+            )
         ),
         verticalAlignment = Alignment.CenterVertically
     ) {
-        Row(
-            modifier = Modifier.weight(1f),
-            verticalAlignment = Alignment.CenterVertically
+        CompositionLocalProvider(
+            value = LocalContentColor provides if (enabled) textPrimaryColor() else textSecondaryColor()
         ) {
-            content()
+            Row(
+                modifier = Modifier.weight(1f),
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                content()
+            }
         }
         onXClick?.let {
             IconButton(

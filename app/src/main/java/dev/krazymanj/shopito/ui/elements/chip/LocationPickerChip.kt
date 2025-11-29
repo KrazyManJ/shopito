@@ -1,5 +1,6 @@
 package dev.krazymanj.shopito.ui.elements.chip
 
+import android.util.Log
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -29,6 +30,8 @@ fun LocationPickerChip(
             viewModel.reverse(location)
         }
     }
+
+    Log.i("Test", "Location $location")
 
     PickerChip(
         selected = location != null,
