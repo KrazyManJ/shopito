@@ -42,4 +42,6 @@
     <string name="list_placeholder_text">Add new items via bottom bar</string>
     <string name="item_deleted">Item \"%1$s\" deleted</string>
     <string name="undo">Undo</string>
+    <string name="unknown">Unknown</string>
+    <string name="unnamed">Unnamed</string>
 </resources>

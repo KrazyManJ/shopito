@@ -3,6 +3,7 @@ package dev.krazymanj.shopito.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.communication.CommunicationResult
 import dev.krazymanj.shopito.communication.IGeoReverseRepository
 import dev.krazymanj.shopito.datastore.DataStoreKey
@@ -34,11 +35,12 @@ class GeoReverseViewModel @Inject constructor(
     val state = _state.asStateFlow()
 
     fun reverse(location: Location){
-        if (_state.value.lastProcessedLocation == location) {
+        if (_state.value.lastProcessedLocation == location && _state.value.error == null) {
             return
         }
         _state.update { GeoReverseUIState(
-            lastProcessedLocation = location
+            lastProcessedLocation = location,
+            isLoading = true
         ) }
         viewModelScope.launch {
             val lastFiveLocations = dataStore.get(DataStoreKey.LastFiveLocations)
@@ -59,22 +61,26 @@ class GeoReverseViewModel @Inject constructor(
             when (result) {
                 is CommunicationResult.ConnectionError -> {
                     _state.update { it.copy(
-                        isLoading = false
+                        isLoading = false,
+                        error = R.string.unknown
                     ) }
                 }
                 is CommunicationResult.Error -> {
                     _state.update { it.copy(
-                        isLoading = false
+                        isLoading = false,
+                        error = R.string.unknown
                     ) }
                 }
                 is CommunicationResult.Exception -> {
                     _state.update { it.copy(
-                        isLoading = false
+                        isLoading = false,
+                        error = R.string.unknown
                     ) }
                 }
                 is CommunicationResult.Success<GeoReverseResponse> -> {
                     _state.update { it.copy(
-                        locationLabel = result.data.displayName ?: result.data.error,
+                        locationLabel = result.data.displayName,
+                        error = if (result.data.error != null) R.string.unnamed else null,
                         isLoading = false
                     ) }
                 }
