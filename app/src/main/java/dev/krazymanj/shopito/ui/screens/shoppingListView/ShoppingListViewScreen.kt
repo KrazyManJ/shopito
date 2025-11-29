@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.SnackbarHostState
@@ -24,6 +25,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.composables.icons.lucide.ListX
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Pencil
 import com.composables.icons.lucide.StickyNote
@@ -122,6 +124,18 @@ fun ShoppingListViewScreen(
                 }
             ) {
                 Icon(imageVector = Lucide.Pencil, contentDescription = null)
+            }
+        },
+        floatingActionButton = {
+            FloatingActionButton(
+                onClick = {
+                    viewModel.removeAllCheckedItems()
+                }
+            ) {
+                Icon(
+                    imageVector = Lucide.ListX,
+                    contentDescription = null
+                )
             }
         },
         placeholderScreenContent = if (state.value.shoppingItems.isEmpty()) PlaceholderScreenContent(

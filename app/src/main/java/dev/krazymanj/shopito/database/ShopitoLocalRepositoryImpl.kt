@@ -75,4 +75,8 @@ class ShopitoLocalRepositoryImpl @Inject constructor(private val shopitoDao: Sho
     override suspend fun getAllItemKeywords(): Flow<List<ItemKeyword>> {
         return shopitoDao.getAllItemKeywords()
     }
+
+    override suspend fun removeAllCheckedItemsInShoppingList(listId: Long) {
+        return shopitoDao.removeAllCheckedItemsInShoppingList(listId)
+    }
 }

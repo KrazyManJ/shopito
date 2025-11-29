@@ -57,4 +57,7 @@ interface ShopitoDao {
 
     @Query("SELECT * FROM item_keywords")
     fun getAllItemKeywords(): Flow<List<ItemKeyword>>
+
+    @Query("DELETE FROM shopping_item WHERE listId = :listId AND isDone = 1")
+    suspend fun removeAllCheckedItemsInShoppingList(listId: Long)
 }

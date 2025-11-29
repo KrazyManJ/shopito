@@ -24,4 +24,5 @@ interface IShopitoLocalRepository {
     suspend fun insert(itemKeyword: ItemKeyword)
     suspend fun delete(itemKeyword: ItemKeyword)
     suspend fun getAllItemKeywords(): Flow<List<ItemKeyword>>
+    suspend fun removeAllCheckedItemsInShoppingList(listId: Long)
 }

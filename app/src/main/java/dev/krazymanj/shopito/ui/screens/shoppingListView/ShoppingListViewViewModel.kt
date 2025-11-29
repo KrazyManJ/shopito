@@ -206,4 +206,10 @@ class ShoppingListViewViewModel @Inject constructor(
             }
         }
     }
+
+    fun removeAllCheckedItems() {
+        viewModelScope.launch {
+            repository.removeAllCheckedItemsInShoppingList(_state.value.shoppingList!!.id!!)
+        }
+    }
 }
