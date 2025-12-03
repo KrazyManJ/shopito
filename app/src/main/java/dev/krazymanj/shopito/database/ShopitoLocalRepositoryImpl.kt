@@ -84,4 +84,8 @@ class ShopitoLocalRepositoryImpl @Inject constructor(private val shopitoDao: Sho
     override suspend fun getAllDistinctLocationsFromItems(): Flow<List<Location>> {
         return shopitoDao.getAllDistinctLocationsFromItems()
     }
+
+    override suspend fun getItemsByLocation(location: Location): Flow<List<ShoppingItemWithList>> {
+        return shopitoDao.getItemsByLocation(location.latitude, location.longitude)
+    }
 }

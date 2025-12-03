@@ -3,19 +3,13 @@ package dev.krazymanj.shopito.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.krazymanj.shopito.R
-import dev.krazymanj.shopito.communication.CommunicationResult
-import dev.krazymanj.shopito.communication.IGeoReverseRepository
-import dev.krazymanj.shopito.datastore.DataStoreKey
-import dev.krazymanj.shopito.datastore.IDataStoreRepository
-import dev.krazymanj.shopito.model.GeoReverseResponse
+import dev.krazymanj.shopito.domain.usecase.GetLocationLabelUseCase
+import dev.krazymanj.shopito.domain.usecase.ReverseGeoResult
 import dev.krazymanj.shopito.model.Location
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 data class GeoReverseUIState(
@@ -27,8 +21,7 @@ data class GeoReverseUIState(
 
 @HiltViewModel
 class GeoReverseViewModel @Inject constructor(
-    private val repository: IGeoReverseRepository,
-    private val dataStore: IDataStoreRepository
+    private val getLocationLabelUseCase: GetLocationLabelUseCase
 ) : ViewModel() {
     private val _state : MutableStateFlow<GeoReverseUIState> = MutableStateFlow(value = GeoReverseUIState())
 
@@ -38,50 +31,26 @@ class GeoReverseViewModel @Inject constructor(
         if (_state.value.lastProcessedLocation == location && _state.value.error == null) {
             return
         }
-        _state.update { GeoReverseUIState(
-            lastProcessedLocation = location,
-            isLoading = true
-        ) }
+
         viewModelScope.launch {
-            val lastFiveLocations = dataStore.get(DataStoreKey.LastFiveLocations)
-            val matchingSavedLocation = lastFiveLocations.firstOrNull { it.location == location }
-
-            matchingSavedLocation?.let { savedLocation ->
-                _state.update { it.copy(
-                    locationLabel = savedLocation.label,
-                    isLoading = false
-                ) }
-                return@launch
-            }
-
-            val result = withContext(Dispatchers.IO) {
-                repository.reverse(location)
-            }
+            _state.update { it.copy(
+                lastProcessedLocation = location,
+                isLoading = true
+            ) }
+            val result = getLocationLabelUseCase(location)
 
             when (result) {
-                is CommunicationResult.ConnectionError -> {
+                is ReverseGeoResult.Success -> {
                     _state.update { it.copy(
                         isLoading = false,
-                        error = R.string.unknown
+                        locationLabel = result.label,
+                        error = null
                     ) }
                 }
-                is CommunicationResult.Error -> {
+                is ReverseGeoResult.Error -> {
                     _state.update { it.copy(
                         isLoading = false,
-                        error = R.string.unknown
-                    ) }
-                }
-                is CommunicationResult.Exception -> {
-                    _state.update { it.copy(
-                        isLoading = false,
-                        error = R.string.unknown
-                    ) }
-                }
-                is CommunicationResult.Success<GeoReverseResponse> -> {
-                    _state.update { it.copy(
-                        locationLabel = result.data.displayName,
-                        error = if (result.data.error != null) R.string.unnamed else null,
-                        isLoading = false
+                        error = result.messageResId
                     ) }
                 }
             }

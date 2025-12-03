@@ -28,4 +28,5 @@ interface IShopitoLocalRepository {
     suspend fun removeAllCheckedItemsInShoppingList(listId: Long)
 
     suspend fun getAllDistinctLocationsFromItems(): Flow<List<Location>>
+    suspend fun getItemsByLocation(location: Location): Flow<List<ShoppingItemWithList>>
 }

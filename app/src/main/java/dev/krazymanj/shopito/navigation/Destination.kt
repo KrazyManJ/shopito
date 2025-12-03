@@ -34,5 +34,10 @@ sealed class Destination {
 
     @Serializable
     data object MapViewScreen : Destination()
+
+    @Serializable
+    data class LocationItemsList(
+        val location: Location
+    ) : Destination()
 }
 

@@ -10,6 +10,7 @@ import androidx.navigation.toRoute
 import dev.krazymanj.shopito.model.Location
 import dev.krazymanj.shopito.ui.screens.addEditShoppingList.AddEditShoppingListScreen
 import dev.krazymanj.shopito.ui.screens.itemKeywordsList.ItemKeywordsListScreen
+import dev.krazymanj.shopito.ui.screens.locationItemsList.LocationItemsListScreen
 import dev.krazymanj.shopito.ui.screens.mapLocationPicker.MapLocationPickerScreen
 import dev.krazymanj.shopito.ui.screens.mapView.MapViewScreen
 import dev.krazymanj.shopito.ui.screens.settings.SettingsScreen
@@ -61,6 +62,13 @@ fun NavGraph(
         }
         composable<Destination.MapViewScreen> {
             MapViewScreen(navRouter)
+        }
+        composable<Destination.LocationItemsList>(
+            typeMap = mapOf(
+                typeOf<Location>() to serializableNavType<Location>(isNullableAllowed = false),
+            )
+        ) {
+            LocationItemsListScreen(navRouter, it.toRoute())
         }
     }
 }

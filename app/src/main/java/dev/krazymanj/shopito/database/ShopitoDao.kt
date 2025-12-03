@@ -64,4 +64,7 @@ interface ShopitoDao {
 
     @Query("SELECT DISTINCT latitude, longitude FROM shopping_item WHERE latitude IS NOT NULL AND longitude IS NOT NULL")
     fun getAllDistinctLocationsFromItems(): Flow<List<Location>>
+
+    @Query("SELECT * FROM shopping_item WHERE latitude = :latitude AND longitude = :longitude")
+    fun getItemsByLocation(latitude: Double, longitude: Double): Flow<List<ShoppingItemWithList>>
 }
