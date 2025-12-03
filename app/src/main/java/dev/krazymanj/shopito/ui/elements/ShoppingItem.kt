@@ -79,21 +79,9 @@ fun ShoppingItem(
 
     val density = LocalDensity.current
     val dismissState = remember(key1 = shoppingItem){
-        SwipeToDismissBoxState (
-            density = density,
-            initialValue = SwipeToDismissBoxValue.Settled,
-            confirmValueChange = { dismissValue ->
-                when (dismissValue) {
-                    SwipeToDismissBoxValue.EndToStart -> {
-                        isRemoved = true
-                        true
-                    }
-                    else -> {
-                        false
-                    }
-                }
-            },
-            positionalThreshold = { with(density) { 56.dp.toPx() } }
+        SwipeToDismissBoxState(
+            SwipeToDismissBoxValue.Settled,
+            { with(density) { 56.dp.toPx() } }
         )
     }
 
@@ -105,6 +93,17 @@ fun ShoppingItem(
         SwipeToDismissBox(
             state = dismissState,
             enableDismissFromStartToEnd = false,
+            onDismiss = { dismissValue ->
+                when (dismissValue) {
+                    SwipeToDismissBoxValue.EndToStart -> {
+                        isRemoved = true
+                        true
+                    }
+                    else -> {
+                        false
+                    }
+                }
+            },
             backgroundContent = {
                 Box(
                     modifier = Modifier

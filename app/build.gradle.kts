@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
@@ -16,7 +18,7 @@ buildscript {
 
 android {
     namespace = "dev.krazymanj.shopito"
-    compileSdk = 35
+    compileSdk = 36
 
     val versionMajor = 1
     val versionMinor = 0
@@ -27,7 +29,7 @@ android {
     defaultConfig {
         applicationId = "dev.krazymanj.shopito"
         minSdk = 26
-        targetSdk = 35
+        targetSdk = 36
         versionCode = myVersionCode
         versionName = myVersionName
 
@@ -47,15 +49,17 @@ android {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
-    kotlinOptions {
-        jvmTarget = "11"
-    }
     buildFeatures {
         compose = true
         buildConfig = true
     }
 }
 
+kotlin {
+    compilerOptions {
+        jvmTarget.set(JvmTarget.JVM_11)
+    }
+}
 
 
 dependencies {
@@ -81,9 +85,9 @@ dependencies {
     implementation(libs.kotlinx.serialization.json)
 
     // Room
-    implementation(libs.room.ktx)
     implementation(libs.room.viewmodel)
     implementation(libs.room.lifecycle)
+    implementation(libs.room.ktx)
     implementation(libs.room.runtime)
     ksp(libs.room.compiler.ksp)
 
@@ -99,6 +103,9 @@ dependencies {
     implementation(libs.googlemap)
     implementation(libs.googlemap.compose)
     implementation(libs.googlemap.foundation)
+    implementation(libs.googlemap.utils)
+    implementation(libs.googlemap.widgets)
+    implementation(libs.googlemap.compose.utils)
 
     // Moshi
     implementation(libs.moshi)
@@ -125,5 +132,4 @@ secrets {
     propertiesFileName = "secrets.properties"
 
     defaultPropertiesFileName = "secrets.defaults.properties"
-
 }

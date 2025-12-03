@@ -9,8 +9,6 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.LocationOn
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -20,14 +18,18 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Pin
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
+import com.google.maps.android.compose.ComposeMapColorScheme
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.MapUiSettings
 import com.google.maps.android.compose.MapsComposeExperimentalApi
@@ -84,15 +86,18 @@ fun MapPositionPickerScreenContent(
     val mapUiSettings by remember { mutableStateOf(
         MapUiSettings(
             zoomControlsEnabled = false,
-            mapToolbarEnabled = false
+            mapToolbarEnabled = false,
+            compassEnabled = true
         )
     ) }
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(state.location.toLatLng(), 8f)
     }
 
-    LaunchedEffect(state.location) {
-        if (!state.initialized) {
+    var isMapLoaded by remember { mutableStateOf(false) }
+
+    LaunchedEffect(state.location, isMapLoaded) {
+        if (!state.initialized && isMapLoaded) {
             cameraPositionState.animate(
                 update = CameraUpdateFactory.newLatLngZoom(state.location.toLatLng(), 18f),
                 durationMs = 500
@@ -119,13 +124,16 @@ fun MapPositionPickerScreenContent(
     Box(
         modifier = Modifier.fillMaxSize()
     ) {
-        GoogleMap(modifier = Modifier.fillMaxHeight(),
+        GoogleMap(
+            modifier = Modifier.fillMaxHeight(),
             uiSettings = mapUiSettings,
-            cameraPositionState = cameraPositionState
+            cameraPositionState = cameraPositionState,
+            onMapLoaded = { isMapLoaded = true },
+            mapColorScheme = ComposeMapColorScheme.FOLLOW_SYSTEM
         ) {}
 
         Icon(
-            imageVector = Icons.Filled.LocationOn,
+            imageVector = Lucide.Pin,
             contentDescription = null,
             tint = Primary,
             modifier = Modifier

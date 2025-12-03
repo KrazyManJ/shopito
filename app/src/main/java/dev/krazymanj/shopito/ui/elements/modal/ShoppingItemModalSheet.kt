@@ -29,7 +29,7 @@ import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.composables.icons.lucide.ChevronRight
 import com.composables.icons.lucide.ListTodo
@@ -211,7 +211,7 @@ fun ShoppingItemModalSheet(
                         containerColor = backgroundPrimaryColor(),
                         contentColor = Primary
                     ),
-                    border = ButtonDefaults.outlinedButtonBorder.copy(
+                    border = ButtonDefaults.outlinedButtonBorder(true).copy(
                         brush = SolidColor(Primary)
                     )
                 ) {

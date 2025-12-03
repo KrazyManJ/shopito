@@ -11,5 +11,5 @@ data class ShoppingItemWithList(
         parentColumn = "listId",
         entityColumn = "id"
     )
-    val list: ShoppingList
+    val list: ShoppingList?
 )
