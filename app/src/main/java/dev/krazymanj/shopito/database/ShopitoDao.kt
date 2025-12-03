@@ -10,6 +10,7 @@ import androidx.room.Update
 import dev.krazymanj.shopito.database.entities.ItemKeyword
 import dev.krazymanj.shopito.database.entities.ShoppingItem
 import dev.krazymanj.shopito.database.entities.ShoppingList
+import dev.krazymanj.shopito.model.Location
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -60,4 +61,7 @@ interface ShopitoDao {
 
     @Query("DELETE FROM shopping_item WHERE listId = :listId AND isDone = 1")
     suspend fun removeAllCheckedItemsInShoppingList(listId: Long)
+
+    @Query("SELECT DISTINCT latitude, longitude FROM shopping_item WHERE latitude IS NOT NULL AND longitude IS NOT NULL")
+    fun getAllDistinctLocationsFromItems(): Flow<List<Location>>
 }

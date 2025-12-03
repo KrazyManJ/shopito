@@ -44,4 +44,6 @@
     <string name="undo">Undo</string>
     <string name="unknown">Unknown</string>
     <string name="unnamed">Unnamed</string>
+    <string name="map_view_title">Map View</string>
+    <string name="navigation_map_view_label">Map View</string>
 </resources>

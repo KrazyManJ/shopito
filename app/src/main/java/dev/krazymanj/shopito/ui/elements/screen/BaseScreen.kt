@@ -28,6 +28,7 @@ import dev.krazymanj.shopito.ui.theme.Primary
 import dev.krazymanj.shopito.ui.theme.backgroundPrimaryColor
 import dev.krazymanj.shopito.ui.theme.spacing16
 import dev.krazymanj.shopito.ui.theme.textPrimaryColor
+import dev.krazymanj.shopito.ui.theme.textSecondaryColor
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -71,7 +72,8 @@ fun BaseScreen(
                     scrolledContainerColor = backgroundPrimaryColor(),
                     navigationIconContentColor = textPrimaryColor(),
                     titleContentColor = textPrimaryColor(),
-                    actionIconContentColor = textPrimaryColor()
+                    actionIconContentColor = textPrimaryColor(),
+                    subtitleContentColor = textSecondaryColor()
                 )
             )
         },

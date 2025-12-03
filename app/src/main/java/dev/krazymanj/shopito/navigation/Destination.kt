@@ -31,5 +31,8 @@ sealed class Destination {
 
     @Serializable
     data object ItemKeywordsListScreen : Destination()
+
+    @Serializable
+    data object MapViewScreen : Destination()
 }
 

@@ -52,7 +52,7 @@ abstract class ShopitoDatabase : RoomDatabase() {
                                     }
                                 }
                             })
-                            .fallbackToDestructiveMigration()
+                            .fallbackToDestructiveMigration(false)
                             .build()
                     }
                 }

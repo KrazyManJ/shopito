@@ -3,6 +3,7 @@ package dev.krazymanj.shopito.database
 import dev.krazymanj.shopito.database.entities.ItemKeyword
 import dev.krazymanj.shopito.database.entities.ShoppingItem
 import dev.krazymanj.shopito.database.entities.ShoppingList
+import dev.krazymanj.shopito.model.Location
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -78,5 +79,9 @@ class ShopitoLocalRepositoryImpl @Inject constructor(private val shopitoDao: Sho
 
     override suspend fun removeAllCheckedItemsInShoppingList(listId: Long) {
         return shopitoDao.removeAllCheckedItemsInShoppingList(listId)
+    }
+
+    override suspend fun getAllDistinctLocationsFromItems(): Flow<List<Location>> {
+        return shopitoDao.getAllDistinctLocationsFromItems()
     }
 }

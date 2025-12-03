@@ -3,6 +3,7 @@ package dev.krazymanj.shopito.database
 import dev.krazymanj.shopito.database.entities.ItemKeyword
 import dev.krazymanj.shopito.database.entities.ShoppingItem
 import dev.krazymanj.shopito.database.entities.ShoppingList
+import dev.krazymanj.shopito.model.Location
 import kotlinx.coroutines.flow.Flow
 
 interface IShopitoLocalRepository {
@@ -25,4 +26,6 @@ interface IShopitoLocalRepository {
     suspend fun delete(itemKeyword: ItemKeyword)
     suspend fun getAllItemKeywords(): Flow<List<ItemKeyword>>
     suspend fun removeAllCheckedItemsInShoppingList(listId: Long)
+
+    suspend fun getAllDistinctLocationsFromItems(): Flow<List<Location>>
 }

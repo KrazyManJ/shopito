@@ -15,12 +15,14 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
 import com.composables.icons.lucide.ListChecks
 import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Map
 import com.composables.icons.lucide.ScrollText
 import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.navigation.NavigationRouterImpl
 import dev.krazymanj.shopito.ui.theme.Primary
+import dev.krazymanj.shopito.ui.theme.backgroundPrimaryColor
 import dev.krazymanj.shopito.ui.theme.textPrimaryColor
 import kotlin.reflect.KClass
 
@@ -45,8 +47,15 @@ val navigationItems: List<NavigationItem> = listOf(
         icon = Lucide.ListChecks,
         route = Destination.ShoppingListsScreen,
         displaySelectedOnRoutes = listOf(
-            Destination.ShoppingListsScreen::class,
-            Destination.ViewShoppingList::class
+            Destination.ShoppingListsScreen::class
+        )
+    ),
+    NavigationItem(
+        label = R.string.navigation_map_view_label,
+        icon = Lucide.Map,
+        route = Destination.MapViewScreen,
+        displaySelectedOnRoutes = listOf(
+            Destination.MapViewScreen::class
         )
     )
 )
@@ -56,7 +65,7 @@ fun ShopitoNavigationBar(
     navigationRouter: INavigationRouter,
 ) {
     NavigationBar(
-        containerColor = Color.Transparent
+        containerColor = backgroundPrimaryColor()
     ) {
         navigationItems.forEach {
             NavigationBarItem(
