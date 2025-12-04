@@ -97,7 +97,6 @@ fun MapViewScreenContent(
                 items = state.locations,
                 onClusterItemClick = {
                     navRouter.navigateTo(Destination.LocationItemsList(it))
-                    // TODO: On click, open list with items in that location
                     true
                 }
             )
