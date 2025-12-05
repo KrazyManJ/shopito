@@ -1,6 +1,6 @@
 package dev.krazymanj.shopito.ui.screens.shoppingListsSummary
 
-import dev.krazymanj.shopito.database.ShoppingItemWithList
+import dev.krazymanj.shopito.model.ShoppingItemWithList
 import dev.krazymanj.shopito.database.entities.ShoppingItem
 
 

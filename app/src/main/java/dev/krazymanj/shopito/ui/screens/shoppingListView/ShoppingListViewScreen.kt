@@ -51,7 +51,7 @@ fun ShoppingListViewScreen(
 ) {
     val viewModel = hiltViewModel<ShoppingListViewViewModel>()
 
-    val state = viewModel.templateUIState.collectAsStateWithLifecycle()
+    val state = viewModel.state.collectAsStateWithLifecycle()
 
     if (state.value.isLoading) {
         viewModel.loadShoppingListData(shoppingListId)
@@ -85,7 +85,7 @@ fun ShoppingListViewScreen(
                 ))
             },
             onDeleteRequest = {
-                viewModel.deleteFromHistory(it)
+                viewModel.removeFromRecentLocations(it)
             }
         )
     }

@@ -5,12 +5,12 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.krazymanj.shopito.communication.CommunicationResult
 import dev.krazymanj.shopito.communication.IGeoReverseRepository
+import dev.krazymanj.shopito.core.IRecentLocationsManager
 import dev.krazymanj.shopito.database.IShopitoLocalRepository
 import dev.krazymanj.shopito.database.entities.ShoppingItem
 import dev.krazymanj.shopito.database.entities.ShoppingList
 import dev.krazymanj.shopito.datastore.DataStoreKey
 import dev.krazymanj.shopito.datastore.IDataStoreRepository
-import dev.krazymanj.shopito.extension.removeFirstItem
 import dev.krazymanj.shopito.model.GeoReverseResponse
 import dev.krazymanj.shopito.model.Location
 import dev.krazymanj.shopito.model.SavedLocation
@@ -28,18 +28,24 @@ const val MAX_OPTIONS = 5
 class ShoppingItemModalSheetViewModel @Inject constructor(
     private val repository: IShopitoLocalRepository,
     private val dataStore: IDataStoreRepository,
-    private val geoReverseRepository: IGeoReverseRepository
-) : ViewModel() {
+    private val geoReverseRepository: IGeoReverseRepository,
+    private val recentLocationsManager: IRecentLocationsManager
+) : ViewModel(), IRecentLocationsManager by recentLocationsManager {
     private val _state : MutableStateFlow<ShoppingItemModalSheetUIState> = MutableStateFlow(value = ShoppingItemModalSheetUIState())
 
     val state = _state.asStateFlow()
 
     fun loadData(shoppingItem: ShoppingItem, shoppingList: ShoppingList?) {
-        _state.value = _state.value.copy(
-            item = shoppingItem,
-            list = shoppingList,
-            loading = false
-        )
+        viewModelScope.launch {
+            dataStore.getFlow(DataStoreKey.LastFiveLocations).collect { locations ->
+                _state.update { it.copy(
+                    item = shoppingItem,
+                    list = shoppingList,
+                    loading = false,
+                    placesOptions = locations
+                ) }
+            }
+        }
     }
 
     fun updateItem(newItem: ShoppingItem) {
@@ -67,23 +73,6 @@ class ShoppingItemModalSheetViewModel @Inject constructor(
         _state.value = ShoppingItemModalSheetUIState()
     }
 
-    fun loadPlacesOptions() {
-        viewModelScope.launch {
-            _state.update { it.copy(
-                placesOptions = dataStore.get(DataStoreKey.LastFiveLocations)
-            ) }
-        }
-    }
-
-    private suspend fun saveToHistory(savedLocation: SavedLocation) {
-        val set = dataStore.get(DataStoreKey.LastFiveLocations) as LinkedHashSet<SavedLocation>
-        set.add(savedLocation)
-        if (set.size > MAX_OPTIONS) {
-            set.removeFirstItem()
-        }
-        dataStore.set(DataStoreKey.LastFiveLocations, set)
-    }
-
     fun updateItemLocation(location: Location) {
         viewModelScope.launch {
             val result = withContext(Dispatchers.IO) {
@@ -101,21 +90,12 @@ class ShoppingItemModalSheetViewModel @Inject constructor(
 
                     val loc = Location(data.lat!!, data.lon!!)
                     updateItem(_state.value.item.copy(location = loc))
-                    saveToHistory(SavedLocation(
+                    addToRecentLocations(SavedLocation(
                         label = data.displayName!!,
                         location = loc
                     ))
                 }
             }
-        }
-    }
-
-    fun deleteFromHistory(savedLocation: SavedLocation){
-        viewModelScope.launch {
-            val set = dataStore.get(DataStoreKey.LastFiveLocations) as LinkedHashSet<SavedLocation>
-            set.remove(savedLocation)
-            dataStore.set(DataStoreKey.LastFiveLocations, set)
-            loadPlacesOptions()
         }
     }
 }

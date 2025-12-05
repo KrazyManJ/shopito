@@ -3,8 +3,8 @@ package dev.krazymanj.shopito.viewmodel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.krazymanj.shopito.domain.usecase.GetLocationLabelUseCase
-import dev.krazymanj.shopito.domain.usecase.ReverseGeoResult
+import dev.krazymanj.shopito.core.usecase.GetLocationLabelUseCase
+import dev.krazymanj.shopito.core.usecase.ReverseGeoResult
 import dev.krazymanj.shopito.model.Location
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

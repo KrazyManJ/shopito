@@ -1,6 +1,6 @@
 package dev.krazymanj.shopito.ui.screens.locationItemsList
 
-import dev.krazymanj.shopito.database.ShoppingItemWithList
+import dev.krazymanj.shopito.model.ShoppingItemWithList
 import dev.krazymanj.shopito.database.entities.ShoppingItem
 
 interface LocationItemsListActions {

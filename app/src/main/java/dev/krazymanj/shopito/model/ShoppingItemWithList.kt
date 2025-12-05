@@ -1,4 +1,4 @@
-package dev.krazymanj.shopito.database
+package dev.krazymanj.shopito.model
 
 import androidx.room.Embedded
 import androidx.room.Relation

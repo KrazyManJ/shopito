@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.krazymanj.shopito.database.IShopitoLocalRepository
-import dev.krazymanj.shopito.database.ShoppingItemWithList
+import dev.krazymanj.shopito.model.ShoppingItemWithList
 import dev.krazymanj.shopito.database.entities.ShoppingItem
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -18,7 +18,6 @@ import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -91,9 +90,6 @@ fun ShoppingItemModalSheet(
     var locationOptionsVisible by remember { mutableStateOf(false) }
 
     if (locationOptionsVisible) {
-        LaunchedEffect(Unit) {
-            viewModel.loadPlacesOptions()
-        }
         LocationOptionsDialog(
             options = state.placesOptions,
             selectedLocation = state.item.location,
@@ -113,7 +109,7 @@ fun ShoppingItemModalSheet(
                 }
             },
             onDeleteRequest = {
-                viewModel.deleteFromHistory(it)
+                viewModel.removeFromRecentLocations(it)
             }
         )
     }

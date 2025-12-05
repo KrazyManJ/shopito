@@ -9,7 +9,6 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import dev.krazymanj.shopito.model.Location
 import dev.krazymanj.shopito.ui.screens.addEditShoppingList.AddEditShoppingListScreen
-import dev.krazymanj.shopito.ui.screens.itemKeywordsList.ItemKeywordsListScreen
 import dev.krazymanj.shopito.ui.screens.locationItemsList.LocationItemsListScreen
 import dev.krazymanj.shopito.ui.screens.mapLocationPicker.MapLocationPickerScreen
 import dev.krazymanj.shopito.ui.screens.mapView.MapViewScreen
@@ -56,9 +55,6 @@ fun NavGraph(
         }
         composable<Destination.SettingsScreen> {
             SettingsScreen(navRouter)
-        }
-        composable<Destination.ItemKeywordsListScreen> {
-            ItemKeywordsListScreen(navRouter)
         }
         composable<Destination.MapViewScreen> {
             MapViewScreen(navRouter)

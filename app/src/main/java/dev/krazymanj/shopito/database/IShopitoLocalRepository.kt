@@ -1,9 +1,9 @@
 package dev.krazymanj.shopito.database
 
-import dev.krazymanj.shopito.database.entities.ItemKeyword
 import dev.krazymanj.shopito.database.entities.ShoppingItem
 import dev.krazymanj.shopito.database.entities.ShoppingList
 import dev.krazymanj.shopito.model.Location
+import dev.krazymanj.shopito.model.ShoppingItemWithList
 import kotlinx.coroutines.flow.Flow
 
 interface IShopitoLocalRepository {
@@ -22,9 +22,6 @@ interface IShopitoLocalRepository {
     suspend fun getShoppingItemsGroupedByDate(): Flow<Map<Long, List<ShoppingItemWithList>>>
     suspend fun getShoppingItemsWithoutBuyTime(): Flow<List<ShoppingItemWithList>>
 
-    suspend fun insert(itemKeyword: ItemKeyword)
-    suspend fun delete(itemKeyword: ItemKeyword)
-    suspend fun getAllItemKeywords(): Flow<List<ItemKeyword>>
     suspend fun removeAllCheckedItemsInShoppingList(listId: Long)
 
     suspend fun getAllDistinctLocationsFromItems(): Flow<List<Location>>

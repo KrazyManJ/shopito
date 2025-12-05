@@ -5,19 +5,20 @@ import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.krazymanj.shopito.communication.CommunicationResult
 import dev.krazymanj.shopito.communication.IGeoReverseRepository
+import dev.krazymanj.shopito.core.IRecentLocationsManager
 import dev.krazymanj.shopito.database.IShopitoLocalRepository
 import dev.krazymanj.shopito.database.entities.ShoppingItem
 import dev.krazymanj.shopito.datastore.DataStoreKey
 import dev.krazymanj.shopito.datastore.IDataStoreRepository
 import dev.krazymanj.shopito.extension.empty
-import dev.krazymanj.shopito.extension.removeFirstItem
+import dev.krazymanj.shopito.extension.extractLastAmount
 import dev.krazymanj.shopito.model.GeoReverseResponse
 import dev.krazymanj.shopito.model.Location
 import dev.krazymanj.shopito.model.SavedLocation
-import dev.krazymanj.shopito.ui.elements.modal.MAX_OPTIONS
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -27,20 +28,29 @@ import javax.inject.Inject
 class ShoppingListViewViewModel @Inject constructor(
     private val repository: IShopitoLocalRepository,
     private val dataStore: IDataStoreRepository,
-    private val geoReverseRepository: IGeoReverseRepository
+    private val geoReverseRepository: IGeoReverseRepository,
+    private val recentLocationsManager: IRecentLocationsManager
 ) : ViewModel(),
-    ShoppingListViewActions {
+    IRecentLocationsManager by recentLocationsManager,
+    ShoppingListViewActions
+{
 
     private val _state : MutableStateFlow<ShoppingListViewUIState> = MutableStateFlow(value = ShoppingListViewUIState())
 
-    val templateUIState = _state.asStateFlow()
+    val state = _state.asStateFlow()
 
     override fun loadShoppingListData(shoppingListId: Long) {
         viewModelScope.launch {
-            repository.getShoppingItemsByShoppingList(shoppingListId).collect {
+            combine(
+                repository.getShoppingItemsByShoppingList(shoppingListId),
+                dataStore.getFlow(DataStoreKey.LastFiveLocations)
+            ) { items, locations ->
+                items to locations
+            } .collect { (items, locations) ->
                 _state.value = _state.value.copy(
                     shoppingList = repository.getShoppingListById(shoppingListId),
-                    shoppingItems = it,
+                    shoppingItems = items,
+                    placesOptions = locations,
                     isLoading = false
                 )
             }
@@ -68,27 +78,6 @@ class ShoppingListViewViewModel @Inject constructor(
         )
     }
 
-    private fun extractLastAmount(input: String): Pair<String, Int> {
-
-        val regex = Regex("\\b(x\\d+|\\d+x)\\b", RegexOption.IGNORE_CASE)
-
-        val matches = regex.findAll(input)
-
-        val lastMatch = matches.lastOrNull() ?: return Pair(input, 1)
-
-        val numberPart = lastMatch.value.replace("x", "", ignoreCase = true)
-        val parsedNumber = numberPart.toIntOrNull() ?: 1
-
-        val range = lastMatch.range
-
-        val textBefore = input.substring(0, range.first).trim()
-        val textAfter = input.substring(range.last + 1).trim()
-
-        val cleanText = "$textBefore $textAfter".trim()
-
-        return Pair(cleanText, parsedNumber)
-    }
-
     fun addShoppingItem() {
         val itemInput = _state.value.itemInput
         if (itemInput.isEmpty()) {
@@ -98,7 +87,7 @@ class ShoppingListViewViewModel @Inject constructor(
             return
         }
 
-        val (text, amount) = extractLastAmount(itemInput)
+        val (text, amount) = itemInput.extractLastAmount()
 
         viewModelScope.launch {
             repository.insert(ShoppingItem(
@@ -147,15 +136,6 @@ class ShoppingListViewViewModel @Inject constructor(
         }
     }
 
-    private suspend fun saveToHistory(savedLocation: SavedLocation) {
-        val set = dataStore.get(DataStoreKey.LastFiveLocations) as LinkedHashSet<SavedLocation>
-        set.add(savedLocation)
-        if (set.size > MAX_OPTIONS) {
-            set.removeFirstItem()
-        }
-        dataStore.set(DataStoreKey.LastFiveLocations, set)
-    }
-
     fun updateItemLocation(location: Location) {
         viewModelScope.launch {
             val result = withContext(Dispatchers.IO) {
@@ -165,6 +145,7 @@ class ShoppingListViewViewModel @Inject constructor(
                 is CommunicationResult.ConnectionError, is CommunicationResult.Error, is CommunicationResult.Exception -> {
                     return@launch
                 }
+
                 is CommunicationResult.Success<GeoReverseResponse> -> {
                     val data = result.data
                     if (data.error != null) {
@@ -175,22 +156,16 @@ class ShoppingListViewViewModel @Inject constructor(
                     onLocationChanged(
                         location = loc
                     )
-                    saveToHistory(SavedLocation(
-                        label = data.displayName!!,
-                        location = loc
-                    ))
+                    addToRecentLocations(
+                        SavedLocation(
+                            label = data.displayName!!,
+                            location = loc
+                        )
+                    )
                 }
             }
         }
-    }
 
-    fun deleteFromHistory(savedLocation: SavedLocation){
-        viewModelScope.launch {
-            val set = dataStore.get(DataStoreKey.LastFiveLocations) as LinkedHashSet<SavedLocation>
-            set.remove(savedLocation)
-            dataStore.set(DataStoreKey.LastFiveLocations, set)
-            loadPlacesOptions()
-        }
     }
 
     override fun saveLastDeletedItem(shoppingItem: ShoppingItem) {

@@ -1,9 +1,9 @@
 package dev.krazymanj.shopito.database
 
-import dev.krazymanj.shopito.database.entities.ItemKeyword
 import dev.krazymanj.shopito.database.entities.ShoppingItem
 import dev.krazymanj.shopito.database.entities.ShoppingList
 import dev.krazymanj.shopito.model.Location
+import dev.krazymanj.shopito.model.ShoppingItemWithList
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
@@ -12,10 +12,6 @@ class ShopitoLocalRepositoryImpl @Inject constructor(private val shopitoDao: Sho
     IShopitoLocalRepository {
     override suspend fun insert(shoppingItem: ShoppingItem) {
         return shopitoDao.insert(shoppingItem)
-    }
-
-    override suspend fun insert(itemKeyword: ItemKeyword) {
-        return shopitoDao.insert(itemKeyword)
     }
 
     override suspend fun insert(shoppingList: ShoppingList) {
@@ -32,10 +28,6 @@ class ShopitoLocalRepositoryImpl @Inject constructor(private val shopitoDao: Sho
 
     override suspend fun delete(shoppingItem: ShoppingItem) {
         return shopitoDao.delete(shoppingItem)
-    }
-
-    override suspend fun delete(itemKeyword: ItemKeyword) {
-        return shopitoDao.delete(itemKeyword)
     }
 
     override suspend fun delete(shoppingList: ShoppingList) {
@@ -71,10 +63,6 @@ class ShopitoLocalRepositoryImpl @Inject constructor(private val shopitoDao: Sho
         return shopitoDao.getAllShoppingItemsWithLists().map { list ->
             list.filter { it.item.buyTime == null && !it.item.isDone}
         }
-    }
-
-    override suspend fun getAllItemKeywords(): Flow<List<ItemKeyword>> {
-        return shopitoDao.getAllItemKeywords()
     }
 
     override suspend fun removeAllCheckedItemsInShoppingList(listId: Long) {

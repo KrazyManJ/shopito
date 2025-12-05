@@ -3,14 +3,13 @@ package dev.krazymanj.shopito.database
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import androidx.room.Update
-import dev.krazymanj.shopito.database.entities.ItemKeyword
 import dev.krazymanj.shopito.database.entities.ShoppingItem
 import dev.krazymanj.shopito.database.entities.ShoppingList
 import dev.krazymanj.shopito.model.Location
+import dev.krazymanj.shopito.model.ShoppingItemWithList
 import kotlinx.coroutines.flow.Flow
 
 @Dao
@@ -52,12 +51,6 @@ interface ShopitoDao {
             buyTime ASC
     """)
     fun getAllShoppingItemsWithLists(): Flow<List<ShoppingItemWithList>>
-
-    @Insert(onConflict = OnConflictStrategy.IGNORE) suspend fun insert(itemKeyword: ItemKeyword)
-    @Delete suspend fun delete(itemKeyword: ItemKeyword)
-
-    @Query("SELECT * FROM item_keywords")
-    fun getAllItemKeywords(): Flow<List<ItemKeyword>>
 
     @Query("DELETE FROM shopping_item WHERE listId = :listId AND isDone = 1")
     suspend fun removeAllCheckedItemsInShoppingList(listId: Long)

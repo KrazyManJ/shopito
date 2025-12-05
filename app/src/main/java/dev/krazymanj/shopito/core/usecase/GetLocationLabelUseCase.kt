@@ -1,4 +1,4 @@
-package dev.krazymanj.shopito.domain.usecase
+package dev.krazymanj.shopito.core.usecase
 
 import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.communication.CommunicationResult

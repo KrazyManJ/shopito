@@ -6,9 +6,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -19,7 +17,6 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dev.krazymanj.shopito.R
-import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.ui.elements.AppVersionString
 import dev.krazymanj.shopito.ui.elements.screen.BaseScreen
@@ -48,8 +45,7 @@ fun SettingsScreen(
         SettingsScreenContent(
             paddingValues = it,
             state = state.value,
-            actions = viewModel,
-            navRouter = navRouter
+            actions = viewModel
         )
     }
 }
@@ -58,8 +54,7 @@ fun SettingsScreen(
 fun SettingsScreenContent(
     paddingValues: PaddingValues,
     state: SettingsUIState,
-    actions: SettingsActions,
-    navRouter: INavigationRouter
+    actions: SettingsActions
 ) {
     Box(
         modifier = Modifier.fillMaxSize().padding(spacing16).padding(bottom = 32.dp)
@@ -79,18 +74,6 @@ fun SettingsScreenContent(
                         actions.onStartNavigationSettingChange(it)
                     }
                 )
-            }
-            Box(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Button(
-                    onClick = {
-                        navRouter.navigateTo(Destination.ItemKeywordsListScreen)
-                    },
-                    modifier = Modifier.align(Alignment.Center)
-                ) {
-                    Text(text = stringResource(R.string.open_shopping_items_database))
-                }
             }
         }
         AppVersionString(

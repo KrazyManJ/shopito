@@ -6,7 +6,6 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import dev.krazymanj.shopito.R
-import dev.krazymanj.shopito.database.entities.ItemKeyword
 import dev.krazymanj.shopito.database.entities.ShoppingItem
 import dev.krazymanj.shopito.database.entities.ShoppingList
 import kotlinx.coroutines.CoroutineScope
@@ -16,8 +15,7 @@ import kotlinx.coroutines.launch
 @Database(
     entities = [
         ShoppingItem::class,
-        ShoppingList::class,
-        ItemKeyword::class
+        ShoppingList::class
     ],
     version = 1,
     exportSchema = true
