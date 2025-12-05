@@ -18,7 +18,7 @@ class MainActivityViewModel @Inject constructor() : ViewModel() {
 
     private val _state : MutableStateFlow<MainActivityUIState> = MutableStateFlow(value = MainActivityUIState())
 
-    val mainActivityUIState = _state.asStateFlow()
+    val state = _state.asStateFlow()
 
     init {
         viewModelScope.launch {
