@@ -50,7 +50,8 @@ class GeoReverseViewModel @Inject constructor(
                 is ReverseGeoResult.Error -> {
                     _state.update { it.copy(
                         isLoading = false,
-                        error = result.messageResId
+                        error = result.messageResId,
+                        locationLabel = null
                     ) }
                 }
             }

@@ -1,6 +1,5 @@
 package dev.krazymanj.shopito.ui.screens.mapView
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -23,7 +22,6 @@ class MapViewViewModel @Inject constructor(
     fun loadLocations() {
         viewModelScope.launch {
             repository.getAllDistinctLocationsFromItems().collect { locations ->
-                Log.i("Test", locations.toString())
                 _state.update { it.copy(
                     isLoading = false,
                     locations = locations

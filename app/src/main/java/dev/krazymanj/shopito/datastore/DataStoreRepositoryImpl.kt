@@ -1,7 +1,6 @@
 package dev.krazymanj.shopito.datastore
 
 import android.content.Context
-import android.util.Log
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
@@ -24,7 +23,6 @@ class DataStoreRepositoryImpl(private val context: Context) : IDataStoreReposito
                 preferences[key.key] as T ?: key.default
             }
             is DataStoreKey.NullablePrimitive<*> -> {
-                Log.i("Test", "Nullable primitive ${preferences[key.key]}")
                 preferences[key.key] as T
             }
             is DataStoreKey.Object -> {

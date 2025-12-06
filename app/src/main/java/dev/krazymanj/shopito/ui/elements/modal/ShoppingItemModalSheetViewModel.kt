@@ -37,12 +37,14 @@ class ShoppingItemModalSheetViewModel @Inject constructor(
 
     fun loadData(shoppingItem: ShoppingItem, shoppingList: ShoppingList?) {
         viewModelScope.launch {
+            _state.update { it.copy(
+                item = shoppingItem,
+                list = shoppingList
+            ) }
             dataStore.getFlow(DataStoreKey.LastFiveLocations).collect { locations ->
                 _state.update { it.copy(
-                    item = shoppingItem,
-                    list = shoppingList,
-                    loading = false,
-                    placesOptions = locations
+                    placesOptions = locations,
+                    loading = false
                 ) }
             }
         }

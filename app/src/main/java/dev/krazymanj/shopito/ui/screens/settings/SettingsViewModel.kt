@@ -1,6 +1,5 @@
 package dev.krazymanj.shopito.ui.screens.settings
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -35,7 +34,6 @@ class SettingsViewModel @Inject constructor(
                 datastore.getFlow(DataStoreKey.StartShoppingListId),
                 repository.getShoppingLists()
             ) { googleMapStartNavigation, startScreenSetting, startShoppingListId, shoppingLists ->
-                Log.i("Test", "Changed datastore to $startShoppingListId")
                 SettingsUIState(
                     isLoading = false,
                     startNavigationSetting = googleMapStartNavigation,
@@ -63,7 +61,6 @@ class SettingsViewModel @Inject constructor(
 
     override fun onStartShoppingListChange(value: ShoppingList) {
         viewModelScope.launch {
-            Log.i("Test", "Changed to $value")
             datastore.set(DataStoreKey.StartShoppingListId, value.id!!)
         }
     }
