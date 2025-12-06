@@ -1,6 +1,7 @@
 package dev.krazymanj.shopito.datastore
 
 import android.content.Context
+import android.util.Log
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.emptyPreferences
@@ -12,6 +13,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.serialization.json.Json
 import java.io.IOException
 
+@Suppress("UNCHECKED_CAST")
 class DataStoreRepositoryImpl(private val context: Context) : IDataStoreRepository {
 
     private val json = Json { ignoreUnknownKeys = true; encodeDefaults = true }
@@ -19,7 +21,11 @@ class DataStoreRepositoryImpl(private val context: Context) : IDataStoreReposito
     private fun <T> mapKey(preferences: Preferences, key: DataStoreKey<T>): T {
         return when (key) {
             is DataStoreKey.Primitive -> {
-                preferences[key.key] ?: key.default
+                preferences[key.key] as T ?: key.default
+            }
+            is DataStoreKey.NullablePrimitive<*> -> {
+                Log.i("Test", "Nullable primitive ${preferences[key.key]}")
+                preferences[key.key] as T
             }
             is DataStoreKey.Object -> {
                 val jsonString = preferences[key.key]
@@ -59,8 +65,14 @@ class DataStoreRepositoryImpl(private val context: Context) : IDataStoreReposito
         context.dataStore.edit { preferences ->
             when (key) {
                 is DataStoreKey.Primitive -> {
-                    key.key.let { prefKey ->
-                        preferences[prefKey] = value
+                    preferences[key.key] = value
+                }
+                is DataStoreKey.NullablePrimitive<*> -> {
+                    val prefKey = key.key as Preferences.Key<Any>
+                    if (value as T? == null) {
+                        preferences.remove(prefKey)
+                    } else {
+                        preferences[prefKey] = value as Any
                     }
                 }
                 is DataStoreKey.Object -> {

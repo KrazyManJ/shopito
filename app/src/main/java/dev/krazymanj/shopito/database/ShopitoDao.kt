@@ -23,7 +23,7 @@ interface ShopitoDao {
     fun getAllShoppingLists(): Flow<List<ShoppingList>>
 
     @Query("SELECT * FROM shopping_list WHERE id = :id")
-    suspend fun getShoppingListById(id: Long): ShoppingList
+    suspend fun getShoppingListById(id: Long): ShoppingList?
 
     @Insert suspend fun insert(shoppingItem: ShoppingItem)
     @Update suspend fun update(shoppingItem: ShoppingItem)

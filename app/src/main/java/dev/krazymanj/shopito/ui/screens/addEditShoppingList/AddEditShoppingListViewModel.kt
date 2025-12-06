@@ -57,7 +57,7 @@ class AddEditShoppingListViewModel @Inject constructor(private val repository: I
 
         viewModelScope.launch {
             _state.value = _state.value.copy(
-                shoppingList = repository.getShoppingListById(id),
+                shoppingList = repository.getShoppingListById(id)!!,
             )
         }
     }

@@ -38,7 +38,7 @@ class ShopitoLocalRepositoryImpl @Inject constructor(private val shopitoDao: Sho
         return shopitoDao.getAllShoppingLists()
     }
 
-    override suspend fun getShoppingListById(id: Long): ShoppingList {
+    override suspend fun getShoppingListById(id: Long): ShoppingList? {
         return shopitoDao.getShoppingListById(id)
     }
 

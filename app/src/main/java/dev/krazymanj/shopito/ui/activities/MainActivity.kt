@@ -8,10 +8,11 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import dagger.hilt.android.AndroidEntryPoint
-import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.NavGraph
 import dev.krazymanj.shopito.ui.theme.ShopitoTheme
 import dev.krazymanj.shopito.ui.theme.backgroundPrimaryColor
@@ -31,12 +32,14 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
+            val state by viewModel.state.collectAsStateWithLifecycle()
+
             ShopitoTheme {
                 Box(
                     modifier = Modifier.fillMaxSize().background(backgroundPrimaryColor())
                 ) {
                     NavGraph(
-                        startDestination = Destination.ShoppingListsSummaryScreen
+                        startDestination = state.resolveStartDestination()
                     )
                 }
             }
