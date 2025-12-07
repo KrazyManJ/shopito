@@ -31,6 +31,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
@@ -42,6 +43,7 @@ import com.composables.icons.lucide.Trash
 import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.database.entities.ShoppingItem
 import dev.krazymanj.shopito.database.entities.ShoppingList
+import dev.krazymanj.shopito.ui.UITestTag
 import dev.krazymanj.shopito.ui.elements.input.ShopitoCheckbox
 import dev.krazymanj.shopito.ui.theme.Primary
 import dev.krazymanj.shopito.ui.theme.backgroundPrimaryColor
@@ -129,6 +131,7 @@ fun ShoppingItem(
                         horizontal = spacing16,
                         vertical = spacing4
                     )
+                    .testTag(UITestTag.ShoppingItem.ShoppingItem)
                 ),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -143,7 +146,8 @@ fun ShoppingItem(
                         color = textColor,
                         textDecoration = textDecoration,
                         overflow = TextOverflow.Ellipsis,
-                        maxLines = 1
+                        maxLines = 1,
+                        modifier = Modifier.testTag(UITestTag.ShoppingItem.Name)
                     )
                     shoppingList?.let { shoppingList ->
                         Row(
@@ -164,7 +168,8 @@ fun ShoppingItem(
                     style = MaterialTheme.typography.bodyLarge,
                     fontWeight = FontWeight.Medium,
                     color = textColor,
-                    textDecoration = textDecoration
+                    textDecoration = textDecoration,
+                    modifier = Modifier.testTag(UITestTag.ShoppingItem.Amount)
                 )
                 ShopitoCheckbox(
                     checked = shoppingItem.isDone,

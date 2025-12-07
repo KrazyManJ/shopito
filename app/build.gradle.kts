@@ -33,7 +33,7 @@ android {
         versionCode = myVersionCode
         versionName = myVersionName
 
-        testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner = "dev.krazymanj.shopito.HiltTestRunner"
     }
 
     buildTypes {
@@ -95,6 +95,8 @@ dependencies {
     implementation(libs.hilt.android)
     implementation(libs.hilt.compose)
     ksp(libs.hilt.compiler.ksp)
+    androidTestImplementation(libs.hilt.android.testing)
+    kspAndroidTest(libs.hilt.compiler.ksp)
 
     // Lucide Icons
     implementation(libs.icons.lucide)

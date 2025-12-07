@@ -70,6 +70,7 @@ room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "
 hilt-android = { group = "com.google.dagger", name = "hilt-android" , version.ref = "hilt"}
 hilt-compiler-ksp = { group = "com.google.dagger", name = "hilt-compiler" , version.ref = "hilt"}
 hilt-compose = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-compose" }
+hilt-android-testing = { group = "com.google.dagger", name = "hilt-android-testing", version.ref = "hilt" }
 
 icons-lucide = { group = "com.composables", name = "icons-lucide", version.ref = "icons-lucide"}
 secrets-gradle-plugin = { group = "com.google.android.libraries.mapsplatform.secrets-gradle-plugin", name="secrets-gradle-plugin", version.ref = "secretsGradlePlugin" }

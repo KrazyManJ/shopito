@@ -16,6 +16,7 @@ import androidx.compose.material3.IconButtonColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
@@ -24,6 +25,7 @@ import com.composables.icons.lucide.ArrowUp
 import com.composables.icons.lucide.Lucide
 import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.model.Location
+import dev.krazymanj.shopito.ui.UITestTag
 import dev.krazymanj.shopito.ui.elements.chip.DatePickerChip
 import dev.krazymanj.shopito.ui.elements.chip.LocationPickerChip
 import dev.krazymanj.shopito.ui.theme.Primary
@@ -53,6 +55,7 @@ fun QuickAdd(
             .background(backgroundPrimaryColor())
             .padding(horizontal = spacing16, vertical = spacing8)
             .navigationBarsPadding())
+            .testTag(UITestTag.QuickAdd.QuickAdd)
     ) {
         HorizontalDivider(
             modifier = Modifier.padding(vertical = spacing8),
@@ -78,7 +81,7 @@ fun QuickAdd(
                 value = value,
                 onValueChange = onValueChange,
                 placeholder = stringResource(R.string.quick_add_placeholder),
-                modifier = Modifier.weight(1f),
+                modifier = Modifier.weight(1f).testTag(UITestTag.QuickAdd.TextField),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = { onAdd() })
             )
@@ -91,6 +94,7 @@ fun QuickAdd(
                     disabledContainerColor = textSecondaryColor(),
                     disabledContentColor = backgroundPrimaryColor()
                 ),
+                modifier = Modifier.testTag(UITestTag.QuickAdd.AddButton)
 
             ) {
                 Icon(

@@ -10,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.rememberNavController
@@ -21,6 +22,7 @@ import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.navigation.NavigationRouterImpl
+import dev.krazymanj.shopito.ui.UITestTag
 import dev.krazymanj.shopito.ui.theme.Primary
 import dev.krazymanj.shopito.ui.theme.backgroundPrimaryColor
 import dev.krazymanj.shopito.ui.theme.textPrimaryColor
@@ -30,7 +32,8 @@ data class NavigationItem(
     val label: Int,
     val icon: ImageVector,
     val route: Destination,
-    val displaySelectedOnRoutes: List<KClass<out Destination>>
+    val displaySelectedOnRoutes: List<KClass<out Destination>>,
+    val testTag: String
 )
 
 val navigationItems: List<NavigationItem> = listOf(
@@ -40,7 +43,8 @@ val navigationItems: List<NavigationItem> = listOf(
         route = Destination.ShoppingListsSummaryScreen,
         displaySelectedOnRoutes = listOf(
             Destination.ShoppingListsSummaryScreen::class
-        )
+        ),
+        testTag = UITestTag.ShopitoNavigationBar.ShoppingListsSummaryScreen
     ),
     NavigationItem(
         label = R.string.navigation_shopping_lists_label,
@@ -48,7 +52,8 @@ val navigationItems: List<NavigationItem> = listOf(
         route = Destination.ShoppingListsScreen,
         displaySelectedOnRoutes = listOf(
             Destination.ShoppingListsScreen::class
-        )
+        ),
+        testTag = UITestTag.ShopitoNavigationBar.ShoppingListsScreen
     ),
     NavigationItem(
         label = R.string.navigation_map_view_label,
@@ -56,7 +61,8 @@ val navigationItems: List<NavigationItem> = listOf(
         route = Destination.MapViewScreen,
         displaySelectedOnRoutes = listOf(
             Destination.MapViewScreen::class
-        )
+        ),
+        testTag = UITestTag.ShopitoNavigationBar.MapViewScreen
     )
 )
 
@@ -65,7 +71,8 @@ fun ShopitoNavigationBar(
     navigationRouter: INavigationRouter,
 ) {
     NavigationBar(
-        containerColor = backgroundPrimaryColor()
+        containerColor = backgroundPrimaryColor(),
+        modifier = Modifier.testTag(UITestTag.ShopitoNavigationBar.Bar)
     ) {
         navigationItems.forEach {
             NavigationBarItem(
@@ -93,7 +100,7 @@ fun ShopitoNavigationBar(
                     disabledIconColor = textPrimaryColor(),
                     disabledTextColor = textPrimaryColor()
                 ),
-                modifier = Modifier.background(Color.Transparent)
+                modifier = Modifier.background(Color.Transparent).testTag(it.testTag)
             )
         }
     }
