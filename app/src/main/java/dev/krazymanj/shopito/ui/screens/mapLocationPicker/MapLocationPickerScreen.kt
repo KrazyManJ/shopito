@@ -1,7 +1,6 @@
 package dev.krazymanj.shopito.ui.screens.mapLocationPicker
 
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -18,7 +17,6 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -27,7 +25,6 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Pin
-import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.maps.android.compose.ComposeMapColorScheme
 import com.google.maps.android.compose.GoogleMap
@@ -50,23 +47,21 @@ fun MapLocationPickerScreen(
 ) {
     val viewModel = hiltViewModel<MapLocationPickerViewModel>()
 
-    val state = viewModel.state.collectAsStateWithLifecycle()
+    val state by viewModel.state.collectAsStateWithLifecycle()
 
     LaunchedEffect(route.location) {
-        if (route.location != null) {
-            viewModel.locationChanged(route.location)
-        }
+        viewModel.loadLocation(route.location)
     }
 
     BaseScreen(
         topBarText = stringResource(R.string.pick_location_title),
+        showLoading = state.isLoading,
         onBackClick = {
             navRouter.returnBack()
         }
     ) {
         MapPositionPickerScreenContent(
-            paddingValues = it,
-            state = state.value,
+            state = state,
             actions = viewModel,
             navRouter = navRouter,
             route = route
@@ -77,7 +72,6 @@ fun MapLocationPickerScreen(
 @OptIn(MapsComposeExperimentalApi::class)
 @Composable
 fun MapPositionPickerScreenContent(
-    paddingValues: PaddingValues,
     state: MapLocationPickerUIState,
     actions: MapLocationPickerActions,
     navRouter: INavigationRouter,
@@ -91,25 +85,10 @@ fun MapPositionPickerScreenContent(
         )
     ) }
     val cameraPositionState = rememberCameraPositionState {
-        position = CameraPosition.fromLatLngZoom(state.location.toLatLng(), 8f)
-    }
-
-    var isMapLoaded by remember { mutableStateOf(false) }
-
-    LaunchedEffect(state.location, isMapLoaded) {
-        if (!state.initialized && isMapLoaded) {
-            cameraPositionState.animate(
-                update = CameraUpdateFactory.newLatLngZoom(state.location.toLatLng(), 18f),
-                durationMs = 500
-            )
-            actions.setInitialized()
-        }
+        position = CameraPosition.fromLatLngZoom(state.location.toLatLng(), 13f)
     }
 
     LaunchedEffect(cameraPositionState.isMoving) {
-        if (!state.initialized) {
-            return@LaunchedEffect
-        }
         if (!cameraPositionState.isMoving) {
             val target = cameraPositionState.position.target
             actions.locationChanged(
@@ -128,7 +107,6 @@ fun MapPositionPickerScreenContent(
             modifier = Modifier.fillMaxHeight(),
             uiSettings = mapUiSettings,
             cameraPositionState = cameraPositionState,
-            onMapLoaded = { isMapLoaded = true },
             mapColorScheme = ComposeMapColorScheme.FOLLOW_SYSTEM
         ) {}
 
@@ -150,6 +128,7 @@ fun MapPositionPickerScreenContent(
             onClick = {
                 navRouter.setPreviousState(route.navSource, state.location)
                 navRouter.returnBack()
+                actions.reset()
             },
             shape = RoundedCornerShape(16.dp)
         ) {

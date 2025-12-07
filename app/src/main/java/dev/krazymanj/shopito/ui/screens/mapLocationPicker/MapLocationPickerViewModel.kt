@@ -16,15 +16,20 @@ class MapLocationPickerViewModel @Inject constructor() : ViewModel(),
 
     val state = _state.asStateFlow()
 
+    override fun loadLocation(location: Location?) {
+        _state.update { it.copy(
+            location = location ?: it.location,
+            isLoading = false
+        ) }
+    }
+
     override fun locationChanged(location: Location) {
         _state.value = _state.value.copy(
             location = location
         )
     }
 
-    override fun setInitialized() {
-        _state.update { it.copy(
-            initialized = true
-        ) }
+    override fun reset() {
+        _state.value = MapLocationPickerUIState()
     }
 }

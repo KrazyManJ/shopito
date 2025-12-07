@@ -47,4 +47,5 @@
     <string name="map_view_title">Map View</string>
     <string name="navigation_map_view_label">Map View</string>
     <string name="shopping_items_in_shop_title">Shopping items in shop</string>
+    <string name="no_items_in_shop_title">No items to buy here</string>
 </resources>

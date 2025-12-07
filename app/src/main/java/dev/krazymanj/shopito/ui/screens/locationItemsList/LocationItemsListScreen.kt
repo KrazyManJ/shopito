@@ -23,13 +23,17 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.MapPinX
 import dev.krazymanj.shopito.R
+import dev.krazymanj.shopito.database.entities.ShoppingItem
 import dev.krazymanj.shopito.extension.showDeletedMessage
 import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.ui.elements.ShoppingItem
 import dev.krazymanj.shopito.ui.elements.modal.ShoppingItemModalSheet
 import dev.krazymanj.shopito.ui.elements.screen.BaseScreen
+import dev.krazymanj.shopito.ui.elements.screen.PlaceholderScreenContent
 import dev.krazymanj.shopito.ui.theme.Emphasized
 import dev.krazymanj.shopito.ui.theme.spacing16
 import dev.krazymanj.shopito.ui.theme.spacing32
@@ -67,6 +71,11 @@ fun LocationItemsListScreen(
                         viewModel.addBackDeletedItem()
                     }
                 }
+            },
+            onShoppingListLinkClick = {
+                it.list?.id?.let { listId ->
+                    navRouter.navigateTo(Destination.ViewShoppingList(listId))
+                }
             }
         )
     }
@@ -75,13 +84,23 @@ fun LocationItemsListScreen(
         topBarText = stringResource(R.string.shopping_items_in_shop_title),
         onBackClick = { navRouter.returnBack() },
         showLoading = state.isLoading,
+        placeholderScreenContent = if (state.items.isEmpty()) PlaceholderScreenContent(
+            icon = Lucide.MapPinX,
+            title = stringResource(R.string.no_items_in_shop_title)
+        ) else null,
         snackbarHostState = snackbarHostState
     ) {
         LocationItemsListScreenContent(
             paddingValues = it,
             state = state,
             actions = viewModel,
-            snackbarHostState = snackbarHostState
+            onDelete = { item ->
+                scope.launch {
+                    snackbarHostState.showDeletedMessage(item,context) {
+                        viewModel.addBackDeletedItem()
+                    }
+                }
+            }
         )
     }
 }
@@ -91,10 +110,8 @@ fun LocationItemsListScreenContent(
     paddingValues: PaddingValues,
     state: LocationItemsListUIState,
     actions: LocationItemsListActions,
-    snackbarHostState: SnackbarHostState
+    onDelete: (ShoppingItem) -> Unit
 ) {
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier.padding(paddingValues).padding(spacing16),
@@ -130,12 +147,8 @@ fun LocationItemsListScreenContent(
                         actions.changeItemCheckState(it.item, state)
                     },
                     onRemove = {
-                        scope.launch {
-                            actions.deleteShoppingItem(it.item)
-                            snackbarHostState.showDeletedMessage(it.item,context) {
-                                actions.addBackDeletedItem()
-                            }
-                        }
+                        actions.deleteShoppingItem(it.item)
+                        onDelete(it.item)
                     },
                     onClick = {
                         actions.openShoppingItemDetails(it)

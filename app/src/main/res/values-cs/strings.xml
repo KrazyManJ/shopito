@@ -42,4 +42,10 @@
     <string name="list_placeholder_text">Vlož položky skrze spodní panel</string>
     <string name="item_deleted">Položka \"%1$s\" smazána</string>
     <string name="undo">Vrátit</string>
+    <string name="unknown">Neznámá</string>
+    <string name="unnamed">Nejmenná</string>
+    <string name="map_view_title">Mapa</string>
+    <string name="navigation_map_view_label">Mapa</string>
+    <string name="shopping_items_in_shop_title">Položky v obchodě</string>
+    <string name="no_items_in_shop_title">Žádně položky zde ke koupi</string>
 </resources>

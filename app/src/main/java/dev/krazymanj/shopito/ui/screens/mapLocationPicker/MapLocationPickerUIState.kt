@@ -4,7 +4,7 @@ import dev.krazymanj.shopito.model.Location
 
 
 data class MapLocationPickerUIState(
-    val initialized: Boolean = false,
+    val isLoading: Boolean = true,
     val location: Location = Location(
         latitude = 49.8175,
         longitude = 15.4730
