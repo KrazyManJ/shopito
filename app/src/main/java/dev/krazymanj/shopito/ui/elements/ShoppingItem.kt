@@ -82,9 +82,8 @@ fun ShoppingItem(
     val density = LocalDensity.current
     val dismissState = remember(key1 = shoppingItem){
         SwipeToDismissBoxState(
-            SwipeToDismissBoxValue.Settled,
-            { with(density) { 56.dp.toPx() } }
-        )
+            SwipeToDismissBoxValue.Settled
+        ) { with(density) { 56.dp.toPx() } }
     }
 
     AnimatedVisibility(
@@ -94,10 +93,9 @@ fun ShoppingItem(
     ) {
         SwipeToDismissBox(
             state = dismissState,
-            enableDismissFromStartToEnd = false,
             onDismiss = { dismissValue ->
                 when (dismissValue) {
-                    SwipeToDismissBoxValue.EndToStart -> {
+                    SwipeToDismissBoxValue.EndToStart, SwipeToDismissBoxValue.StartToEnd -> {
                         isRemoved = true
                         true
                     }
