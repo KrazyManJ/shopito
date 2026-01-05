@@ -27,7 +27,7 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.composables.icons.lucide.ListX
 import com.composables.icons.lucide.Lucide
-import com.composables.icons.lucide.Pencil
+import com.composables.icons.lucide.ScanText
 import com.composables.icons.lucide.StickyNote
 import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.extension.showDeletedMessage
@@ -118,12 +118,19 @@ fun ShoppingListViewScreen(
         },
         showLoading = state.value.isLoading,
         actions = {
+//            IconButton(
+//                onClick = {
+//                    navRouter.navigateTo(Destination.AddEditShoppingList(shoppingListId = shoppingListId))
+//                }
+//            ) {
+//                Icon(imageVector = Lucide.Pencil, contentDescription = null)
+//            }
             IconButton(
                 onClick = {
-                    navRouter.navigateTo(Destination.AddEditShoppingList(shoppingListId = shoppingListId))
+                    navRouter.navigateTo(Destination.ScanShoppingListScreen(shoppingListId))
                 }
             ) {
-                Icon(imageVector = Lucide.Pencil, contentDescription = null)
+                Icon(imageVector = Lucide.ScanText, contentDescription = null)
             }
         },
         floatingActionButton = {

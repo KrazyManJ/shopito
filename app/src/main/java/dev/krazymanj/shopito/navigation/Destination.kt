@@ -36,5 +36,11 @@ sealed class Destination {
     data class LocationItemsList(
         val location: Location
     ) : Destination()
+
+    @Serializable
+    data class ScanShoppingListScreen(
+        val shoppingListId: Long
+    ) : Destination()
+
 }
 

@@ -42,6 +42,9 @@ splashscreen = "1.2.0"
 logging = "5.3.2"
 retrofit = "3.0.0"
 
+camerax-version = "1.4.0"
+text-recognition = "16.0.1"
+
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -96,6 +99,13 @@ splashscreen = { group = "androidx.core", name= "core-splashscreen", version.ref
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
 retrofit-moshi = { group = "com.squareup.retrofit2", name = "converter-moshi", version.ref = "retrofit" }
 retrofit-okhtt3 = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "logging" }
+
+camera-core = { group = "androidx.camera", name = "camera-core", version.ref = "camerax-version" }
+camera-camera2 = { group = "androidx.camera", name = "camera-camera2", version.ref = "camerax-version" }
+camera-lifecycle = { group = "androidx.camera", name = "camera-lifecycle", version.ref = "camerax-version" }
+camera-view = { group = "androidx.camera", name = "camera-view", version.ref = "camerax-version" }
+camera-extensions = { group = "androidx.camera", name = "camera-extensions", version.ref = "camerax-version" }
+text-recognition = { group = "com.google.mlkit", name = "text-recognition", version.ref = "text-recognition" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

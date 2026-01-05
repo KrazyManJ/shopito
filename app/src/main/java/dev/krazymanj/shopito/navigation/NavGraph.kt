@@ -12,6 +12,7 @@ import dev.krazymanj.shopito.ui.screens.addEditShoppingList.AddEditShoppingListS
 import dev.krazymanj.shopito.ui.screens.locationItemsList.LocationItemsListScreen
 import dev.krazymanj.shopito.ui.screens.mapLocationPicker.MapLocationPickerScreen
 import dev.krazymanj.shopito.ui.screens.mapView.MapViewScreen
+import dev.krazymanj.shopito.ui.screens.scanShoppingList.ScanShoppingListScreen
 import dev.krazymanj.shopito.ui.screens.settings.SettingsScreen
 import dev.krazymanj.shopito.ui.screens.shoppingListView.ShoppingListViewScreen
 import dev.krazymanj.shopito.ui.screens.shoppingLists.ShoppingListsScreen
@@ -65,6 +66,9 @@ fun NavGraph(
             )
         ) {
             LocationItemsListScreen(navRouter, it.toRoute())
+        }
+        composable<Destination.ScanShoppingListScreen> {
+            ScanShoppingListScreen(navRouter, it.toRoute())
         }
     }
 }
