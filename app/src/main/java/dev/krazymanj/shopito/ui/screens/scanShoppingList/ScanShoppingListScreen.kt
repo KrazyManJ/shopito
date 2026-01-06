@@ -39,6 +39,8 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
@@ -51,8 +53,10 @@ import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.ui.elements.CameraComposeView
 import dev.krazymanj.shopito.ui.elements.screen.BaseScreen
+import dev.krazymanj.shopito.ui.theme.Emphasized
 import dev.krazymanj.shopito.ui.theme.spacing16
 import dev.krazymanj.shopito.ui.theme.spacing32
+import dev.krazymanj.shopito.ui.theme.spacing4
 import dev.krazymanj.shopito.ui.theme.spacing64
 import dev.krazymanj.shopito.ui.theme.textPrimaryColor
 
@@ -152,15 +156,34 @@ private fun ScanShoppingListScreenContent(
                         }
                     }
                     else {
-                        Text(text = "Scan Result")
+                        Text(
+                            text = "Scan Result",
+                            modifier = Modifier.fillMaxWidth(),
+                            textAlign = TextAlign.Center,
+                            style = MaterialTheme.typography.headlineSmall,
+                            fontWeight = FontWeight.Emphasized
+                        )
+                        Text(
+                            text = "This is the scan result, please check it before adding to ${state.shoppingList?.name}:",
+                            style = MaterialTheme.typography.bodySmall,
+                        )
                         LazyColumn {
                             items(items = state.scannedItems) {
-                                Row {
+                                Row(
+                                    modifier = Modifier.padding(vertical = spacing4),
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
                                     Text(
                                         text = it.itemName,
-                                        modifier = Modifier.weight(1f)
+                                        modifier = Modifier.weight(1f),
+                                        style = MaterialTheme.typography.titleLarge,
+                                        fontWeight = FontWeight.Medium,
                                     )
-                                    Text(text = "${it.amount}x")
+                                    Text(
+                                        text = "${it.amount}x",
+                                        style = MaterialTheme.typography.bodyLarge,
+                                        fontWeight = FontWeight.Medium,
+                                    )
                                 }
                             }
                         }
