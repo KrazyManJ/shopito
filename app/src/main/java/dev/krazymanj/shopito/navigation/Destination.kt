@@ -42,5 +42,7 @@ sealed class Destination {
         val shoppingListId: Long
     ) : Destination()
 
+    @Serializable
+    data object LoginScreen : Destination()
 }
 

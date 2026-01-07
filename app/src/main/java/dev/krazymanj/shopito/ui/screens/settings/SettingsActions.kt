@@ -8,4 +8,5 @@ interface SettingsActions {
     fun onStartNavigationSettingChange(value: Boolean)
     fun onStartScreenSettingChange(value: StartDestinationSetting)
     fun onStartShoppingListChange(value: ShoppingList)
+    fun logout()
 }

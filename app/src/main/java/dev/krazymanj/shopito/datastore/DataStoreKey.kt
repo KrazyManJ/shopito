@@ -52,5 +52,9 @@ sealed class DataStoreKey<T>() {
         val StartShoppingListId = NullablePrimitive<Long?>(
             key = longPreferencesKey("start_shopping_list_id") as Preferences.Key<*>
         )
+
+        val Token = NullablePrimitive<String?>(
+            key = stringPreferencesKey("token")
+        )
     }
 }

@@ -8,6 +8,7 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dev.krazymanj.shopito.BuildConfig
 import dev.krazymanj.shopito.di.Nominatim
+import dev.krazymanj.shopito.di.Shopito
 import okhttp3.Dispatcher
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -50,6 +51,17 @@ object RetrofitModule {
     fun provideNominatimRetrofit(moshi: Moshi, client: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BuildConfig.NOMINATIM_SERVER)
+            .client(client)
+            .addConverterFactory(MoshiConverterFactory.create(moshi))
+            .build()
+    }
+
+    @Shopito
+    @Provides
+    @Singleton
+    fun provideShopitoRetrofit(moshi: Moshi, client: OkHttpClient): Retrofit {
+        return Retrofit.Builder()
+            .baseUrl(BuildConfig.SHOPITO_API_SERVER)
             .client(client)
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()

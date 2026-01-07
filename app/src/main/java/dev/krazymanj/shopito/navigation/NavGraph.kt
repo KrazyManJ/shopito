@@ -10,6 +10,7 @@ import androidx.navigation.toRoute
 import dev.krazymanj.shopito.model.Location
 import dev.krazymanj.shopito.ui.screens.addEditShoppingList.AddEditShoppingListScreen
 import dev.krazymanj.shopito.ui.screens.locationItemsList.LocationItemsListScreen
+import dev.krazymanj.shopito.ui.screens.login.LoginScreen
 import dev.krazymanj.shopito.ui.screens.mapLocationPicker.MapLocationPickerScreen
 import dev.krazymanj.shopito.ui.screens.mapView.MapViewScreen
 import dev.krazymanj.shopito.ui.screens.scanShoppingList.ScanShoppingListScreen
@@ -69,6 +70,9 @@ fun NavGraph(
         }
         composable<Destination.ScanShoppingListScreen> {
             ScanShoppingListScreen(navRouter, it.toRoute())
+        }
+        composable<Destination.LoginScreen> {
+            LoginScreen(navRouter)
         }
     }
 }

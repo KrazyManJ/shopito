@@ -3,6 +3,7 @@ package dev.krazymanj.shopito.ui.screens.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.krazymanj.shopito.core.TokenDecoder
 import dev.krazymanj.shopito.database.IShopitoLocalRepository
 import dev.krazymanj.shopito.database.entities.ShoppingList
 import dev.krazymanj.shopito.datastore.DataStoreKey
@@ -32,14 +33,16 @@ class SettingsViewModel @Inject constructor(
                 datastore.getFlow(DataStoreKey.GoogleMapsStartNavigationKey),
                 datastore.getFlow(DataStoreKey.StartScreenSetting),
                 datastore.getFlow(DataStoreKey.StartShoppingListId),
-                repository.getShoppingLists()
-            ) { googleMapStartNavigation, startScreenSetting, startShoppingListId, shoppingLists ->
+                repository.getShoppingLists(),
+                datastore.getFlow(DataStoreKey.Token)
+            ) { googleMapStartNavigation, startScreenSetting, startShoppingListId, shoppingLists, token ->
                 SettingsUIState(
                     isLoading = false,
                     startNavigationSetting = googleMapStartNavigation,
                     startScreenSetting = startScreenSetting,
                     startShoppingListId = startShoppingListId,
-                    shoppingLists = shoppingLists
+                    shoppingLists = shoppingLists,
+                    loggedData = TokenDecoder.decodeToken(token ?: "")
                 )
             }.collect { state ->
                 _state.update { state }
@@ -62,6 +65,12 @@ class SettingsViewModel @Inject constructor(
     override fun onStartShoppingListChange(value: ShoppingList) {
         viewModelScope.launch {
             datastore.set(DataStoreKey.StartShoppingListId, value.id!!)
+        }
+    }
+
+    override fun logout() {
+        viewModelScope.launch {
+            datastore.set(DataStoreKey.Token, null)
         }
     }
 }

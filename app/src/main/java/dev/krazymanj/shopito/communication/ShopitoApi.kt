@@ -1,0 +1,16 @@
+package dev.krazymanj.shopito.communication
+
+import dev.krazymanj.shopito.model.TokenResponse
+import retrofit2.Response
+import retrofit2.http.Field
+import retrofit2.http.FormUrlEncoded
+import retrofit2.http.POST
+
+interface ShopitoApi {
+    @FormUrlEncoded
+    @POST("login")
+    suspend fun login(
+        @Field("username") username: String,
+        @Field("password") password: String
+    ): Response<TokenResponse>
+}
