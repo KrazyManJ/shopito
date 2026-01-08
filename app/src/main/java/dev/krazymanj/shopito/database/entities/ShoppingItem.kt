@@ -32,9 +32,24 @@ data class ShoppingItem(
     var listId: String? = null,
 
     @PrimaryKey
-    var id: String = UUID.randomUUID().toString()
+    var id: String = UUID.randomUUID().toString(),
+
+    val updatedAt: Long = System.currentTimeMillis(),
+    val isSynced: Boolean = false,
+    /**
+     * A property that marks if entity is known to server (isDirty = false) or not (isDirty = true)
+     *
+     * In default true, because server does not know about it
+     */
+    val isDirty: Boolean = true,
+    val isDeleted: Boolean = false
 ) {
     companion object {
         fun default(): ShoppingItem = ShoppingItem("",0)
     }
+
+    fun withUpdatedAt(): ShoppingItem = this.copy(
+        updatedAt = System.currentTimeMillis(),
+        isDirty = true
+    )
 }

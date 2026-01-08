@@ -15,8 +15,8 @@ class ShoppingListAnalyzer @Inject constructor() {
 
     private val generativeModel = GenerativeModel(
 
-//        modelName = "gemini-2.5-flash",
-        modelName = "gemini-2.5-flash-lite", // USE THIS IN CASE IF FIRST ONE RUNS OUT OF CREDITS
+        modelName = "gemini-2.5-flash",
+//        modelName = "gemini-2.5-flash-lite", // USE THIS IN CASE IF FIRST ONE RUNS OUT OF CREDITS
         apiKey = BuildConfig.GEMINI_API_KEY
     )
 

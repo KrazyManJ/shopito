@@ -3,7 +3,7 @@ package dev.krazymanj.shopito.ui.screens.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.krazymanj.shopito.core.TokenDecoder
+import dev.krazymanj.shopito.core.UserManager
 import dev.krazymanj.shopito.database.IShopitoLocalRepository
 import dev.krazymanj.shopito.database.entities.ShoppingList
 import dev.krazymanj.shopito.datastore.DataStoreKey
@@ -19,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val datastore: IDataStoreRepository,
-    private val repository: IShopitoLocalRepository
+    private val repository: IShopitoLocalRepository,
+    private val userManager: UserManager
 ) : ViewModel(),
     SettingsActions {
 
@@ -42,7 +43,7 @@ class SettingsViewModel @Inject constructor(
                     startScreenSetting = startScreenSetting,
                     startShoppingListId = startShoppingListId,
                     shoppingLists = shoppingLists,
-                    loggedData = TokenDecoder.decodeToken(token ?: "")
+                    loggedData = userManager.getUserInfo()
                 )
             }.collect { state ->
                 _state.update { state }
@@ -64,13 +65,13 @@ class SettingsViewModel @Inject constructor(
 
     override fun onStartShoppingListChange(value: ShoppingList) {
         viewModelScope.launch {
-            datastore.set(DataStoreKey.StartShoppingListId, value.id!!)
+            datastore.set(DataStoreKey.StartShoppingListId, value.id)
         }
     }
 
     override fun logout() {
         viewModelScope.launch {
-            datastore.set(DataStoreKey.Token, null)
+            userManager.logout()
         }
     }
 }

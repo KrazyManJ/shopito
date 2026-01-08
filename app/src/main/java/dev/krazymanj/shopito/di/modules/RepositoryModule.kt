@@ -1,21 +1,20 @@
 package dev.krazymanj.shopito.di.modules
 
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
-import dev.krazymanj.shopito.database.ShopitoDao
-import dev.krazymanj.shopito.database.ShopitoLocalRepositoryImpl
 import dev.krazymanj.shopito.database.IShopitoLocalRepository
+import dev.krazymanj.shopito.database.ShopitoLocalRepositoryImpl
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object RepositoryModule {
+interface RepositoryModule {
 
-    @Provides
+    @Binds
     @Singleton
-    fun provideRepository(dao: ShopitoDao): IShopitoLocalRepository {
-        return ShopitoLocalRepositoryImpl(dao)
-    }
+    fun bindRepository(
+        impl: ShopitoLocalRepositoryImpl
+    ): IShopitoLocalRepository
 }

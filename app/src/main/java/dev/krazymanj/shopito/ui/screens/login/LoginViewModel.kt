@@ -3,23 +3,16 @@ package dev.krazymanj.shopito.ui.screens.login
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.krazymanj.shopito.R
-import dev.krazymanj.shopito.communication.CommunicationResult
-import dev.krazymanj.shopito.communication.IShopitoRemoteRepository
-import dev.krazymanj.shopito.datastore.DataStoreKey
-import dev.krazymanj.shopito.datastore.IDataStoreRepository
-import kotlinx.coroutines.Dispatchers
+import dev.krazymanj.shopito.core.UserManager
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val repository: IShopitoRemoteRepository,
-    private val datastore: IDataStoreRepository
+    private val userManager: UserManager
 ) : ViewModel(), LoginActions {
     private var _state = MutableStateFlow(value = LoginUIState())
 
@@ -36,34 +29,19 @@ class LoginViewModel @Inject constructor(
     override fun onLoginClick() {
         viewModelScope.launch {
             _state.update { it.copy(isLoggingIn = true, error = null) }
-            val result = withContext(Dispatchers.IO) {
-                repository.login(
-                    username = state.value.usernameInput,
-                    password = state.value.passwordInput
-                )
-            }
+            val result = userManager.login(
+                username = state.value.usernameInput,
+                password = state.value.passwordInput
+            )
 
             when (result) {
-                is CommunicationResult.ConnectionError -> {
+                is UserManager.LoginResponse.Error -> {
                     _state.update { it.copy(
                         isLoggingIn = false,
-                        error = R.string.error_no_internet_connection
-                    )}
-                }
-                is CommunicationResult.Error -> {
-                    _state.update { it.copy(
-                        isLoggingIn = false,
-                        error = R.string.error_invalid_credentials
+                        error = result.messageResId
                     ) }
                 }
-                is CommunicationResult.Exception -> {
-                    _state.update { it.copy(
-                        isLoggingIn = false,
-                        error = R.string.error_unknown
-                    ) }
-                }
-                is CommunicationResult.Success -> {
-                    datastore.set(DataStoreKey.Token, result.data.accessToken)
+                UserManager.LoginResponse.Success -> {
                     _state.update { it.copy(
                         isLoggingIn = false,
                         loggedIn = true

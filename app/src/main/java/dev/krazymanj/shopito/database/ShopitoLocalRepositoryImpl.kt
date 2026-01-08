@@ -8,34 +8,50 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
-class ShopitoLocalRepositoryImpl @Inject constructor(private val shopitoDao: ShopitoDao) :
+class ShopitoLocalRepositoryImpl @Inject constructor(
+    private val shopitoDao: ShopitoDao
+) :
     IShopitoLocalRepository {
     override suspend fun insert(shoppingItem: ShoppingItem) {
-        return shopitoDao.insert(shoppingItem)
+        return shopitoDao.insert(shoppingItem.withUpdatedAt())
     }
 
     override suspend fun insert(shoppingList: ShoppingList) {
-        return shopitoDao.insert(shoppingList)
+        return shopitoDao.insert(shoppingList.withUpdatedAt())
     }
 
     override suspend fun update(shoppingItem: ShoppingItem) {
-        return shopitoDao.update(shoppingItem)
+        return shopitoDao.update(shoppingItem.withUpdatedAt())
+    }
+
+    override suspend fun upsert(shoppingItem: ShoppingItem) {
+        return shopitoDao.upsert(shoppingItem.withUpdatedAt())
     }
 
     override suspend fun update(shoppingList: ShoppingList) {
-        return shopitoDao.update(shoppingList)
+        return shopitoDao.update(shoppingList.withUpdatedAt())
     }
 
     override suspend fun upsert(shoppingList: ShoppingList) {
-        return shopitoDao.upsert(shoppingList)
+        return shopitoDao.upsert(shoppingList.withUpdatedAt())
     }
 
     override suspend fun delete(shoppingItem: ShoppingItem) {
-        return shopitoDao.delete(shoppingItem)
+        if (shoppingItem.isSynced) {
+            shopitoDao.delete(shoppingItem)
+        }
+        else {
+            shopitoDao.update(shoppingItem.withUpdatedAt().copy(isDeleted = true))
+        }
     }
 
     override suspend fun delete(shoppingList: ShoppingList) {
-        return shopitoDao.delete(shoppingList)
+        if (shoppingList.isSynced) {
+            shopitoDao.update(shoppingList.withUpdatedAt().copy(isDeleted = true))
+        }
+        else {
+            shopitoDao.delete(shoppingList)
+        }
     }
 
     override suspend fun getShoppingLists(): Flow<List<ShoppingList>> {

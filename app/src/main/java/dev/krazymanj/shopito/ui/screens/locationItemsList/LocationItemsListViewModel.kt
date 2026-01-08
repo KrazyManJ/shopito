@@ -65,7 +65,7 @@ class LocationItemsListViewModel @Inject constructor(
     override fun addBackDeletedItem() {
         viewModelScope.launch {
             _state.value.lastDeletedItem?.let {
-                repository.insert(it)
+                repository.upsert(it)
             }
         }
     }

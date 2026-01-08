@@ -10,9 +10,19 @@ data class ShoppingList(
     var description: String,
 
     @PrimaryKey
-    var id: String = UUID.randomUUID().toString()
+    var id: String = UUID.randomUUID().toString(),
+
+    val updatedAt: Long = System.currentTimeMillis(),
+    val isSynced: Boolean = false,
+    val isDirty: Boolean = false,
+    val isDeleted: Boolean = false
 ) {
     companion object {
         fun default(): ShoppingList = ShoppingList("","")
     }
+
+    fun withUpdatedAt(): ShoppingList = this.copy(
+        updatedAt = System.currentTimeMillis(),
+        isDirty = true
+    )
 }

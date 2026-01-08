@@ -177,14 +177,14 @@ class ShoppingListViewViewModel @Inject constructor(
     override fun addBackDeletedItem() {
         viewModelScope.launch {
             _state.value.lastDeletedItem?.let {
-                repository.insert(it)
+                repository.upsert(it)
             }
         }
     }
 
     fun removeAllCheckedItems() {
         viewModelScope.launch {
-            repository.removeAllCheckedItemsInShoppingList(_state.value.shoppingList!!.id!!)
+            repository.removeAllCheckedItemsInShoppingList(_state.value.shoppingList!!.id)
         }
     }
 }

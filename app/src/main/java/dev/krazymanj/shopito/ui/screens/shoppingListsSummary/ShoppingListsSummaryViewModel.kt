@@ -73,7 +73,7 @@ class ShoppingListsSummaryViewModel @Inject constructor(private val repository: 
     override fun addBackDeletedItem() {
         viewModelScope.launch {
             _state.value.lastDeletedItem?.let {
-                repository.insert(it)
+                repository.upsert(it)
             }
         }
     }
