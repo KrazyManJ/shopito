@@ -1,6 +1,6 @@
 package dev.krazymanj.shopito.communication
 
-import dev.krazymanj.shopito.model.TokenResponse
+import dev.krazymanj.shopito.model.network.TokenResponse
 import javax.inject.Inject
 
 class ShopitoRemoteRepositoryImpl @Inject constructor(

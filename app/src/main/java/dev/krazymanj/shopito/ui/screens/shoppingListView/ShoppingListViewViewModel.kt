@@ -12,7 +12,7 @@ import dev.krazymanj.shopito.datastore.DataStoreKey
 import dev.krazymanj.shopito.datastore.IDataStoreRepository
 import dev.krazymanj.shopito.extension.empty
 import dev.krazymanj.shopito.extension.extractLastAmount
-import dev.krazymanj.shopito.model.GeoReverseResponse
+import dev.krazymanj.shopito.model.network.GeoReverseResponse
 import dev.krazymanj.shopito.model.Location
 import dev.krazymanj.shopito.model.SavedLocation
 import kotlinx.coroutines.Dispatchers

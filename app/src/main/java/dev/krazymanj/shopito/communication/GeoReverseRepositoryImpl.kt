@@ -1,6 +1,6 @@
 package dev.krazymanj.shopito.communication
 
-import dev.krazymanj.shopito.model.GeoReverseResponse
+import dev.krazymanj.shopito.model.network.GeoReverseResponse
 import dev.krazymanj.shopito.model.Location
 import javax.inject.Inject
 

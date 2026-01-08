@@ -1,4 +1,4 @@
-package dev.krazymanj.shopito.model
+package dev.krazymanj.shopito.model.network
 
 import com.squareup.moshi.Json
 

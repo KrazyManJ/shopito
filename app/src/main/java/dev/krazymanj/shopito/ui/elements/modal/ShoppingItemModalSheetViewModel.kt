@@ -11,7 +11,7 @@ import dev.krazymanj.shopito.database.entities.ShoppingItem
 import dev.krazymanj.shopito.database.entities.ShoppingList
 import dev.krazymanj.shopito.datastore.DataStoreKey
 import dev.krazymanj.shopito.datastore.IDataStoreRepository
-import dev.krazymanj.shopito.model.GeoReverseResponse
+import dev.krazymanj.shopito.model.network.GeoReverseResponse
 import dev.krazymanj.shopito.model.Location
 import dev.krazymanj.shopito.model.SavedLocation
 import kotlinx.coroutines.Dispatchers
