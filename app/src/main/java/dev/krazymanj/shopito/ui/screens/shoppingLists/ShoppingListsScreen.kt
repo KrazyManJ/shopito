@@ -47,7 +47,7 @@ fun ShoppingListsScreen(
             }
         }
     ) {
-        TemplateScreenContent(
+        ShoppingListScreenContent(
             paddingValues = it,
             state = state.value,
             actions = viewModel,
@@ -62,11 +62,11 @@ fun ShoppingListsScreen(
 }
 
 @Composable
-fun TemplateScreenContent(
+fun ShoppingListScreenContent(
     paddingValues: PaddingValues,
     state: ShoppingListsUIState,
     actions: ShoppingListActions,
-    onShoppingListNav: (id: Long) -> Unit,
+    onShoppingListNav: (id: String) -> Unit,
     onNewShoppingList: () -> Unit
 ) {
     LazyColumn(
@@ -81,9 +81,7 @@ fun TemplateScreenContent(
                 ShoppingList(
                     shoppingList = it,
                     onClick = {
-                        it.id?.let {
-                            onShoppingListNav(it)
-                        }
+                        onShoppingListNav(it.id)
                     }
                 )
             }

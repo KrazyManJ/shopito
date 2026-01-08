@@ -12,12 +12,12 @@ sealed class Destination {
 
     @Serializable
     data class AddEditShoppingList(
-        val shoppingListId: Long?
+        val shoppingListId: String?
     ) : Destination()
 
     @Serializable
     data class ViewShoppingList(
-        val shoppingListId: Long
+        val shoppingListId: String
     ): Destination()
 
     @Serializable
@@ -39,7 +39,7 @@ sealed class Destination {
 
     @Serializable
     data class ScanShoppingListScreen(
-        val shoppingListId: Long
+        val shoppingListId: String
     ) : Destination()
 
     @Serializable

@@ -8,7 +8,7 @@ import dev.krazymanj.shopito.navigation.StartDestinationSetting
 data class MainActivityUIState(
     val isLoading: Boolean = true,
     val startScreenSetting: StartDestinationSetting = DataStoreKey.StartScreenSetting.default,
-    val startShoppingListId: Long? = null
+    val startShoppingListId: String? = null
 ) {
     fun resolveStartDestination(): Destination {
         return when (startScreenSetting) {

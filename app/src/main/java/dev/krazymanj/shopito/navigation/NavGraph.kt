@@ -39,12 +39,10 @@ fun NavGraph(
             ShoppingListsScreen(navRouter)
         }
         composable<Destination.AddEditShoppingList> {
-            val route = it.toRoute<Destination.AddEditShoppingList>()
-            AddEditShoppingListScreen(navRouter, route.shoppingListId)
+            AddEditShoppingListScreen(navRouter, it.toRoute())
         }
         composable<Destination.ViewShoppingList> {
-            val route = it.toRoute<Destination.ViewShoppingList>()
-            ShoppingListViewScreen(navRouter, route.shoppingListId)
+            ShoppingListViewScreen(navRouter, it.toRoute())
         }
         composable<Destination.MapLocationPickerScreen>(
             typeMap = mapOf(
@@ -52,8 +50,7 @@ fun NavGraph(
                 typeOf<NavStateKey<Location>>() to serializableNavType<NavStateKey<Location>>(isNullableAllowed = false),
             )
         ) {
-            val route = it.toRoute<Destination.MapLocationPickerScreen>()
-            MapLocationPickerScreen(navRouter, route)
+            MapLocationPickerScreen(navRouter, it.toRoute())
         }
         composable<Destination.SettingsScreen> {
             SettingsScreen(navRouter)

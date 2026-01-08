@@ -31,12 +31,12 @@ import dev.krazymanj.shopito.ui.theme.spacing8
 @Composable
 fun AddEditShoppingListScreen(
     navRouter: INavigationRouter,
-    shoppingListId: Long?
+    route: Destination.AddEditShoppingList,
 ) {
     val viewModel = hiltViewModel<AddEditShoppingListViewModel>()
 
-    LaunchedEffect(shoppingListId) {
-        viewModel.loadShoppingListData(shoppingListId)
+    LaunchedEffect(route.shoppingListId) {
+        viewModel.loadShoppingListData(route.shoppingListId)
     }
 
     val state = viewModel.addEditShoppingListUIState.collectAsStateWithLifecycle()
@@ -51,7 +51,7 @@ fun AddEditShoppingListScreen(
 
     BaseScreen(
         topBarText = stringResource(
-            if (shoppingListId != null)
+            if (route.shoppingListId != null)
                 R.string.edit_shopping_list_title
             else
                 R.string.add_shopping_list_title
@@ -60,7 +60,7 @@ fun AddEditShoppingListScreen(
             navRouter.returnBack()
         },
         actions = {
-            shoppingListId?.let {
+            route.shoppingListId?.let {
                 IconButton(onClick = {
                     viewModel.deleteShoppingList()
                 }) {

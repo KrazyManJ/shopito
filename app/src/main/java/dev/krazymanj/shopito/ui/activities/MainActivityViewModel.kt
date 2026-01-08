@@ -27,7 +27,7 @@ class MainActivityViewModel @Inject constructor(
 
     val state = _state.asStateFlow()
 
-    private suspend fun getCorrectShoppingListId(): Long? {
+    private suspend fun getCorrectShoppingListId(): String? {
         val dataStoreId = dataStore.get(DataStoreKey.StartShoppingListId)
         if (dataStoreId == null) return null
         val list = repository.getShoppingListById(dataStoreId)

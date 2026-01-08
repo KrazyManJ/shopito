@@ -7,6 +7,7 @@ import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.database.IShopitoLocalRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -40,25 +41,22 @@ class AddEditShoppingListViewModel @Inject constructor(private val repository: I
             return
         }
         viewModelScope.launch {
-            if (_state.value.shoppingList.id != null) {
-                repository.update(_state.value.shoppingList)
-            }
-            else {
-                repository.insert(_state.value.shoppingList)
-            }
+            repository.upsert(_state.value.shoppingList)
             _state.value = _state.value.copy(
                 isSaved = true
             )
         }
     }
 
-    override fun loadShoppingListData(id: Long?) {
+    override fun loadShoppingListData(id: String?) {
         if (id == null) return
 
         viewModelScope.launch {
-            _state.value = _state.value.copy(
-                shoppingList = repository.getShoppingListById(id)!!,
-            )
+            repository.getShoppingListById(id)?.let { item ->
+                _state.update { it.copy(
+                    shoppingList = item,
+                )}
+            }
         }
     }
 

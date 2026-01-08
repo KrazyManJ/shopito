@@ -47,14 +47,14 @@ import kotlinx.coroutines.launch
 @Composable
 fun ShoppingListViewScreen(
     navRouter: INavigationRouter,
-    shoppingListId: Long,
+    route: Destination.ViewShoppingList
 ) {
     val viewModel = hiltViewModel<ShoppingListViewViewModel>()
 
     val state = viewModel.state.collectAsStateWithLifecycle()
 
     if (state.value.isLoading) {
-        viewModel.loadShoppingListData(shoppingListId)
+        viewModel.loadShoppingListData(route.shoppingListId)
     }
 
     NavigationCurrentStateReceivedEffect(navRouter, NavStateKey.LocationQuickAddResult) { location ->
@@ -127,7 +127,7 @@ fun ShoppingListViewScreen(
 //            }
             IconButton(
                 onClick = {
-                    navRouter.navigateTo(Destination.ScanShoppingListScreen(shoppingListId))
+                    navRouter.navigateTo(Destination.ScanShoppingListScreen(route.shoppingListId))
                 }
             ) {
                 Icon(imageVector = Lucide.ScanText, contentDescription = null)

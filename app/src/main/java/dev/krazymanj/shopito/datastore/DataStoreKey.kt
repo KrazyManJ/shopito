@@ -2,7 +2,6 @@ package dev.krazymanj.shopito.datastore
 
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
-import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import dev.krazymanj.shopito.model.SavedLocation
 import dev.krazymanj.shopito.navigation.StartDestinationSetting
@@ -49,8 +48,8 @@ sealed class DataStoreKey<T>() {
             serializer = StartDestinationSetting.serializer()
         )
 
-        val StartShoppingListId = NullablePrimitive<Long?>(
-            key = longPreferencesKey("start_shopping_list_id") as Preferences.Key<*>
+        val StartShoppingListId = NullablePrimitive<String?>(
+            key = stringPreferencesKey("start_shopping_list_id")
         )
 
         val Token = NullablePrimitive<String?>(

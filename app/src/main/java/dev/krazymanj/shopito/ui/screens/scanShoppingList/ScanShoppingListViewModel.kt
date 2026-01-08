@@ -22,7 +22,7 @@ class ScanShoppingListViewModel @Inject constructor(
     private val _state : MutableStateFlow<ScanShoppingListUIState> = MutableStateFlow(value = ScanShoppingListUIState())
 
     val state = _state.asStateFlow()
-    override fun loadShoppingListData(shoppingListId: Long) {
+    override fun loadShoppingListData(shoppingListId: String) {
         viewModelScope.launch {
             _state.update { it.copy(
                 isLoading = false,

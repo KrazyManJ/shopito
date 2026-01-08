@@ -6,6 +6,7 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
 import dev.krazymanj.shopito.model.Location
+import java.util.UUID
 
 @Entity(
     tableName = "shopping_item",
@@ -28,13 +29,11 @@ data class ShoppingItem(
     @Embedded val location: Location? = null,
 
     @ColumnInfo(index = true)
-    var listId: Long? = null,
+    var listId: String? = null,
 
-    @PrimaryKey(autoGenerate = true)
-    var id: Long? = null
+    @PrimaryKey
+    var id: String = UUID.randomUUID().toString()
 ) {
-    fun isInDatabase(): Boolean = id != null
-
     companion object {
         fun default(): ShoppingItem = ShoppingItem("",0)
     }

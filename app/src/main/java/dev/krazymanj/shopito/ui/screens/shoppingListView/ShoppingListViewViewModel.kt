@@ -39,7 +39,7 @@ class ShoppingListViewViewModel @Inject constructor(
 
     val state = _state.asStateFlow()
 
-    override fun loadShoppingListData(shoppingListId: Long) {
+    override fun loadShoppingListData(shoppingListId: String) {
         viewModelScope.launch {
             combine(
                 repository.getShoppingItemsByShoppingList(shoppingListId),

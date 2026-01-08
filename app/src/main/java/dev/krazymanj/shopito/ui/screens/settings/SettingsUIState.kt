@@ -11,7 +11,7 @@ data class SettingsUIState(
 
     val startNavigationSetting: Boolean = DataStoreKey.GoogleMapsStartNavigationKey.default,
     val startScreenSetting: StartDestinationSetting = DataStoreKey.StartScreenSetting.default,
-    val startShoppingListId: Long? = DataStoreKey.StartShoppingListId.default,
+    val startShoppingListId: String? = DataStoreKey.StartShoppingListId.default,
 
     val shoppingLists: List<ShoppingList> = emptyList(),
 
