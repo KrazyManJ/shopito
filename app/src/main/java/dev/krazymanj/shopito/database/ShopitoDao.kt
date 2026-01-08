@@ -21,7 +21,8 @@ interface ShopitoDao {
     @Upsert suspend fun upsert(shoppingList: ShoppingList)
     @Delete suspend fun delete(shoppingList: ShoppingList)
 
-    @Query("SELECT * FROM shopping_list WHERE isDeleted = 0")
+    // TODO: UPDATE TO DESCENDING EVERYWHERE AND CHANGE SCROLL LOGIN FOR SCREENS
+    @Query("SELECT * FROM shopping_list WHERE isDeleted = 0 ORDER BY updatedAt ASC")
     fun getAllShoppingLists(): Flow<List<ShoppingList>>
 
     @Query("SELECT * FROM shopping_list WHERE id = :id AND isDeleted = 0")
@@ -41,7 +42,8 @@ interface ShopitoDao {
         WHERE listId = :id AND isDeleted = 0
         ORDER BY
             CASE WHEN buyTime IS NULL THEN 1 ELSE 0 END,
-            buyTime ASC
+            buyTime ASC,
+            updatedAt ASC
      """)
     fun getShoppingItemsByShoppingList(id: String): Flow<List<ShoppingItem>>
 
@@ -52,7 +54,8 @@ interface ShopitoDao {
         WHERE isDeleted = 0
         ORDER BY
             CASE WHEN buyTime IS NULL THEN 1 ELSE 0 END,
-            buyTime ASC
+            buyTime ASC,
+            updatedAt ASC
     """)
     fun getAllShoppingItemsWithLists(): Flow<List<ShoppingItemWithList>>
 
@@ -79,7 +82,41 @@ interface ShopitoDao {
     @Query("SELECT DISTINCT latitude, longitude FROM shopping_item WHERE latitude IS NOT NULL AND longitude IS NOT NULL AND isDeleted = 0")
     fun getAllDistinctLocationsFromItems(): Flow<List<Location>>
 
-    @Transaction
-    @Query("SELECT * FROM shopping_item WHERE latitude = :latitude AND longitude = :longitude AND isDeleted = 0")
+    @Query("""
+        SELECT *
+        FROM shopping_item
+        WHERE latitude = :latitude AND longitude = :longitude AND isDeleted = 0
+        ORDER BY updatedAt ASC
+    """)
     fun getItemsByLocation(latitude: Double, longitude: Double): Flow<List<ShoppingItemWithList>>
+
+    @Query("SELECT * FROM shopping_list WHERE isDirty = 1")
+    suspend fun getDirtyLists(): List<ShoppingList>
+
+    @Query("SELECT * FROM shopping_item WHERE isDirty = 1")
+    suspend fun getDirtyItems(): List<ShoppingItem>
+
+    @Upsert
+    suspend fun upsertLists(lists: List<ShoppingList>)
+
+    @Upsert
+    suspend fun upsertItems(items: List<ShoppingItem>)
+
+    @Query("UPDATE shopping_item SET isDirty = 0, isSynced = 1 WHERE id IN (:ids)")
+    suspend fun markItemsAsSynced(ids: List<String>)
+
+    @Query("UPDATE shopping_list SET isDirty = 0, isSynced = 1 WHERE id IN (:ids)")
+    suspend fun markListsAsSynced(ids: List<String>)
+
+    @Query("DELETE FROM shopping_list WHERE isDeleted = 1 AND isDirty = 0")
+    suspend fun pruneSyncedDeletedLists()
+
+    @Query("DELETE FROM shopping_item WHERE isDeleted = 1 AND isDirty = 0")
+    suspend fun pruneSyncedDeletedItems()
+
+    @Transaction
+    suspend fun pruneGlobally() {
+        pruneSyncedDeletedLists()
+        pruneSyncedDeletedItems()
+    }
 }

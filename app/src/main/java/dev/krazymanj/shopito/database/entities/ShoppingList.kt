@@ -14,7 +14,7 @@ data class ShoppingList(
 
     val updatedAt: Long = System.currentTimeMillis(),
     val isSynced: Boolean = false,
-    val isDirty: Boolean = false,
+    val isDirty: Boolean = true,
     val isDeleted: Boolean = false
 ) {
     companion object {

@@ -15,7 +15,11 @@ data class SettingsUIState(
 
     val shoppingLists: List<ShoppingList> = emptyList(),
 
-    val loggedData: TokenData? = null
+    val loggedData: TokenData? = null,
+
+    val isSyncing: Boolean = false,
+    val lastTimeSynced: Long? = null,
+    val syncResult: String? = null
 ) {
     fun isLoggedIn() = loggedData != null
 }

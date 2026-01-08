@@ -2,6 +2,7 @@ package dev.krazymanj.shopito.datastore
 
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import dev.krazymanj.shopito.model.SavedLocation
 import dev.krazymanj.shopito.navigation.StartDestinationSetting
@@ -54,6 +55,11 @@ sealed class DataStoreKey<T>() {
 
         val Token = NullablePrimitive<String?>(
             key = stringPreferencesKey("token")
+        )
+
+        val LastSyncTime = Primitive(
+            key = longPreferencesKey("last_sync_time"),
+            default = 0
         )
     }
 }

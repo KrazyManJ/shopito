@@ -38,19 +38,19 @@ class ShopitoLocalRepositoryImpl @Inject constructor(
 
     override suspend fun delete(shoppingItem: ShoppingItem) {
         if (shoppingItem.isSynced) {
-            shopitoDao.delete(shoppingItem)
+            shopitoDao.update(shoppingItem.withUpdatedAt().copy(isDeleted = true))
         }
         else {
-            shopitoDao.update(shoppingItem.withUpdatedAt().copy(isDeleted = true))
+            shopitoDao.delete(shoppingItem)
         }
     }
 
     override suspend fun delete(shoppingList: ShoppingList) {
         if (shoppingList.isSynced) {
-            shopitoDao.update(shoppingList.withUpdatedAt().copy(isDeleted = true))
+            shopitoDao.delete(shoppingList)
         }
         else {
-            shopitoDao.delete(shoppingList)
+            shopitoDao.update(shoppingList.withUpdatedAt().copy(isDeleted = true))
         }
     }
 

@@ -9,4 +9,5 @@ interface SettingsActions {
     fun onStartScreenSettingChange(value: StartDestinationSetting)
     fun onStartShoppingListChange(value: ShoppingList)
     fun logout()
+    fun attemptSync()
 }

@@ -1,29 +1,25 @@
 package dev.krazymanj.shopito.di.modules
 
+import dagger.Binds
 import dagger.Module
-import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dev.krazymanj.shopito.communication.GeoReverseRepositoryImpl
 import dev.krazymanj.shopito.communication.IGeoReverseRepository
 import dev.krazymanj.shopito.communication.IShopitoRemoteRepository
-import dev.krazymanj.shopito.communication.NominatimApi
-import dev.krazymanj.shopito.communication.ShopitoApi
 import dev.krazymanj.shopito.communication.ShopitoRemoteRepositoryImpl
 import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object RemoteRepositoryModule {
+interface RemoteRepositoryModule {
 
-    @Provides
+    @Binds
     @Singleton
-    fun provideGeoReverseRepository(nominatimApi: NominatimApi): IGeoReverseRepository =
-        GeoReverseRepositoryImpl(nominatimApi)
+    fun bindGeoReverseRepository(impl: GeoReverseRepositoryImpl): IGeoReverseRepository
 
-    @Provides
+    @Binds
     @Singleton
-    fun provideShopitoRemoteRepository(shopitoApi: ShopitoApi): IShopitoRemoteRepository =
-        ShopitoRemoteRepositoryImpl(shopitoApi)
+    fun bindShopitoRemoteRepository(impl: ShopitoRemoteRepositoryImpl): IShopitoRemoteRepository
 
 }

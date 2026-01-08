@@ -11,10 +11,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Card
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -32,8 +34,10 @@ import dev.krazymanj.shopito.navigation.StartDestinationSetting
 import dev.krazymanj.shopito.ui.elements.AppVersionString
 import dev.krazymanj.shopito.ui.elements.input.SuggestionField
 import dev.krazymanj.shopito.ui.elements.screen.BaseScreen
+import dev.krazymanj.shopito.ui.theme.Primary
 import dev.krazymanj.shopito.ui.theme.spacing16
 import dev.krazymanj.shopito.ui.theme.spacing32
+import dev.krazymanj.shopito.utils.DateUtils
 
 
 @Composable
@@ -89,27 +93,54 @@ fun SettingsScreenContent(
                         }
                     }
             ) {
-                Row(
-                    modifier = Modifier.padding(spacing16),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(spacing16)
+                Column(
+                    modifier = Modifier.fillMaxWidth().padding(spacing16)
                 ) {
-                    Icon(
-                        imageVector = Lucide.UserRound,
-                        contentDescription = null,
-                        modifier = Modifier.size(64.dp)
-                    )
-                    Column {
-                        Text(
-                            text = state.loggedData?.username ?: "Guest",
-                            style = MaterialTheme.typography.titleLarge,
+                    Row(
+                        verticalAlignment = Alignment.CenterVertically,
+                        horizontalArrangement = Arrangement.spacedBy(spacing16)
+                    ) {
+                        Icon(
+                            imageVector = Lucide.UserRound,
+                            contentDescription = null,
+                            modifier = Modifier.size(64.dp)
                         )
-                        Text(
-                            text = when {
-                                state.isLoggedIn() -> "Logged in (click to Log out)"
-                                else -> "Click to Log In"
+                        Column {
+                            Text(
+                                text = state.loggedData?.username ?: "Guest",
+                                style = MaterialTheme.typography.titleLarge,
+                            )
+                            Text(
+                                text = when {
+                                    state.isLoggedIn() -> "Logged in (click to Log out)"
+                                    else -> "Click to Log In"
+                                }
+                            )
+                        }
+                    }
+                    Row(
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        TextButton(
+                            onClick = {
+                                actions.attemptSync()
                             }
+                        ) {
+                            if (state.isSyncing) {
+                                CircularProgressIndicator()
+                            }
+                            else {
+                                Text("Sync")
+                            }
+                        }
+                        Text(
+                            text = if (state.lastTimeSynced != null) {
+                                "Last sync: ${DateUtils.getDateString(state.lastTimeSynced)}"
+                            } else "Never"
                         )
+                    }
+                    state.syncResult?.let {
+                        Text(text = it, color = Primary)
                     }
                 }
             }

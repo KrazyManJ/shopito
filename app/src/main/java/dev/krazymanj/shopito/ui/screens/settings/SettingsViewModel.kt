@@ -3,6 +3,7 @@ package dev.krazymanj.shopito.ui.screens.settings
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.krazymanj.shopito.core.SyncManager
 import dev.krazymanj.shopito.core.UserManager
 import dev.krazymanj.shopito.database.IShopitoLocalRepository
 import dev.krazymanj.shopito.database.entities.ShoppingList
@@ -16,11 +17,18 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+private data class UserSettings(
+    val googleMapStartNavigation: Boolean,
+    val startScreenSetting: StartDestinationSetting,
+    val startShoppingListId: String?
+)
+
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val datastore: IDataStoreRepository,
     private val repository: IShopitoLocalRepository,
-    private val userManager: UserManager
+    private val userManager: UserManager,
+    private val syncManager: SyncManager
 ) : ViewModel(),
     SettingsActions {
 
@@ -30,20 +38,31 @@ class SettingsViewModel @Inject constructor(
 
     override fun loadSettings() {
         viewModelScope.launch {
-            combine(
+            val settingsFlow = combine(
                 datastore.getFlow(DataStoreKey.GoogleMapsStartNavigationKey),
                 datastore.getFlow(DataStoreKey.StartScreenSetting),
                 datastore.getFlow(DataStoreKey.StartShoppingListId),
+            ) { googleMapStartNavigation, startScreenSetting, startShoppingListId ->
+                UserSettings(
+                    googleMapStartNavigation = googleMapStartNavigation,
+                    startScreenSetting = startScreenSetting,
+                    startShoppingListId = startShoppingListId
+                )
+            }
+
+            combine(
+                settingsFlow,
                 repository.getShoppingLists(),
-                datastore.getFlow(DataStoreKey.Token)
-            ) { googleMapStartNavigation, startScreenSetting, startShoppingListId, shoppingLists, token ->
+                datastore.getFlow(DataStoreKey.LastSyncTime),
+            ) { settings, shoppingLists, lastSyncTime ->
                 SettingsUIState(
                     isLoading = false,
-                    startNavigationSetting = googleMapStartNavigation,
-                    startScreenSetting = startScreenSetting,
-                    startShoppingListId = startShoppingListId,
+                    startNavigationSetting = settings.googleMapStartNavigation,
+                    startScreenSetting = settings.startScreenSetting,
+                    startShoppingListId = settings.startShoppingListId,
                     shoppingLists = shoppingLists,
-                    loggedData = userManager.getUserInfo()
+                    loggedData = userManager.getUserInfo(),
+                    lastTimeSynced = lastSyncTime
                 )
             }.collect { state ->
                 _state.update { state }
@@ -72,6 +91,30 @@ class SettingsViewModel @Inject constructor(
     override fun logout() {
         viewModelScope.launch {
             userManager.logout()
+        }
+    }
+
+    override fun attemptSync() {
+        viewModelScope.launch {
+            _state.update { it.copy(
+                isSyncing = true
+            ) }
+            val syncResult = syncManager.sync()
+
+            when (syncResult) {
+                is SyncManager.Result.Success -> {
+                    _state.update { it.copy(
+                        isSyncing = false,
+                        syncResult = "Successfully synced"
+                    ) }
+                }
+                is SyncManager.Result.Error -> {
+                    _state.update { it.copy(
+                        isSyncing = false,
+                        syncResult = syncResult.message
+                    ) }
+                }
+            }
         }
     }
 }
