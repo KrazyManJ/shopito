@@ -24,6 +24,9 @@ data class NetworkShoppingItem(
     @field:Json(name = "list_id")
     val listId: String?,
 
+    @field:Json(name = "created_at")
+    val createdAt: Long,
+
     @field:Json(name = "updated_at")
     val updatedAt: Long,
 

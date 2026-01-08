@@ -12,6 +12,7 @@ fun ShoppingItem.toNetworkModel(): NetworkShoppingItem {
         buyTime = this.buyTime,
         location = this.location,
         listId = this.listId,
+        createdAt = this.createdAt,
         updatedAt = this.updatedAt,
         isDeleted = this.isDeleted
     )
@@ -26,6 +27,7 @@ fun NetworkShoppingItem.toEntity(): ShoppingItem {
         buyTime = this.buyTime,
         location = this.location,
         listId = this.listId,
+        createdAt = this.createdAt,
         updatedAt = this.updatedAt,
         isDeleted = this.isDeleted,
         isSynced = true,

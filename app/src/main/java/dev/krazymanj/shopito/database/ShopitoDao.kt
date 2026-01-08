@@ -21,8 +21,7 @@ interface ShopitoDao {
     @Upsert suspend fun upsert(shoppingList: ShoppingList)
     @Delete suspend fun delete(shoppingList: ShoppingList)
 
-    // TODO: UPDATE TO DESCENDING EVERYWHERE AND CHANGE SCROLL LOGIN FOR SCREENS
-    @Query("SELECT * FROM shopping_list WHERE isDeleted = 0 ORDER BY updatedAt ASC")
+    @Query("SELECT * FROM shopping_list WHERE isDeleted = 0 ORDER BY createdAt ASC")
     fun getAllShoppingLists(): Flow<List<ShoppingList>>
 
     @Query("SELECT * FROM shopping_list WHERE id = :id AND isDeleted = 0")
@@ -43,7 +42,7 @@ interface ShopitoDao {
         ORDER BY
             CASE WHEN buyTime IS NULL THEN 1 ELSE 0 END,
             buyTime ASC,
-            updatedAt ASC
+            createdAt ASC
      """)
     fun getShoppingItemsByShoppingList(id: String): Flow<List<ShoppingItem>>
 
@@ -55,7 +54,7 @@ interface ShopitoDao {
         ORDER BY
             CASE WHEN buyTime IS NULL THEN 1 ELSE 0 END,
             buyTime ASC,
-            updatedAt ASC
+            createdAt ASC
     """)
     fun getAllShoppingItemsWithLists(): Flow<List<ShoppingItemWithList>>
 
@@ -86,7 +85,7 @@ interface ShopitoDao {
         SELECT *
         FROM shopping_item
         WHERE latitude = :latitude AND longitude = :longitude AND isDeleted = 0
-        ORDER BY updatedAt ASC
+        ORDER BY createdAt ASC
     """)
     fun getItemsByLocation(latitude: Double, longitude: Double): Flow<List<ShoppingItemWithList>>
 

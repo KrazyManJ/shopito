@@ -10,6 +10,9 @@ data class NetworkShoppingList(
     val name: String,
     val description: String,
 
+    @field:Json(name = "created_at")
+    val createdAt: Long,
+
     @field:Json(name = "updated_at")
     val updatedAt: Long,
 

@@ -10,7 +10,8 @@ fun ShoppingList.toNetworkModel(): NetworkShoppingList {
         name = this.name,
         description = this.description,
         updatedAt = this.updatedAt,
-        isDeleted = this.isDeleted
+        isDeleted = this.isDeleted,
+        createdAt = this.createdAt
     )
 }
 
@@ -19,10 +20,9 @@ fun NetworkShoppingList.toEntity(): ShoppingList {
         id = this.id,
         name = this.name,
         description = this.description,
-
+        createdAt = this.createdAt,
         updatedAt = this.updatedAt,
         isDeleted = this.isDeleted,
-
         isSynced = true,
         isDirty = false
     )

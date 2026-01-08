@@ -12,6 +12,7 @@ data class ShoppingList(
     @PrimaryKey
     var id: String = UUID.randomUUID().toString(),
 
+    val createdAt: Long = System.currentTimeMillis(),
     val updatedAt: Long = System.currentTimeMillis(),
     val isSynced: Boolean = false,
     val isDirty: Boolean = true,

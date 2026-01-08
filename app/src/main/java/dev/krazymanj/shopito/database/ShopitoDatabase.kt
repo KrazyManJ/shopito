@@ -4,13 +4,8 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.sqlite.db.SupportSQLiteDatabase
-import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.database.entities.ShoppingItem
 import dev.krazymanj.shopito.database.entities.ShoppingList
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 @Database(
     entities = [
@@ -36,20 +31,6 @@ abstract class ShopitoDatabase : RoomDatabase() {
                             ShopitoDatabase::class.java,
                             "shopito_database"
                         )
-                            .addCallback(object: Callback() {
-                                override fun onCreate(db: SupportSQLiteDatabase) {
-                                    super.onCreate(db)
-
-                                    CoroutineScope(Dispatchers.IO).launch {
-                                        val instance = getDatabase(context)
-                                        val dao = instance.shopitoDao()
-                                        dao.insert(ShoppingList(
-                                            name = context.getString(R.string.general_shopping_list_name),
-                                            description = context.getString(R.string.general_shopping_list_description)
-                                        ))
-                                    }
-                                }
-                            })
                             .fallbackToDestructiveMigration(false)
                             .build()
                     }
