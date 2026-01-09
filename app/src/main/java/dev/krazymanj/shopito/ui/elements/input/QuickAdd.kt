@@ -13,13 +13,14 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonColors
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.ArrowUp
 import com.composables.icons.lucide.Lucide
@@ -30,6 +31,7 @@ import dev.krazymanj.shopito.ui.elements.chip.DatePickerChip
 import dev.krazymanj.shopito.ui.elements.chip.LocationPickerChip
 import dev.krazymanj.shopito.ui.theme.Primary
 import dev.krazymanj.shopito.ui.theme.backgroundPrimaryColor
+import dev.krazymanj.shopito.ui.theme.backgroundSecondaryColor
 import dev.krazymanj.shopito.ui.theme.spacing16
 import dev.krazymanj.shopito.ui.theme.spacing8
 import dev.krazymanj.shopito.ui.theme.textSecondaryColor
@@ -90,9 +92,9 @@ fun QuickAdd(
                 enabled = value.isNotEmpty(),
                 colors = IconButtonColors(
                     containerColor = Primary,
-                    contentColor = backgroundPrimaryColor(),
-                    disabledContainerColor = textSecondaryColor(),
-                    disabledContentColor = backgroundPrimaryColor()
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                    disabledContainerColor = backgroundSecondaryColor(),
+                    disabledContentColor = MaterialTheme.colorScheme.onPrimary
                 ),
                 modifier = Modifier.testTag(UITestTag.QuickAdd.AddButton)
 
@@ -106,7 +108,7 @@ fun QuickAdd(
     }
 }
 
-@Preview
+@PreviewLightDark
 @Composable
 private fun Preview() {
     QuickAdd(

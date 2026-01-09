@@ -7,26 +7,16 @@ import android.graphics.Matrix
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -38,27 +28,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.composables.icons.lucide.Camera
-import com.composables.icons.lucide.CircleAlert
 import com.composables.icons.lucide.Lucide
 import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.ui.elements.CameraComposeView
+import dev.krazymanj.shopito.ui.elements.modal.ScanResultDialog
 import dev.krazymanj.shopito.ui.elements.screen.BaseScreen
-import dev.krazymanj.shopito.ui.theme.Emphasized
-import dev.krazymanj.shopito.ui.theme.spacing16
-import dev.krazymanj.shopito.ui.theme.spacing32
-import dev.krazymanj.shopito.ui.theme.spacing4
+import dev.krazymanj.shopito.ui.theme.backgroundSecondaryColor
 import dev.krazymanj.shopito.ui.theme.spacing64
-import dev.krazymanj.shopito.ui.theme.textPrimaryColor
 
 @Composable
 fun ScanShoppingListScreen(
@@ -115,111 +97,26 @@ private fun ScanShoppingListScreenContent(
     var openedResult by remember { mutableStateOf(false) }
 
     if (openedResult) {
-        Dialog(
-            onDismissRequest = {
-                openedResult = false
-                capturedBitmap = null
-            }
-        ) {
-            Card(
-                modifier = Modifier.fillMaxWidth()
-            ) {
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(spacing16),
-                    modifier = Modifier.padding(spacing32)
-                ) {
-                    if (state.isScanning) {
-                        Box(
-                            modifier = Modifier.fillMaxWidth().padding(spacing64)
-                        ) {
-                            CircularProgressIndicator(Modifier.align(Alignment.Center) )
-                        }
-                    }
-                    else if (state.scanError != null) {
-                        Box(modifier = Modifier.fillMaxWidth().padding(vertical = spacing16)) {
-                            Column(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.spacedBy(spacing16),
-                            ) {
-                                Icon(
-                                    imageVector = Lucide.CircleAlert,
-                                    contentDescription = null,
-                                    tint = MaterialTheme.colorScheme.primary,
-                                    modifier = Modifier.size(64.dp)
-                                )
-                                Text(
-                                    text = stringResource(state.scanError),
-                                    color = MaterialTheme.colorScheme.primary,
-                                )
-                            }
-                        }
-                    }
-                    else {
-                        Text(
-                            text = "Scan Result",
-                            modifier = Modifier.fillMaxWidth(),
-                            textAlign = TextAlign.Center,
-                            style = MaterialTheme.typography.headlineSmall,
-                            fontWeight = FontWeight.Emphasized
-                        )
-                        Text(
-                            text = "This is the scan result, please check it before adding to ${state.shoppingList?.name}:",
-                            style = MaterialTheme.typography.bodySmall,
-                        )
-                        LazyColumn {
-                            items(items = state.scannedItems) {
-                                Row(
-                                    modifier = Modifier.padding(vertical = spacing4),
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    Text(
-                                        text = it.itemName,
-                                        modifier = Modifier.weight(1f),
-                                        style = MaterialTheme.typography.titleLarge,
-                                        fontWeight = FontWeight.Medium,
-                                    )
-                                    Text(
-                                        text = "${it.amount}x",
-                                        style = MaterialTheme.typography.bodyLarge,
-                                        fontWeight = FontWeight.Medium,
-                                    )
-                                }
-                            }
-                        }
-                    }
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End
-                    ) {
-                        if (!state.isScanning) {
-                            TextButton(
-                                onClick = {
-                                    openedResult = false
-                                    capturedBitmap = null
-                                },
-                                colors = ButtonDefaults.textButtonColors(contentColor = textPrimaryColor())
-                            ) {
-                                Text("Try Again")
-                            }
-                        }
-                        if (!state.isScanning && state.scanError == null) {
-                            TextButton(
-                                onClick = {
-                                    openedResult = false
-                                    capturedBitmap = null
-                                    actions.addScannedItemsToShoppingList()
-                                },
-                                colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.primary)
-                            ) {
-                                Text("Add items")
-                            }
-                        }
-                    }
-                }
-            }
+        state.shoppingList?.let {
+            ScanResultDialog(
+                onDismissRequest = {
+                    openedResult = false
+                    capturedBitmap = null
+                },
+                onConfirm = {
+                    openedResult = false
+                    capturedBitmap = null
+                    actions.addScannedItemsToShoppingList()
+                },
+                isScanning = state.isScanning,
+                scanError = state.scanError,
+                shoppingList = it,
+                scannedItems = state.scannedItems
+            )
         }
     }
+
+    var isCapturingImage by remember { mutableStateOf(false) }
 
     Box(modifier = Modifier.fillMaxSize()) {
         CameraComposeView(
@@ -232,17 +129,30 @@ private fun ScanShoppingListScreenContent(
                 capturedBitmap = finalBitmap
                 imageProxy.close()
                 openedResult = true
+                isCapturingImage = false
             }
         ) {
             IconButton(
-                onClick = { it() },
+                onClick = {
+                    isCapturingImage = true
+                    it()
+                },
                 modifier = Modifier.align(Alignment.BottomCenter).size(spacing64),
                 colors = IconButtonDefaults.iconButtonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
-                    contentColor = MaterialTheme.colorScheme.onPrimary
-                )
+                    contentColor = MaterialTheme.colorScheme.onPrimary,
+                    disabledContainerColor = backgroundSecondaryColor()
+                ),
+                enabled = !isCapturingImage
             ) {
-                Icon(imageVector = Lucide.Camera, contentDescription = null)
+                if (isCapturingImage) {
+                    CircularProgressIndicator(
+                        color = MaterialTheme.colorScheme.onPrimary,
+                        modifier = Modifier.size(32.dp)
+                    )
+                } else {
+                    Icon(imageVector = Lucide.Camera, contentDescription = null)
+                }
             }
         }
         capturedBitmap?.let { bitmap ->

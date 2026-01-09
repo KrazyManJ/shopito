@@ -119,4 +119,16 @@ interface ShopitoDao {
         pruneSyncedDeletedLists()
         pruneSyncedDeletedItems()
     }
+
+    @Query("DELETE FROM shopping_item")
+    suspend fun deleteAllItems()
+
+    @Query("DELETE FROM shopping_list")
+    suspend fun deleteAllLists()
+
+    @Transaction
+    suspend fun clearAllTables() {
+        deleteAllItems()
+        deleteAllLists()
+    }
 }

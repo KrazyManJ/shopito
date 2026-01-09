@@ -96,4 +96,8 @@ class ShopitoLocalRepositoryImpl @Inject constructor(
     override suspend fun getItemsByLocation(location: Location): Flow<List<ShoppingItemWithList>> {
         return shopitoDao.getItemsByLocation(location.latitude, location.longitude)
     }
+
+    override suspend fun wipeAllData() {
+        return shopitoDao.clearAllTables()
+    }
 }

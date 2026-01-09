@@ -93,10 +93,13 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    override fun logout() {
+    override fun logout(wipeData: Boolean) {
         viewModelScope.launch {
             userManager.logout()
             workScheduler.cancelAllWork()
+            if (wipeData) {
+                repository.wipeAllData()
+            }
         }
     }
 

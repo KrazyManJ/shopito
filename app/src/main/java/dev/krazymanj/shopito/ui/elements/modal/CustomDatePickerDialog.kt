@@ -1,17 +1,18 @@
 package dev.krazymanj.shopito.ui.elements.modal
 
-import androidx.compose.material3.Button
 import androidx.compose.material3.DatePicker
 import androidx.compose.material3.DatePickerDefaults
 import androidx.compose.material3.DatePickerDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberDatePickerState
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import dev.krazymanj.shopito.R
-import dev.krazymanj.shopito.ui.theme.backgroundPrimaryColor
+import dev.krazymanj.shopito.ui.theme.backgroundSecondaryColor
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -26,11 +27,12 @@ fun CustomDatePickerDialog(
     DatePickerDialog(
         modifier = modifier,
         onDismissRequest = { onDismiss() },
-        colors = DatePickerDefaults.colors().copy(
-            containerColor = backgroundPrimaryColor(),
+        colors = DatePickerDefaults.colors(
+            containerColor = backgroundSecondaryColor(),
+
         ),
         confirmButton = {
-            Button(
+            TextButton(
                 enabled = datePickerState.selectedDateMillis != null,
                 onClick = {
                     datePickerState.selectedDateMillis?.let { millis ->
@@ -43,7 +45,7 @@ fun CustomDatePickerDialog(
             }
         },
         dismissButton = {
-            Button(onClick = {
+            TextButton(onClick = {
                 onDismiss()
             }) {
                 Text(text = stringResource(R.string.cancel_label))
@@ -51,7 +53,10 @@ fun CustomDatePickerDialog(
         }
     ) {
         DatePicker(
-            state = datePickerState
+            state = datePickerState,
+            colors = DatePickerDefaults.colors(
+                containerColor = Color.Transparent
+            )
         )
     }
 }

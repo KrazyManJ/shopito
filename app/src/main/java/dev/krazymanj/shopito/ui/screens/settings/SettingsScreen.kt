@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -21,6 +20,9 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -34,11 +36,14 @@ import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.navigation.StartDestinationSetting
 import dev.krazymanj.shopito.ui.elements.AppVersionString
+import dev.krazymanj.shopito.ui.elements.FilledCard
 import dev.krazymanj.shopito.ui.elements.input.SuggestionField
+import dev.krazymanj.shopito.ui.elements.modal.LogoutDialog
 import dev.krazymanj.shopito.ui.elements.screen.BaseScreen
 import dev.krazymanj.shopito.ui.theme.Primary
 import dev.krazymanj.shopito.ui.theme.spacing16
 import dev.krazymanj.shopito.ui.theme.spacing32
+import dev.krazymanj.shopito.ui.theme.spacing4
 import dev.krazymanj.shopito.ui.theme.spacing8
 import dev.krazymanj.shopito.ui.theme.textPrimaryColor
 import dev.krazymanj.shopito.ui.theme.textSecondaryColor
@@ -80,6 +85,18 @@ fun SettingsScreenContent(
     actions: SettingsActions,
     navRouter: INavigationRouter
 ) {
+    var showLogoutDialog by remember { mutableStateOf(false) }
+
+    if (showLogoutDialog) {
+        LogoutDialog(
+            onDismissRequest = { showLogoutDialog = false },
+            onConfirm = { wipeData ->
+                showLogoutDialog = false
+                actions.logout(wipeData)
+            }
+        )
+    }
+
     Box(
         modifier = Modifier.fillMaxSize().padding(spacing16).padding(bottom = spacing16)
     ) {
@@ -87,9 +104,10 @@ fun SettingsScreenContent(
             modifier = Modifier.padding(paddingValues),
             verticalArrangement = Arrangement.spacedBy(spacing32)
         ) {
-            Card(
+
+            FilledCard(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxWidth(),
             ) {
                 Column(
                     modifier = Modifier.fillMaxWidth().padding(spacing16),
@@ -125,7 +143,7 @@ fun SettingsScreenContent(
                         }
                     }
                     HorizontalDivider(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier.fillMaxWidth().padding(vertical = spacing4),
                         color = textSecondaryColor()
                     )
                     Row(
@@ -150,7 +168,7 @@ fun SettingsScreenContent(
                         TextButton(
                             onClick = {
                                 if (state.isLoggedIn()) {
-                                    actions.logout()
+                                    showLogoutDialog = true
                                 } else {
                                     navRouter.navigateTo(Destination.AuthScreen)
                                 }
