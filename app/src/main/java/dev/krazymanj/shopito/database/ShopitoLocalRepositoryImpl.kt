@@ -58,6 +58,10 @@ class ShopitoLocalRepositoryImpl @Inject constructor(
         return shopitoDao.getAllShoppingLists()
     }
 
+    override suspend fun getShoppingListsByActivity(): Flow<List<ShoppingList>> {
+        return shopitoDao.getAllShoppingListsByActivity()
+    }
+
     override suspend fun getShoppingListById(id: String): ShoppingList? {
         return shopitoDao.getShoppingListById(id)
     }

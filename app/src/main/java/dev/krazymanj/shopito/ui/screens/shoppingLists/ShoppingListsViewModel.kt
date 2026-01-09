@@ -19,7 +19,7 @@ class ShoppingListsViewModel @Inject constructor(private val repository: IShopit
 
     override fun loadLists() {
         viewModelScope.launch {
-            repository.getShoppingLists().collect {
+            repository.getShoppingListsByActivity().collect {
                 _state.value = _state.value.copy(
                     loading = false,
                     lists = it

@@ -24,6 +24,16 @@ interface ShopitoDao {
     @Query("SELECT * FROM shopping_list WHERE isDeleted = 0 ORDER BY createdAt ASC")
     fun getAllShoppingLists(): Flow<List<ShoppingList>>
 
+    @Transaction
+    @Query("""
+        SELECT sl.* FROM shopping_list AS sl
+        LEFT JOIN shopping_item AS si ON sl.id = si.listId AND si.isDeleted = 0
+        WHERE sl.isDeleted = 0
+        GROUP BY sl.id
+        ORDER BY MAX(sl.updatedAt, COALESCE(MAX(si.updatedAt), 0)) DESC
+    """)
+    fun getAllShoppingListsByActivity(): Flow<List<ShoppingList>>
+
     @Query("SELECT * FROM shopping_list WHERE id = :id AND isDeleted = 0")
     suspend fun getShoppingListById(id: String): ShoppingList?
 

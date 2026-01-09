@@ -1,8 +1,7 @@
 TODO:
 
-- Update shopping list title with subtitle of shopping list name & title of shopping list (align right)
+- Update shopping list title with subtitle of shopping list name & title of shopping list (align left)
 - (Optional) in list of shopping list open modal when user holds list card
-- Update shopping list query to sort by most recent
 - Add action of edit/scan/delete ticked items/delete list (i guess dropdown menu)
 - Make undo manager more generic so I can use it for ticked items as well
 - When token expires, say offline mode and offer login
