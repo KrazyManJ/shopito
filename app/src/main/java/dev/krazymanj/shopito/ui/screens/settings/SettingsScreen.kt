@@ -135,7 +135,7 @@ fun SettingsScreenContent(
                         }
                         Text(
                             text = if (state.lastTimeSynced != null) {
-                                "Last sync: ${DateUtils.getDateString(state.lastTimeSynced)}"
+                                "Last sync: ${DateUtils.getDateTimeString(state.lastTimeSynced)}"
                             } else "Never"
                         )
                     }

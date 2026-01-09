@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.krazymanj.shopito.core.UserManager
+import dev.krazymanj.shopito.worker.WorkScheduler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -12,7 +13,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val userManager: UserManager
+    private val userManager: UserManager,
+    private val workScheduler: WorkScheduler
 ) : ViewModel(), LoginActions {
     private var _state = MutableStateFlow(value = LoginUIState())
 
@@ -42,6 +44,9 @@ class LoginViewModel @Inject constructor(
                     ) }
                 }
                 UserManager.LoginResponse.Success -> {
+                    workScheduler.scheduleOneTimeSync()
+
+                    workScheduler.schedulePeriodicSync()
                     _state.update { it.copy(
                         isLoggingIn = false,
                         loggedIn = true

@@ -12,15 +12,26 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
+import dev.krazymanj.shopito.core.UserManager
+import dev.krazymanj.shopito.worker.WorkScheduler
 import dev.krazymanj.shopito.navigation.NavGraph
 import dev.krazymanj.shopito.ui.theme.ShopitoTheme
 import dev.krazymanj.shopito.ui.theme.backgroundPrimaryColor
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
     private val viewModel by viewModels<MainActivityViewModel>()
+
+    @Inject
+    lateinit var workScheduler: WorkScheduler
+
+    @Inject
+    lateinit var userManager: UserManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashScreen = installSplashScreen()
@@ -29,6 +40,7 @@ class MainActivity : ComponentActivity() {
 
         splashScreen.setKeepOnScreenCondition { viewModel.state.value.isLoading }
 
+        checkAndSync()
 
         enableEdgeToEdge()
         setContent {
@@ -42,6 +54,16 @@ class MainActivity : ComponentActivity() {
                         startDestination = state.resolveStartDestination()
                     )
                 }
+            }
+        }
+    }
+
+    private fun checkAndSync() {
+        lifecycleScope.launch {
+            if (userManager.isLoggedIn()) {
+                workScheduler.scheduleOneTimeSync()
+
+                workScheduler.schedulePeriodicSync()
             }
         }
     }

@@ -2,9 +2,10 @@ package dev.krazymanj.shopito.ui.screens.settings
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.WorkInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.krazymanj.shopito.core.SyncManager
 import dev.krazymanj.shopito.core.UserManager
+import dev.krazymanj.shopito.worker.WorkScheduler
 import dev.krazymanj.shopito.database.IShopitoLocalRepository
 import dev.krazymanj.shopito.database.entities.ShoppingList
 import dev.krazymanj.shopito.datastore.DataStoreKey
@@ -28,13 +29,17 @@ class SettingsViewModel @Inject constructor(
     private val datastore: IDataStoreRepository,
     private val repository: IShopitoLocalRepository,
     private val userManager: UserManager,
-    private val syncManager: SyncManager
+    private val workScheduler: WorkScheduler
 ) : ViewModel(),
     SettingsActions {
 
     private val _state : MutableStateFlow<SettingsUIState> = MutableStateFlow(value = SettingsUIState())
 
     val state = _state.asStateFlow()
+
+    init {
+        observeSyncStatus()
+    }
 
     override fun loadSettings() {
         viewModelScope.launch {
@@ -91,30 +96,62 @@ class SettingsViewModel @Inject constructor(
     override fun logout() {
         viewModelScope.launch {
             userManager.logout()
+            workScheduler.cancelAllWork()
+        }
+    }
+
+    private fun observeSyncStatus() {
+        viewModelScope.launch {
+            workScheduler.getSyncWorkInfoFlow().collect { workInfo ->
+
+                if (workInfo == null) return@collect
+
+                val state = workInfo.state
+
+                val isSyncing = state == WorkInfo.State.RUNNING ||
+                        state == WorkInfo.State.ENQUEUED
+
+                val resultMessage = when (state) {
+                    WorkInfo.State.SUCCEEDED -> "Successfully synced"
+                    WorkInfo.State.FAILED -> {
+                        workInfo.outputData.getString("ERROR_MSG") ?: "Unknown error"
+                    }
+                    else -> null
+                }
+
+                _state.update { it.copy(
+                    isSyncing = isSyncing,
+                    syncResult = resultMessage ?: it.syncResult
+                ) }
+            }
         }
     }
 
     override fun attemptSync() {
-        viewModelScope.launch {
-            _state.update { it.copy(
-                isSyncing = true
-            ) }
-            val syncResult = syncManager.sync()
-
-            when (syncResult) {
-                is SyncManager.Result.Success -> {
-                    _state.update { it.copy(
-                        isSyncing = false,
-                        syncResult = "Successfully synced"
-                    ) }
-                }
-                is SyncManager.Result.Error -> {
-                    _state.update { it.copy(
-                        isSyncing = false,
-                        syncResult = syncResult.message
-                    ) }
-                }
-            }
-        }
+        workScheduler.scheduleOneTimeSync()
     }
+
+//    override fun attemptSync() {
+//        viewModelScope.launch {
+//            _state.update { it.copy(
+//                isSyncing = true
+//            ) }
+//            val syncResult = syncManager.sync()
+//
+//            when (syncResult) {
+//                is SyncManager.Result.Success -> {
+//                    _state.update { it.copy(
+//                        isSyncing = false,
+//                        syncResult = "Successfully synced"
+//                    ) }
+//                }
+//                is SyncManager.Result.Error -> {
+//                    _state.update { it.copy(
+//                        isSyncing = false,
+//                        syncResult = syncResult.message
+//                    ) }
+//                }
+//            }
+//        }
+//    }
 }
