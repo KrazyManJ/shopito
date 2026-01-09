@@ -63,5 +63,6 @@ class UserManager @Inject constructor(
 
     suspend fun logout() {
         dataStore.set(DataStoreKey.Token, null)
+        dataStore.set(DataStoreKey.LastSyncTime, null)
     }
 }

@@ -5,12 +5,12 @@ import androidx.lifecycle.viewModelScope
 import androidx.work.WorkInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.krazymanj.shopito.core.UserManager
-import dev.krazymanj.shopito.worker.WorkScheduler
 import dev.krazymanj.shopito.database.IShopitoLocalRepository
 import dev.krazymanj.shopito.database.entities.ShoppingList
 import dev.krazymanj.shopito.datastore.DataStoreKey
 import dev.krazymanj.shopito.datastore.IDataStoreRepository
 import dev.krazymanj.shopito.navigation.StartDestinationSetting
+import dev.krazymanj.shopito.worker.WorkScheduler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
@@ -112,7 +112,6 @@ class SettingsViewModel @Inject constructor(
                         state == WorkInfo.State.ENQUEUED
 
                 val resultMessage = when (state) {
-                    WorkInfo.State.SUCCEEDED -> "Successfully synced"
                     WorkInfo.State.FAILED -> {
                         workInfo.outputData.getString("ERROR_MSG") ?: "Unknown error"
                     }
@@ -121,7 +120,7 @@ class SettingsViewModel @Inject constructor(
 
                 _state.update { it.copy(
                     isSyncing = isSyncing,
-                    syncResult = resultMessage ?: it.syncResult
+                    syncError = resultMessage
                 ) }
             }
         }

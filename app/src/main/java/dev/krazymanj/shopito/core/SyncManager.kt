@@ -24,7 +24,7 @@ class SyncManager @Inject constructor(
     }
 
     suspend fun sync(): Result {
-        val lastSync = dataStore.get(DataStoreKey.LastSyncTime)
+        val lastSync = dataStore.get(DataStoreKey.LastSyncTime) ?: 0
 
         val dirtyLists = shopitoDao.getDirtyLists()
         val dirtyItems = shopitoDao.getDirtyItems()

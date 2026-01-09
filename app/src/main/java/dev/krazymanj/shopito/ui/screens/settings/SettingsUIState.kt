@@ -19,7 +19,7 @@ data class SettingsUIState(
 
     val isSyncing: Boolean = false,
     val lastTimeSynced: Long? = null,
-    val syncResult: String? = null
+    val syncError: String? = null
 ) {
     fun isLoggedIn() = loggedData != null
 }

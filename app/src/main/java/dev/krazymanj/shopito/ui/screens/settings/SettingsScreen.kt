@@ -1,17 +1,19 @@
 package dev.krazymanj.shopito.ui.screens.settings
 
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
@@ -37,6 +39,9 @@ import dev.krazymanj.shopito.ui.elements.screen.BaseScreen
 import dev.krazymanj.shopito.ui.theme.Primary
 import dev.krazymanj.shopito.ui.theme.spacing16
 import dev.krazymanj.shopito.ui.theme.spacing32
+import dev.krazymanj.shopito.ui.theme.spacing8
+import dev.krazymanj.shopito.ui.theme.textPrimaryColor
+import dev.krazymanj.shopito.ui.theme.textSecondaryColor
 import dev.krazymanj.shopito.utils.DateUtils
 
 
@@ -85,16 +90,10 @@ fun SettingsScreenContent(
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .clickable {
-                        if (state.isLoggedIn()) {
-                            actions.logout()
-                        } else {
-                            navRouter.navigateTo(Destination.LoginScreen)
-                        }
-                    }
             ) {
                 Column(
-                    modifier = Modifier.fillMaxWidth().padding(spacing16)
+                    modifier = Modifier.fillMaxWidth().padding(spacing16),
+                    verticalArrangement = Arrangement.spacedBy(spacing8)
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -112,34 +111,56 @@ fun SettingsScreenContent(
                             )
                             Text(
                                 text = when {
-                                    state.isLoggedIn() -> "Logged in (click to Log out)"
-                                    else -> "Click to Log In"
+                                    state.lastTimeSynced != null -> "Last sync: ${DateUtils.getDateTimeString(state.lastTimeSynced)}"
+                                    state.syncError != null -> state.syncError
+                                    state.isSyncing -> "Syncing..."
+                                    else -> ""
+                                },
+                                style = MaterialTheme.typography.bodySmall,
+                                color = when {
+                                    state.syncError != null -> Primary
+                                    else -> textSecondaryColor()
                                 }
                             )
                         }
                     }
+                    HorizontalDivider(
+                        modifier = Modifier.fillMaxWidth(),
+                        color = textSecondaryColor()
+                    )
                     Row(
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        modifier = Modifier.fillMaxWidth()
                     ) {
-                        TextButton(
-                            onClick = {
-                                actions.attemptSync()
-                            }
-                        ) {
-                            if (state.isSyncing) {
-                                CircularProgressIndicator()
-                            }
-                            else {
-                                Text("Sync")
+                        if (state.isLoggedIn()) {
+                            TextButton(
+                                onClick = {
+                                    actions.attemptSync()
+                                }
+                            ) {
+                                if (state.isSyncing) {
+                                    CircularProgressIndicator()
+                                }
+                                else {
+                                    Text("Sync")
+                                }
                             }
                         }
-                        Text(
-                            text = if (state.lastTimeSynced != null) {
-                                "Last sync: ${DateUtils.getDateTimeString(state.lastTimeSynced)}"
-                            } else "Never"
-                        )
+                        Spacer(modifier = Modifier)
+                        TextButton(
+                            onClick = {
+                                if (state.isLoggedIn()) {
+                                    actions.logout()
+                                } else {
+                                    navRouter.navigateTo(Destination.LoginScreen)
+                                }
+                            },
+                            colors = ButtonDefaults.textButtonColors(contentColor = textPrimaryColor())
+                        ) {
+                            Text(text = if (state.isLoggedIn()) "Logout" else "Login")
+                        }
                     }
-                    state.syncResult?.let {
+                    state.syncError?.let {
                         Text(text = it, color = Primary)
                     }
                 }

@@ -57,9 +57,8 @@ sealed class DataStoreKey<T>() {
             key = stringPreferencesKey("token")
         )
 
-        val LastSyncTime = Primitive(
-            key = longPreferencesKey("last_sync_time"),
-            default = 0
+        val LastSyncTime = NullablePrimitive<Long?>(
+            key = longPreferencesKey("last_sync_time")
         )
     }
 }
