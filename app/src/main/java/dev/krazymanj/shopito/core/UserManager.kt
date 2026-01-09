@@ -6,6 +6,8 @@ import dev.krazymanj.shopito.communication.IShopitoRemoteRepository
 import dev.krazymanj.shopito.datastore.DataStoreKey
 import dev.krazymanj.shopito.datastore.IDataStoreRepository
 import dev.krazymanj.shopito.model.TokenData
+import dev.krazymanj.shopito.model.network.RegisterForm
+import dev.krazymanj.shopito.model.network.TokenResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -19,33 +21,53 @@ class UserManager @Inject constructor(
         return dataStore.get(DataStoreKey.Token) != null
     }
 
-    sealed class LoginResponse {
-        data object Success : LoginResponse()
-        data class Error(val messageResId: Int) : LoginResponse()
+    sealed class AuthResponse {
+        data object Success : AuthResponse()
+        data class Error(val messageResId: Int) : AuthResponse()
     }
 
-    suspend fun login(username: String, password: String): LoginResponse {
-        val result = withContext(Dispatchers.IO) {
-            repository.login(username, password)
-        }
+    private suspend fun processTokenResponse(
+        errorCodeResolver: (Int) -> Int = { R.string.error_unknown },
+        request: suspend () -> CommunicationResult<TokenResponse>,
+    ): AuthResponse {
+        val result = withContext(Dispatchers.IO) { request() }
 
         return when (result) {
             is CommunicationResult.ConnectionError -> {
-                LoginResponse.Error(R.string.error_no_internet_connection)
+                AuthResponse.Error(R.string.error_no_internet_connection)
             }
             is CommunicationResult.Error -> {
-                LoginResponse.Error(when (result.error.code) {
-                    401 -> R.string.error_invalid_credentials
-                    else -> R.string.error_unknown
-                })
+                AuthResponse.Error(errorCodeResolver(result.error.code))
             }
             is CommunicationResult.Exception -> {
-                LoginResponse.Error(R.string.error_unknown)
+                AuthResponse.Error(R.string.error_unknown)
             }
             is CommunicationResult.Success -> {
                 dataStore.set(DataStoreKey.Token, result.data.accessToken)
-                LoginResponse.Success
+                AuthResponse.Success
             }
+        }
+    }
+
+    suspend fun login(username: String, password: String): AuthResponse {
+        return processTokenResponse(
+            errorCodeResolver = { when (it) {
+                401 -> R.string.error_invalid_credentials
+                else -> R.string.error_unknown
+            }}
+        ) {
+            repository.login(username, password)
+        }
+    }
+
+    suspend fun register(registerForm: RegisterForm): AuthResponse {
+        return processTokenResponse(
+            errorCodeResolver = { when (it) {
+                409 -> R.string.error_user_already_exists
+                else -> R.string.error_unknown
+            } }
+        ) {
+            repository.register(registerForm)
         }
     }
 

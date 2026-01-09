@@ -43,6 +43,6 @@ sealed class Destination {
     ) : Destination()
 
     @Serializable
-    data object LoginScreen : Destination()
+    data object AuthScreen : Destination()
 }
 

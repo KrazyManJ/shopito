@@ -1,5 +1,6 @@
 package dev.krazymanj.shopito.communication
 
+import dev.krazymanj.shopito.model.network.RegisterForm
 import dev.krazymanj.shopito.model.network.SyncRequest
 import dev.krazymanj.shopito.model.network.SyncResponse
 import dev.krazymanj.shopito.model.network.TokenResponse
@@ -16,6 +17,11 @@ interface ShopitoApi {
     suspend fun login(
         @Field("username") username: String,
         @Field("password") password: String
+    ): Response<TokenResponse>
+
+    @POST("register")
+    suspend fun register(
+        @Body registerForm: RegisterForm
     ): Response<TokenResponse>
 
     @POST("sync")

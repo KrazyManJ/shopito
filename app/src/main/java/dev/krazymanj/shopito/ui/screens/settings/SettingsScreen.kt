@@ -152,7 +152,7 @@ fun SettingsScreenContent(
                                 if (state.isLoggedIn()) {
                                     actions.logout()
                                 } else {
-                                    navRouter.navigateTo(Destination.LoginScreen)
+                                    navRouter.navigateTo(Destination.AuthScreen)
                                 }
                             },
                             colors = ButtonDefaults.textButtonColors(contentColor = textPrimaryColor())
