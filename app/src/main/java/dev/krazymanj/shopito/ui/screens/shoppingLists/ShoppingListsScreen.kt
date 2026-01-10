@@ -55,7 +55,12 @@ fun ShoppingListsScreen(
                 selectedListId = null
             },
             onAfterRemove = hideSheet,
-            onAfterSave = hideSheet
+            onAfterSave = { id ->
+                if (selectedListId == null) {
+                    navRouter.navigateTo(Destination.ViewShoppingList(id))
+                }
+                hideSheet()
+            }
         )
     }
 

@@ -12,9 +12,9 @@ import dev.krazymanj.shopito.datastore.DataStoreKey
 import dev.krazymanj.shopito.datastore.IDataStoreRepository
 import dev.krazymanj.shopito.extension.empty
 import dev.krazymanj.shopito.extension.extractLastAmount
-import dev.krazymanj.shopito.model.network.GeoReverseResponse
 import dev.krazymanj.shopito.model.Location
 import dev.krazymanj.shopito.model.SavedLocation
+import dev.krazymanj.shopito.model.network.GeoReverseResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -185,6 +185,13 @@ class ShoppingListViewViewModel @Inject constructor(
     fun removeAllCheckedItems() {
         viewModelScope.launch {
             repository.removeAllCheckedItemsInShoppingList(_state.value.shoppingList!!.id)
+        }
+    }
+
+    fun deleteList() {
+        _state.value.shoppingList?.let {
+            viewModelScope.launch { repository.delete(it) }
+            _state.update { ShoppingListViewUIState() }
         }
     }
 }

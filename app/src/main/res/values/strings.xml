@@ -57,4 +57,7 @@
     <string name="error_user_already_exists">User already exists</string>
     <string name="scan_result_title">Scan Result</string>
     <string name="shopping_list_title">Shopping List</string>
+    <string name="edit">Edit</string>
+    <string name="scan">Scan</string>
+    <string name="remove_all_checked_items">Remove all checked items</string>
 </resources>

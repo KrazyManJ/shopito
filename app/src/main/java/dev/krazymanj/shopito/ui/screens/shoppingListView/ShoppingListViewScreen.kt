@@ -7,10 +7,14 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
+import androidx.compose.material3.MenuDefaults
 import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -27,8 +31,11 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.composables.icons.lucide.ListX
 import com.composables.icons.lucide.Lucide
+import com.composables.icons.lucide.Menu
+import com.composables.icons.lucide.Pencil
 import com.composables.icons.lucide.ScanText
 import com.composables.icons.lucide.StickyNote
+import com.composables.icons.lucide.Trash
 import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.extension.showDeletedMessage
 import dev.krazymanj.shopito.navigation.Destination
@@ -39,9 +46,13 @@ import dev.krazymanj.shopito.ui.elements.ShoppingItem
 import dev.krazymanj.shopito.ui.elements.input.QuickAdd
 import dev.krazymanj.shopito.ui.elements.modal.LocationOptionsDialog
 import dev.krazymanj.shopito.ui.elements.modal.ShoppingItemModalSheet
+import dev.krazymanj.shopito.ui.elements.modal.ShoppingListModalSheet
 import dev.krazymanj.shopito.ui.elements.screen.BaseScreen
 import dev.krazymanj.shopito.ui.elements.screen.PlaceholderScreenContent
+import dev.krazymanj.shopito.ui.theme.Primary
+import dev.krazymanj.shopito.ui.theme.backgroundSecondaryColor
 import dev.krazymanj.shopito.ui.theme.spacing16
+import dev.krazymanj.shopito.ui.theme.textSecondaryColor
 import kotlinx.coroutines.launch
 
 @Composable
@@ -111,37 +122,82 @@ fun ShoppingListViewScreen(
         )
     }
 
+    var showListEditSheet by remember { mutableStateOf(false) }
+
+    if (showListEditSheet) {
+        ShoppingListModalSheet(
+            shoppingListId = route.shoppingListId,
+            onDismissRequest = {
+                showListEditSheet = false
+            },
+            onAfterRemove = {
+                showListEditSheet = false
+                navRouter.returnBack()
+            },
+            onAfterSave = {
+                showListEditSheet = false
+                viewModel.loadShoppingListData(route.shoppingListId)
+            }
+        )
+    }
+
+    var expandedMenu by remember { mutableStateOf(false) }
+
     BaseScreen(
-        topBarText = if (state.value.shoppingList != null) state.value.shoppingList!!.name else "...",
+        topBarText = stringResource(R.string.shopping_list_title),
+        topBarTextDescription = state.value.shoppingList?.name ?: stringResource(R.string.unnamed),
         onBackClick = {
             navRouter.returnBack()
         },
         showLoading = state.value.isLoading,
         actions = {
-//            IconButton(
-//                onClick = {
-//                    navRouter.navigateTo(Destination.AddEditShoppingList(shoppingListId = shoppingListId))
-//                }
-//            ) {
-//                Icon(imageVector = Lucide.Pencil, contentDescription = null)
-//            }
             IconButton(
-                onClick = {
-                    navRouter.navigateTo(Destination.ScanShoppingListScreen(route.shoppingListId))
-                }
+                onClick = { expandedMenu = true }
             ) {
-                Icon(imageVector = Lucide.ScanText, contentDescription = null)
+                Icon(imageVector = Lucide.Menu, contentDescription = null)
             }
-        },
-        floatingActionButton = {
-            FloatingActionButton(
-                onClick = {
-                    viewModel.removeAllCheckedItems()
-                }
+            DropdownMenu(
+                expanded = expandedMenu,
+                onDismissRequest = { expandedMenu = false },
+                containerColor = backgroundSecondaryColor()
             ) {
-                Icon(
-                    imageVector = Lucide.ListX,
-                    contentDescription = null
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.scan)) },
+                    leadingIcon = { Icon(imageVector = Lucide.ScanText, contentDescription = null) },
+                    onClick = {
+                        expandedMenu = false
+                        navRouter.navigateTo(Destination.ScanShoppingListScreen(route.shoppingListId))
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.remove_all_checked_items)) },
+                    leadingIcon = { Icon(imageVector = Lucide.ListX, contentDescription = null) },
+                    onClick = {
+                        expandedMenu = false
+                        viewModel.removeAllCheckedItems()
+                    }
+                )
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.edit)) },
+                    leadingIcon = { Icon(imageVector = Lucide.Pencil, contentDescription = null) },
+                    onClick = {
+                        expandedMenu = false
+                        showListEditSheet = true
+                    }
+                )
+                HorizontalDivider(color = textSecondaryColor())
+                DropdownMenuItem(
+                    text = { Text(stringResource(R.string.remove)) },
+                    colors = MenuDefaults.itemColors(
+                        textColor = Primary,
+                        leadingIconColor = Primary
+                    ),
+                    leadingIcon = { Icon(imageVector = Lucide.Trash, contentDescription = null) },
+                    onClick = {
+                        expandedMenu = false
+                        viewModel.deleteList()
+                        navRouter.returnBack()
+                    }
                 )
             }
         },
@@ -211,7 +267,7 @@ fun ShoppingListViewScreenContent(
     ) {
         items(
             items = state.shoppingItems,
-            key = { item -> item.id!! }
+            key = { item -> item.id }
         ) {
             ShoppingItem(
                 shoppingItem = it,

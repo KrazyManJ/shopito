@@ -47,7 +47,7 @@ import kotlinx.coroutines.launch
 fun ShoppingListModalSheet(
     shoppingListId: String?,
     onDismissRequest: () -> Unit,
-    onAfterSave: () -> Unit = {},
+    onAfterSave: (id: String) -> Unit = {},
     onAfterRemove: () -> Unit = {},
 ) {
     val viewModel: ShoppingListModalSheetViewModel = hiltViewModel()
@@ -131,7 +131,7 @@ fun ShoppingListModalSheet(
                             sheetState.hide()
                             viewModel.save()
                             viewModel.reset()
-                            onAfterSave()
+                            onAfterSave(state.shoppingList.id)
                         }
                     },
                     enabled = state.isFormValid()
