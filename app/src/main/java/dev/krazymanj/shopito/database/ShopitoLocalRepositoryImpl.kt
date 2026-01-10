@@ -47,10 +47,10 @@ class ShopitoLocalRepositoryImpl @Inject constructor(
 
     override suspend fun delete(shoppingList: ShoppingList) {
         if (shoppingList.isSynced) {
-            shopitoDao.delete(shoppingList)
+            shopitoDao.softDeleteListWithItems(shoppingList.id)
         }
         else {
-            shopitoDao.update(shoppingList.withUpdatedAt().copy(isDeleted = true))
+            shopitoDao.delete(shoppingList)
         }
     }
 

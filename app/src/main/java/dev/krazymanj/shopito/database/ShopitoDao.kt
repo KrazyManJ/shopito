@@ -141,4 +141,17 @@ interface ShopitoDao {
         deleteAllItems()
         deleteAllLists()
     }
+
+    @Query("UPDATE shopping_list SET isDeleted = 1, isSynced = 0, updatedAt = :updatedAt WHERE id = :listId")
+    suspend fun softDeleteListOnly(listId: String, updatedAt: Long)
+
+    @Query("UPDATE shopping_item SET isDeleted = 1, isSynced = 0, updatedAt = :updatedAt WHERE listId = :listId AND isDeleted = 0")
+    suspend fun softDeleteItemsInList(listId: String, updatedAt: Long)
+
+    @Transaction
+    suspend fun softDeleteListWithItems(listId: String) {
+        val now = System.currentTimeMillis()
+        softDeleteListOnly(listId, now)
+        softDeleteItemsInList(listId, now)
+    }
 }
