@@ -1,7 +1,6 @@
 package dev.krazymanj.shopito.ui.screens.scanShoppingList
 
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -64,7 +63,6 @@ class ScanShoppingListViewModel @Inject constructor(
 
     override fun addScannedItemsToShoppingList() {
         viewModelScope.launch {
-            Log.i("Test", "Add items to shopping list")
             _state.value.scannedItems.forEach { repository.insert(it) }
             _state.update { it.copy(
                 hasAddedItems = true
