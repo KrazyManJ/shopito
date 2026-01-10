@@ -161,7 +161,6 @@ fun ShoppingListsSummaryScreenContent(
                         actions.setCurrentViewingShoppingItem(it)
                     },
                     onRemove = {
-                        Log.i("ShoppingListsSummaryScreenContent","Remove ${it.item.itemName}")
                         actions.deleteShoppingItem(it.item)
                     }
                 )
