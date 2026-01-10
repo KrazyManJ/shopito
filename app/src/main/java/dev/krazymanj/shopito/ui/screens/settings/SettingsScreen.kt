@@ -200,7 +200,10 @@ fun SettingsScreenContent(
             }
             SuggestionField(
                 options = StartDestinationSetting.entries,
-                labelProvider = {it.toString()},
+                labelProvider = { stringResource( when (it) {
+                    StartDestinationSetting.ShoppingListScreen -> R.string.shopping_list_title
+                    StartDestinationSetting.ShoppingSummaryScreen -> R.string.navigation_lists_summary_label
+                }) },
                 value = state.startScreenSetting,
                 onValueChange = { actions.onStartScreenSettingChange(it) },
                 labelText = "When app opens...",

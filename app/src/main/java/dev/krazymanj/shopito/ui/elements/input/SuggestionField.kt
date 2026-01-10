@@ -20,7 +20,7 @@ import dev.krazymanj.shopito.ui.elements.modal.OptionSelectDialog
 @Composable
 fun <T> SuggestionField(
     options: List<T>,
-    labelProvider: (T) -> String,
+    labelProvider: @Composable (T) -> String,
     value: T?,
     onValueChange: (T) -> Unit,
     modifier: Modifier = Modifier,
