@@ -11,11 +11,6 @@ sealed class Destination {
     data object ShoppingListsScreen : Destination()
 
     @Serializable
-    data class AddEditShoppingList(
-        val shoppingListId: String?
-    ) : Destination()
-
-    @Serializable
     data class ViewShoppingList(
         val shoppingListId: String
     ): Destination()

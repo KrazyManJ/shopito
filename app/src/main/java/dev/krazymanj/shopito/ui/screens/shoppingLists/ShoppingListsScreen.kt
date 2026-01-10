@@ -7,6 +7,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
@@ -19,6 +23,7 @@ import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.ui.elements.NewShoppingList
 import dev.krazymanj.shopito.ui.elements.ShopitoNavigationBar
 import dev.krazymanj.shopito.ui.elements.ShoppingList
+import dev.krazymanj.shopito.ui.elements.modal.ShoppingListModalSheet
 import dev.krazymanj.shopito.ui.elements.screen.BaseScreen
 import dev.krazymanj.shopito.ui.theme.spacing16
 
@@ -33,6 +38,27 @@ fun ShoppingListsScreen(
     if (state.value.loading){
         viewModel.loadLists()
     }
+
+    var showSheet by remember { mutableStateOf(false) }
+    var selectedListId by remember { mutableStateOf<String?>(null) }
+
+    val hideSheet = {
+        showSheet = false
+        selectedListId = null
+    }
+
+    if (showSheet) {
+        ShoppingListModalSheet(
+            shoppingListId = selectedListId,
+            onDismissRequest = {
+                showSheet = false
+                selectedListId = null
+            },
+            onAfterRemove = hideSheet,
+            onAfterSave = hideSheet
+        )
+    }
+
 
     BaseScreen(
         topBarText = stringResource(R.string.navigation_shopping_lists_label),
@@ -55,7 +81,12 @@ fun ShoppingListsScreen(
                 navRouter.navigateTo(Destination.ViewShoppingList(shoppingListId = id))
             },
             onNewShoppingList = {
-                navRouter.navigateTo(Destination.AddEditShoppingList(null))
+                showSheet = true
+                selectedListId = null
+            },
+            onShoppingListEdit = { id ->
+                showSheet = true
+                selectedListId = id
             }
         )
     }
@@ -67,6 +98,7 @@ fun ShoppingListScreenContent(
     state: ShoppingListsUIState,
     actions: ShoppingListActions,
     onShoppingListNav: (id: String) -> Unit,
+    onShoppingListEdit: (id: String) -> Unit,
     onNewShoppingList: () -> Unit
 ) {
     LazyColumn(
@@ -82,6 +114,9 @@ fun ShoppingListScreenContent(
                     shoppingList = it,
                     onClick = {
                         onShoppingListNav(it.id)
+                    },
+                    onLongClick = {
+                        onShoppingListEdit(it.id)
                     }
                 )
             }
