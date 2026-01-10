@@ -1,7 +1,12 @@
 package dev.krazymanj.shopito.navigation
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import androidx.lifecycle.repeatOnLifecycle
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -24,12 +29,22 @@ import kotlin.reflect.typeOf
 fun NavGraph(
     startDestination: Destination,
     navHostController: NavHostController = rememberNavController(),
-    navRouter: INavigationRouter = remember { NavigationRouterImpl(navHostController) }
+    navRouter: INavigationRouter = remember { NavigationRouterImpl(navHostController) },
+    navGraphViewModel: NavGraphViewModel = hiltViewModel()
 ) {
+    val lifecycleOwner = LocalLifecycleOwner.current
+
+    LaunchedEffect(lifecycleOwner.lifecycle) {
+        lifecycleOwner.repeatOnLifecycle(Lifecycle.State.STARTED) {
+            navGraphViewModel.navigationEvent.collect {
+                navRouter.navigateTo(it)
+            }
+        }
+    }
+
     NavHost(
         startDestination = startDestination,
         navController = navHostController,
-
     ) {
         composable<Destination.ShoppingListsSummaryScreen> {
             ShoppingListsSummaryScreen(navRouter)

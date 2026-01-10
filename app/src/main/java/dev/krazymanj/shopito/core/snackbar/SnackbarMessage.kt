@@ -6,6 +6,8 @@ import dev.krazymanj.shopito.ui.UiText
 data class SnackbarMessage(
     val message: UiText,
     val actionLabel: UiText? = null,
-    val duration: SnackbarDuration = SnackbarDuration.Short,
-    val onAction: (suspend () -> Unit)? = null
+    val withDismissAction: Boolean = false,
+    val duration: SnackbarDuration? = null,
+    val onAction: (suspend () -> Unit)? = null,
+    val reAppearOnNavigation: Boolean = false,
 )

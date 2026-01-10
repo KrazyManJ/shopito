@@ -60,4 +60,6 @@
     <string name="edit">Edit</string>
     <string name="scan">Scan</string>
     <string name="remove_all_checked_items">Remove all checked items</string>
+    <string name="login_expired">Your login has expired. Please log in again to synchronize.</string>
+    <string name="login_label">Login</string>
 </resources>

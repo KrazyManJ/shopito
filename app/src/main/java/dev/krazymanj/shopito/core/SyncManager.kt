@@ -23,6 +23,7 @@ class SyncManager @Inject constructor(
     sealed class Result {
         data object Success : Result()
         data class Error(val message: String) : Result()
+        data object Unauthorized : Result()
     }
 
     suspend fun sync(): Result {
@@ -45,10 +46,10 @@ class SyncManager @Inject constructor(
 
         return when (result) {
             is CommunicationResult.ConnectionError -> Result.Error("No internet connection")
-            is CommunicationResult.Error -> Result.Error(when (result.error.code) {
-                401 -> "Invalid credentials"
-                else -> "Unknown error"
-            })
+            is CommunicationResult.Error -> when (result.error.code) {
+                401 -> Result.Unauthorized
+                else -> Result.Error("Unknown error")
+            }
             is CommunicationResult.Exception -> Result.Error("Unknown error")
             is CommunicationResult.Success -> {
                 val data = result.data

@@ -1,6 +1,5 @@
 package dev.krazymanj.shopito.core.snackbar
 
-import android.util.Log
 import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.database.entities.ShoppingItem
 import dev.krazymanj.shopito.extension.ellipsis
@@ -17,7 +16,6 @@ class SnackbarManager @Inject constructor() {
     val messageEvent = _messageEvent.receiveAsFlow()
 
     suspend fun showMessage(message: SnackbarMessage) {
-        Log.i("SnackbarManager","Send message with $message")
         _messageEvent.send(message)
     }
 
@@ -28,7 +26,8 @@ class SnackbarManager @Inject constructor() {
         showMessage(SnackbarMessage(
             message = message,
             actionLabel = UiText.StringResource(R.string.undo),
-            onAction = onUndo
+            onAction = onUndo,
+            withDismissAction = true
         ))
     }
 

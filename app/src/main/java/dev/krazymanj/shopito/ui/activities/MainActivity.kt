@@ -15,10 +15,10 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import dagger.hilt.android.AndroidEntryPoint
 import dev.krazymanj.shopito.core.UserManager
-import dev.krazymanj.shopito.worker.WorkScheduler
 import dev.krazymanj.shopito.navigation.NavGraph
 import dev.krazymanj.shopito.ui.theme.ShopitoTheme
 import dev.krazymanj.shopito.ui.theme.backgroundPrimaryColor
+import dev.krazymanj.shopito.worker.WorkScheduler
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -46,13 +46,15 @@ class MainActivity : ComponentActivity() {
         setContent {
             val state by viewModel.state.collectAsStateWithLifecycle()
 
-            ShopitoTheme {
-                Box(
-                    modifier = Modifier.fillMaxSize().background(backgroundPrimaryColor())
-                ) {
-                    NavGraph(
-                        startDestination = state.resolveStartDestination()
-                    )
+            if (!state.isLoading) {
+                ShopitoTheme {
+                    Box(
+                        modifier = Modifier.fillMaxSize().background(backgroundPrimaryColor())
+                    ) {
+                        NavGraph(
+                            startDestination = state.resolveStartDestination()
+                        )
+                    }
                 }
             }
         }
