@@ -6,14 +6,15 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.krazymanj.shopito.communication.CommunicationResult
 import dev.krazymanj.shopito.communication.IGeoReverseRepository
 import dev.krazymanj.shopito.core.IRecentLocationsManager
+import dev.krazymanj.shopito.core.snackbar.SnackbarManager
 import dev.krazymanj.shopito.database.IShopitoLocalRepository
 import dev.krazymanj.shopito.database.entities.ShoppingItem
 import dev.krazymanj.shopito.database.entities.ShoppingList
 import dev.krazymanj.shopito.datastore.DataStoreKey
 import dev.krazymanj.shopito.datastore.IDataStoreRepository
-import dev.krazymanj.shopito.model.network.GeoReverseResponse
 import dev.krazymanj.shopito.model.Location
 import dev.krazymanj.shopito.model.SavedLocation
+import dev.krazymanj.shopito.model.network.GeoReverseResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -29,7 +30,8 @@ class ShoppingItemModalSheetViewModel @Inject constructor(
     private val repository: IShopitoLocalRepository,
     private val dataStore: IDataStoreRepository,
     private val geoReverseRepository: IGeoReverseRepository,
-    private val recentLocationsManager: IRecentLocationsManager
+    private val recentLocationsManager: IRecentLocationsManager,
+    private val snackbarManager: SnackbarManager
 ) : ViewModel(), IRecentLocationsManager by recentLocationsManager {
     private val _state : MutableStateFlow<ShoppingItemModalSheetUIState> = MutableStateFlow(value = ShoppingItemModalSheetUIState())
 
@@ -68,6 +70,9 @@ class ShoppingItemModalSheetViewModel @Inject constructor(
     fun remove() {
         viewModelScope.launch {
             repository.delete(_state.value.item)
+            snackbarManager.showDeletedItem(_state.value.item) {
+                repository.upsert(it)
+            }
         }
     }
 

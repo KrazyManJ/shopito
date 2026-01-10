@@ -11,7 +11,9 @@ import dev.krazymanj.shopito.model.network.TokenResponse
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class UserManager @Inject constructor(
     private val repository: IShopitoRemoteRepository,
     private val dataStore: IDataStoreRepository

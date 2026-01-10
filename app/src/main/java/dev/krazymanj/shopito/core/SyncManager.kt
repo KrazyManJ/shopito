@@ -11,7 +11,9 @@ import dev.krazymanj.shopito.model.network.SyncRequest
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class SyncManager @Inject constructor(
     private val dataStore: IDataStoreRepository,
     private val shopitoDao: ShopitoDao,

@@ -3,12 +3,13 @@ package dev.krazymanj.shopito.ui.screens.locationItemsList
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dev.krazymanj.shopito.database.IShopitoLocalRepository
-import dev.krazymanj.shopito.model.ShoppingItemWithList
-import dev.krazymanj.shopito.database.entities.ShoppingItem
+import dev.krazymanj.shopito.core.snackbar.SnackbarManager
 import dev.krazymanj.shopito.core.usecase.GetLocationLabelUseCase
 import dev.krazymanj.shopito.core.usecase.ReverseGeoResult
+import dev.krazymanj.shopito.database.IShopitoLocalRepository
+import dev.krazymanj.shopito.database.entities.ShoppingItem
 import dev.krazymanj.shopito.model.Location
+import dev.krazymanj.shopito.model.ShoppingItemWithList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
@@ -18,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class LocationItemsListViewModel @Inject constructor(
     private val repository: IShopitoLocalRepository,
-    private val getLocationLabelUseCase: GetLocationLabelUseCase
+    private val getLocationLabelUseCase: GetLocationLabelUseCase,
+    private val snackbarManager: SnackbarManager
 ) : ViewModel(), LocationItemsListActions {
     private var _state = MutableStateFlow(value = LocationItemsListUIState())
 
@@ -56,24 +58,12 @@ class LocationItemsListViewModel @Inject constructor(
         ) }
     }
 
-    override fun saveLastDeletedItem(shoppingItem: ShoppingItem) {
-        _state.update { it.copy(
-            lastDeletedItem = shoppingItem
-        ) }
-    }
-
-    override fun addBackDeletedItem() {
-        viewModelScope.launch {
-            _state.value.lastDeletedItem?.let {
-                repository.upsert(it)
-            }
-        }
-    }
-
     override fun deleteShoppingItem(item: ShoppingItem) {
         viewModelScope.launch {
             repository.delete(item)
-            saveLastDeletedItem(item)
+            snackbarManager.showDeletedItem(shoppingItem = item) {
+                repository.upsert(it)
+            }
         }
     }
 

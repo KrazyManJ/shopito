@@ -10,7 +10,9 @@ import dev.krazymanj.shopito.extension.extractLastAmount
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class ShoppingListAnalyzer @Inject constructor() {
 
     private val generativeModel = GenerativeModel(

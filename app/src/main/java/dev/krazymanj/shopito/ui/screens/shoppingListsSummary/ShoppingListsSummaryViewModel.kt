@@ -3,19 +3,21 @@ package dev.krazymanj.shopito.ui.screens.shoppingListsSummary
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.krazymanj.shopito.core.snackbar.SnackbarManager
 import dev.krazymanj.shopito.database.IShopitoLocalRepository
-import dev.krazymanj.shopito.model.ShoppingItemWithList
 import dev.krazymanj.shopito.database.entities.ShoppingItem
+import dev.krazymanj.shopito.model.ShoppingItemWithList
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
-import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class ShoppingListsSummaryViewModel @Inject constructor(private val repository: IShopitoLocalRepository) : ViewModel(),
-    ShoppingListsSummaryActions {
+class ShoppingListsSummaryViewModel @Inject constructor(
+    private val repository: IShopitoLocalRepository,
+    private val snackbarManager: SnackbarManager
+) : ViewModel(), ShoppingListsSummaryActions {
 
     private val _state : MutableStateFlow<ShoppingListsSummaryUIState> = MutableStateFlow(value = ShoppingListsSummaryUIState())
 
@@ -46,8 +48,10 @@ class ShoppingListsSummaryViewModel @Inject constructor(private val repository: 
     override fun deleteShoppingItem(shoppingItem: ShoppingItem) {
         viewModelScope.launch {
             repository.delete(shoppingItem)
+            snackbarManager.showDeletedItem(shoppingItem = shoppingItem) {
+                repository.upsert(it)
+            }
         }
-        saveLastDeletedItem(shoppingItem)
     }
 
     override fun changeItemCheckState(shoppingItem: ShoppingItem, state: Boolean) {
@@ -62,19 +66,5 @@ class ShoppingListsSummaryViewModel @Inject constructor(private val repository: 
         _state.value = _state.value.copy(
             currentShownShoppingItem = shoppingItem
         )
-    }
-
-    override fun saveLastDeletedItem(shoppingItem: ShoppingItem) {
-        _state.update { it.copy(
-            lastDeletedItem = shoppingItem
-        ) }
-    }
-
-    override fun addBackDeletedItem() {
-        viewModelScope.launch {
-            _state.value.lastDeletedItem?.let {
-                repository.upsert(it)
-            }
-        }
     }
 }

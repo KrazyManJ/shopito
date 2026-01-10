@@ -1,5 +1,6 @@
 package dev.krazymanj.shopito.ui.screens.shoppingListsSummary
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -9,14 +10,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -24,7 +21,6 @@ import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.Settings
 import com.composables.icons.lucide.StickyNote
 import dev.krazymanj.shopito.R
-import dev.krazymanj.shopito.extension.showDeletedMessage
 import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.ui.elements.PrettyTimeText
@@ -36,7 +32,6 @@ import dev.krazymanj.shopito.ui.elements.screen.PlaceholderScreenContent
 import dev.krazymanj.shopito.ui.theme.spacing16
 import dev.krazymanj.shopito.ui.theme.spacing32
 import dev.krazymanj.shopito.ui.theme.spacing4
-import kotlinx.coroutines.launch
 
 @Composable
 fun ShoppingListsSummaryScreen(
@@ -49,10 +44,6 @@ fun ShoppingListsSummaryScreen(
     if (state.isLoading) {
         viewModel.loadData()
     }
-
-    val snackbarHostState = remember { SnackbarHostState() }
-    val scope = rememberCoroutineScope()
-    val context = LocalContext.current
 
     BaseScreen(
         topBarText = stringResource(R.string.navigation_lists_summary_label),
@@ -71,12 +62,10 @@ fun ShoppingListsSummaryScreen(
             ) {
                 Icon(imageVector = Lucide.Settings, contentDescription = stringResource(R.string.settings_title))
             }
-        },
-        snackbarHostState = snackbarHostState
+        }
     ) {
         ShoppingListsSummaryScreenContent(
             paddingValues = it,
-            snackbarHostState = snackbarHostState,
             state = state,
             actions = viewModel
         )
@@ -91,17 +80,10 @@ fun ShoppingListsSummaryScreen(
             },
             onShoppingListLinkClick = {
                 viewModel.setCurrentViewingShoppingItem(null)
-                navRouter.navigateTo(Destination.ViewShoppingList(shoppingListId = shoppingItemWithList.list!!.id!!))
+                navRouter.navigateTo(Destination.ViewShoppingList(shoppingListId = shoppingItemWithList.list!!.id))
             },
             navRouter = navRouter,
-            onAfterRemove = {
-                scope.launch {
-                    viewModel.saveLastDeletedItem(it)
-                    snackbarHostState.showDeletedMessage(it,context) {
-                        viewModel.addBackDeletedItem()
-                    }
-                }
-            }
+            onAfterRemove = {}
         )
     }
 }
@@ -109,12 +91,9 @@ fun ShoppingListsSummaryScreen(
 @Composable
 fun ShoppingListsSummaryScreenContent(
     paddingValues: PaddingValues,
-    snackbarHostState: SnackbarHostState,
     state: ShoppingListsSummaryUIState,
     actions: ShoppingListsSummaryActions
 ) {
-    val scope = rememberCoroutineScope()
-    val context = LocalContext.current
 
     LazyColumn(
         Modifier
@@ -136,7 +115,7 @@ fun ShoppingListsSummaryScreenContent(
             }
             items(
                 items = shoppingItems,
-                key = { it.item.id!! }
+                key = { it.item.id }
             ) {
                 ShoppingItem(
                     shoppingItem = it.item,
@@ -149,12 +128,7 @@ fun ShoppingListsSummaryScreenContent(
                         actions.setCurrentViewingShoppingItem(it)
                     },
                     onRemove = {
-                        scope.launch {
-                            actions.deleteShoppingItem(it.item)
-                            snackbarHostState.showDeletedMessage(it.item, context) {
-                                actions.addBackDeletedItem()
-                            }
-                        }
+                        actions.deleteShoppingItem(it.item)
                     }
                 )
             }
@@ -174,7 +148,7 @@ fun ShoppingListsSummaryScreenContent(
             }
             items(
                 items = state.shoppingItemsWithoutDate,
-                key = { it.item.id!! }
+                key = { it.item.id }
             ) {
                 ShoppingItem(
                     it.item,
@@ -187,12 +161,8 @@ fun ShoppingListsSummaryScreenContent(
                         actions.setCurrentViewingShoppingItem(it)
                     },
                     onRemove = {
-                        scope.launch {
-                            actions.deleteShoppingItem(it.item)
-                            snackbarHostState.showDeletedMessage(it.item, context) {
-                                actions.addBackDeletedItem()
-                            }
-                        }
+                        Log.i("ShoppingListsSummaryScreenContent","Remove ${it.item.itemName}")
+                        actions.deleteShoppingItem(it.item)
                     }
                 )
             }

@@ -8,15 +8,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -26,8 +22,6 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.MapPinX
 import dev.krazymanj.shopito.R
-import dev.krazymanj.shopito.database.entities.ShoppingItem
-import dev.krazymanj.shopito.extension.showDeletedMessage
 import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.ui.elements.ShoppingItem
@@ -38,7 +32,6 @@ import dev.krazymanj.shopito.ui.theme.Emphasized
 import dev.krazymanj.shopito.ui.theme.spacing16
 import dev.krazymanj.shopito.ui.theme.spacing32
 import dev.krazymanj.shopito.ui.theme.textSecondaryColor
-import kotlinx.coroutines.launch
 
 @Composable
 fun LocationItemsListScreen(
@@ -53,10 +46,6 @@ fun LocationItemsListScreen(
         viewModel.loadData(route.location)
     }
 
-    val context = LocalContext.current
-    val scope = rememberCoroutineScope()
-    val snackbarHostState = remember { SnackbarHostState() }
-
     state.currentShownShoppingItem?.let {
         ShoppingItemModalSheet(
             shoppingItem = it.item,
@@ -65,13 +54,7 @@ fun LocationItemsListScreen(
                 viewModel.openShoppingItemDetails(null)
             },
             navRouter = navRouter,
-            onAfterRemove = { item ->
-                scope.launch {
-                    snackbarHostState.showDeletedMessage(item,context) {
-                        viewModel.addBackDeletedItem()
-                    }
-                }
-            },
+            onAfterRemove = {},
             onShoppingListLinkClick = {
                 it.list?.id?.let { listId ->
                     navRouter.navigateTo(Destination.ViewShoppingList(listId))
@@ -87,20 +70,12 @@ fun LocationItemsListScreen(
         placeholderScreenContent = if (state.items.isEmpty()) PlaceholderScreenContent(
             icon = Lucide.MapPinX,
             title = stringResource(R.string.no_items_in_shop_title)
-        ) else null,
-        snackbarHostState = snackbarHostState
+        ) else null
     ) {
         LocationItemsListScreenContent(
             paddingValues = it,
             state = state,
-            actions = viewModel,
-            onDelete = { item ->
-                scope.launch {
-                    snackbarHostState.showDeletedMessage(item,context) {
-                        viewModel.addBackDeletedItem()
-                    }
-                }
-            }
+            actions = viewModel
         )
     }
 }
@@ -109,8 +84,7 @@ fun LocationItemsListScreen(
 fun LocationItemsListScreenContent(
     paddingValues: PaddingValues,
     state: LocationItemsListUIState,
-    actions: LocationItemsListActions,
-    onDelete: (ShoppingItem) -> Unit
+    actions: LocationItemsListActions
 ) {
 
     Column(
@@ -139,7 +113,7 @@ fun LocationItemsListScreenContent(
             )
         }
         LazyColumn{
-            items(items = state.items, key = { it.item.id!! }) {
+            items(items = state.items, key = { it.item.id }) {
                 ShoppingItem(
                     it.item,
                     shoppingList = it.list,
@@ -148,7 +122,6 @@ fun LocationItemsListScreenContent(
                     },
                     onRemove = {
                         actions.deleteShoppingItem(it.item)
-                        onDelete(it.item)
                     },
                     onClick = {
                         actions.openShoppingItemDetails(it)

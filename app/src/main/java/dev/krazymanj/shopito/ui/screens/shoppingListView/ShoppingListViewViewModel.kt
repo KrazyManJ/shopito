@@ -6,6 +6,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import dev.krazymanj.shopito.communication.CommunicationResult
 import dev.krazymanj.shopito.communication.IGeoReverseRepository
 import dev.krazymanj.shopito.core.IRecentLocationsManager
+import dev.krazymanj.shopito.core.snackbar.SnackbarManager
 import dev.krazymanj.shopito.database.IShopitoLocalRepository
 import dev.krazymanj.shopito.database.entities.ShoppingItem
 import dev.krazymanj.shopito.datastore.DataStoreKey
@@ -29,7 +30,8 @@ class ShoppingListViewViewModel @Inject constructor(
     private val repository: IShopitoLocalRepository,
     private val dataStore: IDataStoreRepository,
     private val geoReverseRepository: IGeoReverseRepository,
-    private val recentLocationsManager: IRecentLocationsManager
+    private val recentLocationsManager: IRecentLocationsManager,
+    private val snackbarManager: SnackbarManager
 ) : ViewModel(),
     IRecentLocationsManager by recentLocationsManager,
     ShoppingListViewActions
@@ -60,7 +62,12 @@ class ShoppingListViewViewModel @Inject constructor(
     override fun deleteShoppingItem(shoppingItem: ShoppingItem) {
         viewModelScope.launch {
             repository.delete(shoppingItem)
-            saveLastDeletedItem(shoppingItem)
+            snackbarManager.showDeletedItem(
+                shoppingItem = shoppingItem,
+                onUndo = {
+                    repository.upsert(shoppingItem)
+                }
+            )
         }
     }
 
@@ -163,21 +170,6 @@ class ShoppingListViewViewModel @Inject constructor(
                         )
                     )
                 }
-            }
-        }
-
-    }
-
-    override fun saveLastDeletedItem(shoppingItem: ShoppingItem) {
-        _state.update { it.copy(
-            lastDeletedItem = shoppingItem
-        ) }
-    }
-
-    override fun addBackDeletedItem() {
-        viewModelScope.launch {
-            _state.value.lastDeletedItem?.let {
-                repository.upsert(it)
             }
         }
     }
