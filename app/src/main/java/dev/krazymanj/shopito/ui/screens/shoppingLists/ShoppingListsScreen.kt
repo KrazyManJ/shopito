@@ -76,7 +76,6 @@ fun ShoppingListsScreen(
         ShoppingListScreenContent(
             paddingValues = it,
             state = state.value,
-            actions = viewModel,
             onShoppingListNav = { id ->
                 navRouter.navigateTo(Destination.ViewShoppingList(shoppingListId = id))
             },
@@ -96,7 +95,6 @@ fun ShoppingListsScreen(
 fun ShoppingListScreenContent(
     paddingValues: PaddingValues,
     state: ShoppingListsUIState,
-    actions: ShoppingListActions,
     onShoppingListNav: (id: String) -> Unit,
     onShoppingListEdit: (id: String) -> Unit,
     onNewShoppingList: () -> Unit
