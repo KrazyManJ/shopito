@@ -1,6 +1,9 @@
 package dev.krazymanj.shopito.utils
 
 import java.text.SimpleDateFormat
+import java.time.Instant
+import java.time.LocalDate
+import java.time.ZoneId
 import java.util.Calendar
 import java.util.Date
 import java.util.Locale
@@ -18,13 +21,10 @@ class DateUtils {
         fun getDateString(unixTime: Long): String{
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = unixTime
-
-            val format: SimpleDateFormat
-            if (LanguageUtils.isLanguageCzech()){
-                format = SimpleDateFormat(DATE_FORMAT_CS, Locale.GERMAN)
+            val format: SimpleDateFormat = if (LanguageUtils.isLanguageCzech()){
+                SimpleDateFormat(DATE_FORMAT_CS, Locale.GERMAN)
             } else {
-                format = SimpleDateFormat(DATE_FORMAT_EN, Locale.ENGLISH)
-
+                SimpleDateFormat(DATE_FORMAT_EN, Locale.ENGLISH)
             }
             return format.format(calendar.getTime())
         }
@@ -32,12 +32,10 @@ class DateUtils {
         fun getDateTimeString(unixTime: Long): String {
             val calendar = Calendar.getInstance()
             calendar.timeInMillis = unixTime
-
-            val format: SimpleDateFormat
-            if (LanguageUtils.isLanguageCzech()){
-                format = SimpleDateFormat(DATETIME_FORMAT_CS, Locale.GERMAN)
+            val format: SimpleDateFormat = if (LanguageUtils.isLanguageCzech()){
+                SimpleDateFormat(DATETIME_FORMAT_CS, Locale.GERMAN)
             } else {
-                format = SimpleDateFormat(DATETIME_FORMAT_EN, Locale.ENGLISH)
+                SimpleDateFormat(DATETIME_FORMAT_EN, Locale.ENGLISH)
 
             }
             return format.format(calendar.getTime())
@@ -49,6 +47,16 @@ class DateUtils {
 
             return calendarDate.get(Calendar.YEAR) == calendarNow.get(Calendar.YEAR) &&
                     calendarDate.get(Calendar.DAY_OF_YEAR) == calendarNow.get(Calendar.DAY_OF_YEAR)
+        }
+
+        fun isPast(unixTime: Long): Boolean {
+            val dateToCheck = Instant.ofEpochMilli(unixTime)
+                .atZone(ZoneId.systemDefault())
+                .toLocalDate()
+
+            val today = LocalDate.now(ZoneId.systemDefault())
+
+            return dateToCheck.isBefore(today)
         }
 
     }

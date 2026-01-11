@@ -19,7 +19,7 @@ class ShoppingListsSummaryViewModel @Inject constructor(
     private val snackbarManager: SnackbarManager
 ) : ViewModel(), ShoppingListsSummaryActions {
 
-    private val _state : MutableStateFlow<ShoppingListsSummaryUIState> = MutableStateFlow(value = ShoppingListsSummaryUIState())
+    private val _state = MutableStateFlow(value = ShoppingListsSummaryUIState())
 
     val state = _state.asStateFlow()
 

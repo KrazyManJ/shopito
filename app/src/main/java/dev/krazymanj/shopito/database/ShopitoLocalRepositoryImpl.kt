@@ -77,17 +77,28 @@ class ShopitoLocalRepositoryImpl @Inject constructor(
     }
 
     override suspend fun getShoppingItemsGroupedByDate(): Flow<Map<Long, List<ShoppingItemWithList>>> {
-        val now = System.currentTimeMillis()
+
         return shopitoDao.getAllShoppingItemsWithLists().map { list ->
             list
-                .filter { it.item.buyTime != null && (!it.item.isDone || it.item.buyTime!! >= now) }
+                .filter { it.item.buyTime != null }
+                .sortedWith(
+                    compareBy<ShoppingItemWithList> { it.item.isDone }
+                        .thenBy { it.item.createdAt }
+                )
                 .groupBy { it.item.buyTime ?: -1L }
+                .toSortedMap()
         }
     }
 
     override suspend fun getShoppingItemsWithoutBuyTime(): Flow<List<ShoppingItemWithList>> {
         return shopitoDao.getAllShoppingItemsWithLists().map { list ->
-            list.filter { it.item.buyTime == null && !it.item.isDone }
+            list
+                .filter { it.item.buyTime == null }
+                .sortedWith(
+                    compareBy<ShoppingItemWithList> { it.item.isDone }
+                        .thenBy { it.item.createdAt }
+                )
+
         }
     }
 

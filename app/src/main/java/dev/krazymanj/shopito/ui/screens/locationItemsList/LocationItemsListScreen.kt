@@ -3,6 +3,7 @@ package dev.krazymanj.shopito.ui.screens.locationItemsList
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
@@ -31,6 +32,7 @@ import dev.krazymanj.shopito.ui.elements.screen.PlaceholderScreenContent
 import dev.krazymanj.shopito.ui.theme.Emphasized
 import dev.krazymanj.shopito.ui.theme.spacing16
 import dev.krazymanj.shopito.ui.theme.spacing32
+import dev.krazymanj.shopito.ui.theme.spacing4
 import dev.krazymanj.shopito.ui.theme.textSecondaryColor
 
 @Composable
@@ -98,9 +100,10 @@ fun LocationItemsListScreenContent(
                 text = "Current shop",
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
-                style = MaterialTheme.typography.bodySmall,
+                style = MaterialTheme.typography.titleMedium,
                 color = textSecondaryColor()
             )
+            Spacer(modifier = Modifier.padding(vertical = spacing4))
             Text(
                 text = state.locationLabel ?: "Loading...",
                 textAlign = TextAlign.Center,

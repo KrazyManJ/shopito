@@ -53,4 +53,10 @@
         <item quantity="few">Úspěšně odstraněny %d zaškrtnuté položky</item>
         <item quantity="many">Úspěšně odstraněno %d zaškrtnutých položek</item>
     </plurals>
+    <plurals name="in_shops_label_count">
+        <item quantity="one">V %1$d obchodě</item>
+        <item quantity="few">V %1$d obchodech</item>
+        <item quantity="many">V %1$d obchodech</item>
+        <item quantity="other">V %1$d obchodech</item>
+    </plurals>
 </resources>

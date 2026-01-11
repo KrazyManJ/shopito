@@ -66,4 +66,10 @@
         <item quantity="one">Successfully removed %d ticked item</item>
         <item quantity="other">Successfully removed %d ticked items</item>
     </plurals>
+    <plurals name="in_shops_label_count">
+        <item quantity="zero">In no shops</item>
+        <item quantity="one">In %1$d shop</item>
+        <item quantity="many">In %1$d shops</item>
+        <item quantity="other">In %1$d shops</item>
+    </plurals>
 </resources>

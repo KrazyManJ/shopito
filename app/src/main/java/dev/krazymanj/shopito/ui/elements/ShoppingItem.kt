@@ -11,12 +11,15 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.SwipeToDismissBox
 import androidx.compose.material3.SwipeToDismissBoxState
 import androidx.compose.material3.SwipeToDismissBoxValue
@@ -47,8 +50,10 @@ import dev.krazymanj.shopito.ui.UITestTag
 import dev.krazymanj.shopito.ui.elements.input.ShopitoCheckbox
 import dev.krazymanj.shopito.ui.theme.Primary
 import dev.krazymanj.shopito.ui.theme.backgroundPrimaryColor
+import dev.krazymanj.shopito.ui.theme.backgroundSecondaryColor
 import dev.krazymanj.shopito.ui.theme.spacing16
 import dev.krazymanj.shopito.ui.theme.spacing4
+import dev.krazymanj.shopito.ui.theme.spacing8
 import dev.krazymanj.shopito.ui.theme.textPrimaryColor
 import dev.krazymanj.shopito.ui.theme.textSecondaryColor
 import kotlinx.coroutines.delay
@@ -148,16 +153,24 @@ fun ShoppingItem(
                         modifier = Modifier.testTag(UITestTag.ShoppingItem.Name)
                     )
                     shoppingList?.let { shoppingList ->
-                        Row(
-                            horizontalArrangement = Arrangement.spacedBy(spacing4)
+                        Spacer(modifier = Modifier.height(spacing4))
+                        Surface(
+                            color = backgroundSecondaryColor(),
+                            shape = MaterialTheme.shapes.extraLarge
                         ) {
-                            Icon(
-                                imageVector = Lucide.ListTodo,
-                                contentDescription = null,
-                                modifier = Modifier.size(16.dp),
-                                tint = textSecondaryColor()
-                            )
-                            Text(shoppingList.name, style = MaterialTheme.typography.bodySmall)
+                            Row(
+                                horizontalArrangement = Arrangement.spacedBy(spacing4),
+                                modifier = Modifier.padding(horizontal = spacing8, vertical = 1.dp),
+                                verticalAlignment = Alignment.CenterVertically
+                            ) {
+                                Icon(
+                                    imageVector = Lucide.ListTodo,
+                                    contentDescription = null,
+                                    modifier = Modifier.size(12.dp),
+                                    tint = textSecondaryColor()
+                                )
+                                Text(shoppingList.name, style = MaterialTheme.typography.labelSmall)
+                            }
                         }
                     }
                 }
