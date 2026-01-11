@@ -63,7 +63,7 @@ class ScanShoppingListViewModel @Inject constructor(
 
     override fun addScannedItemsToShoppingList() {
         viewModelScope.launch {
-            _state.value.scannedItems.forEach { repository.insert(it) }
+            _state.value.scannedItems.forEach { repository.upsert(it) }
             _state.update { it.copy(
                 hasAddedItems = true
             ) }

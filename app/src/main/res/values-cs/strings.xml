@@ -48,4 +48,9 @@
     <string name="navigation_map_view_label">Mapa</string>
     <string name="shopping_items_in_shop_title">Položky v obchodě</string>
     <string name="no_items_in_shop_title">Žádně položky zde ke koupi</string>
+    <plurals name="delete_all_checked_items_success_message">
+        <item quantity="one">Úspěšně odstraněna %d zaškrtnutá položka</item>
+        <item quantity="few">Úspěšně odstraněny %d zaškrtnuté položky</item>
+        <item quantity="many">Úspěšně odstraněno %d zaškrtnutých položek</item>
+    </plurals>
 </resources>

@@ -63,7 +63,7 @@ class ShoppingItemModalSheetViewModel @Inject constructor(
 
     fun save() {
         viewModelScope.launch {
-            repository.update(_state.value.item)
+            repository.upsert(_state.value.item)
         }
     }
 

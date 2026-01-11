@@ -12,24 +12,14 @@ class ShopitoLocalRepositoryImpl @Inject constructor(
     private val shopitoDao: ShopitoDao
 ) :
     IShopitoLocalRepository {
-    override suspend fun insert(shoppingItem: ShoppingItem) {
-        return shopitoDao.insert(shoppingItem.withUpdatedAt())
-    }
 
-    override suspend fun insert(shoppingList: ShoppingList) {
-        return shopitoDao.insert(shoppingList.withUpdatedAt())
-    }
-
-    override suspend fun update(shoppingItem: ShoppingItem) {
-        return shopitoDao.update(shoppingItem.withUpdatedAt())
-    }
 
     override suspend fun upsert(shoppingItem: ShoppingItem) {
         return shopitoDao.upsert(shoppingItem.withUpdatedAt())
     }
 
-    override suspend fun update(shoppingList: ShoppingList) {
-        return shopitoDao.update(shoppingList.withUpdatedAt())
+    override suspend fun upsertMany(shoppingItems: List<ShoppingItem>) {
+        return shopitoDao.upsertMany(shoppingItems.map { it.withUpdatedAt() })
     }
 
     override suspend fun upsert(shoppingList: ShoppingList) {
@@ -38,18 +28,26 @@ class ShopitoLocalRepositoryImpl @Inject constructor(
 
     override suspend fun delete(shoppingItem: ShoppingItem) {
         if (shoppingItem.isSynced) {
-            shopitoDao.update(shoppingItem.withUpdatedAt().copy(isDeleted = true))
-        }
-        else {
+            shopitoDao.upsert(shoppingItem.withUpdatedAt().copy(isDeleted = true))
+        } else {
             shopitoDao.delete(shoppingItem)
+        }
+    }
+
+    override suspend fun deleteMany(shoppingItems: List<ShoppingItem>) {
+        val (syncedItems, notSyncedItems) = shoppingItems.partition { it.isSynced }
+        if (notSyncedItems.isNotEmpty()) {
+            shopitoDao.deleteMany(notSyncedItems)
+        }
+        if (syncedItems.isNotEmpty()) {
+            shopitoDao.upsertMany(syncedItems.map { it.withUpdatedAt().copy(isDeleted = true) })
         }
     }
 
     override suspend fun delete(shoppingList: ShoppingList) {
         if (shoppingList.isSynced) {
             shopitoDao.softDeleteListWithItems(shoppingList.id)
-        }
-        else {
+        } else {
             shopitoDao.delete(shoppingList)
         }
     }
@@ -70,6 +68,10 @@ class ShopitoLocalRepositoryImpl @Inject constructor(
         return shopitoDao.getShoppingItemsByShoppingList(id)
     }
 
+    override suspend fun getCheckedShoppingItemsByShoppingList(id: String): List<ShoppingItem> {
+        return shopitoDao.getCheckedShoppingItemsByShoppingList(id)
+    }
+
     override suspend fun getShoppingItemById(id: String): ShoppingItem {
         return shopitoDao.getShoppingItemById(id)
     }
@@ -85,12 +87,8 @@ class ShopitoLocalRepositoryImpl @Inject constructor(
 
     override suspend fun getShoppingItemsWithoutBuyTime(): Flow<List<ShoppingItemWithList>> {
         return shopitoDao.getAllShoppingItemsWithLists().map { list ->
-            list.filter { it.item.buyTime == null && !it.item.isDone}
+            list.filter { it.item.buyTime == null && !it.item.isDone }
         }
-    }
-
-    override suspend fun removeAllCheckedItemsInShoppingList(listId: String) {
-        return shopitoDao.removeAllCheckedItemsInShoppingList(listId)
     }
 
     override suspend fun getAllDistinctLocationsFromItems(): Flow<List<Location>> {

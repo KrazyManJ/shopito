@@ -2,10 +2,8 @@ package dev.krazymanj.shopito.database
 
 import androidx.room.Dao
 import androidx.room.Delete
-import androidx.room.Insert
 import androidx.room.Query
 import androidx.room.Transaction
-import androidx.room.Update
 import androidx.room.Upsert
 import dev.krazymanj.shopito.database.entities.ShoppingItem
 import dev.krazymanj.shopito.database.entities.ShoppingList
@@ -16,8 +14,6 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface ShopitoDao {
 
-    @Insert suspend fun insert(shoppingList: ShoppingList)
-    @Update suspend fun update(shoppingList: ShoppingList)
     @Upsert suspend fun upsert(shoppingList: ShoppingList)
     @Delete suspend fun delete(shoppingList: ShoppingList)
 
@@ -37,10 +33,11 @@ interface ShopitoDao {
     @Query("SELECT * FROM shopping_list WHERE id = :id AND isDeleted = 0")
     suspend fun getShoppingListById(id: String): ShoppingList?
 
-    @Insert suspend fun insert(shoppingItem: ShoppingItem)
-    @Update suspend fun update(shoppingItem: ShoppingItem)
     @Upsert suspend fun upsert(shoppingItem: ShoppingItem)
+    @Upsert suspend fun upsertMany(shoppingItems: List<ShoppingItem>)
     @Delete suspend fun delete(shoppingItem: ShoppingItem)
+    @Delete suspend fun deleteMany(shoppingItems: List<ShoppingItem>)
+
 
     @Query("SELECT * FROM shopping_item WHERE id=:id AND isDeleted = 0")
     suspend fun getShoppingItemById(id: String): ShoppingItem
@@ -56,6 +53,13 @@ interface ShopitoDao {
      """)
     fun getShoppingItemsByShoppingList(id: String): Flow<List<ShoppingItem>>
 
+    @Query("""
+        SELECT *
+        FROM shopping_item
+        WHERE listId = :id AND isDeleted = 0 AND isDone = 1
+    """)
+    suspend fun getCheckedShoppingItemsByShoppingList(id: String): List<ShoppingItem>
+
     @Transaction
     @Query("""
         SELECT * 
@@ -68,25 +72,8 @@ interface ShopitoDao {
     """)
     fun getAllShoppingItemsWithLists(): Flow<List<ShoppingItemWithList>>
 
-    @Query("DELETE FROM shopping_item WHERE listId = :listId AND isDone = 1 AND isSynced = 0")
-    suspend fun hardDeleteUnknownCheckedItems(listId: String)
-
-    @Query("""
-        UPDATE shopping_item 
-        SET isDeleted = 1, 
-            updatedAt = :updateTime, 
-            isDirty = 1 
-        WHERE listId = :listId 
-          AND isDone = 1 
-          AND isDeleted = 0
-    """)
-    suspend fun softDeleteKnownCheckedItems(listId: String, updateTime: Long = System.currentTimeMillis())
-
-    @Transaction
-    suspend fun removeAllCheckedItemsInShoppingList(listId: String) {
-        hardDeleteUnknownCheckedItems(listId)
-        softDeleteKnownCheckedItems(listId, System.currentTimeMillis())
-    }
+    @Query("SELECT id FROM shopping_item WHERE listId = :listId AND isDone = 1 AND isDeleted = 0")
+    suspend fun getActiveCheckedItemIds(listId: String): List<String>
 
     @Query("SELECT DISTINCT latitude, longitude FROM shopping_item WHERE latitude IS NOT NULL AND longitude IS NOT NULL AND isDeleted = 0")
     fun getAllDistinctLocationsFromItems(): Flow<List<Location>>

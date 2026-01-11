@@ -62,4 +62,8 @@
     <string name="remove_all_checked_items">Remove all checked items</string>
     <string name="login_expired">Your login has expired. Please log in again to synchronize.</string>
     <string name="login_label">Login</string>
+    <plurals name="delete_all_checked_items_success_message">
+        <item quantity="one">Successfully removed %d ticked item</item>
+        <item quantity="other">Successfully removed %d ticked items</item>
+    </plurals>
 </resources>

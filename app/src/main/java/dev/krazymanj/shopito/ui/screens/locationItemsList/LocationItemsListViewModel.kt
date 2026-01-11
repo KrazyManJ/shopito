@@ -69,7 +69,7 @@ class LocationItemsListViewModel @Inject constructor(
 
     override fun changeItemCheckState(shoppingItem: ShoppingItem, state: Boolean) {
         viewModelScope.launch {
-            repository.update(shoppingItem.copy(
+            repository.upsert(shoppingItem.copy(
                 isDone = state
             ))
         }

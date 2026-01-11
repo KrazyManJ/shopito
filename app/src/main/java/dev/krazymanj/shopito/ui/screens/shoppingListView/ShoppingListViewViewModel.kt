@@ -3,6 +3,7 @@ package dev.krazymanj.shopito.ui.screens.shoppingListView
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.communication.CommunicationResult
 import dev.krazymanj.shopito.communication.IGeoReverseRepository
 import dev.krazymanj.shopito.core.IRecentLocationsManager
@@ -16,6 +17,7 @@ import dev.krazymanj.shopito.extension.extractLastAmount
 import dev.krazymanj.shopito.model.Location
 import dev.krazymanj.shopito.model.SavedLocation
 import dev.krazymanj.shopito.model.network.GeoReverseResponse
+import dev.krazymanj.shopito.ui.UiText
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -73,7 +75,7 @@ class ShoppingListViewViewModel @Inject constructor(
 
     override fun changeItemCheckState(shoppingItem: ShoppingItem, state: Boolean) {
         viewModelScope.launch {
-            repository.update(shoppingItem.copy(
+            repository.upsert(shoppingItem.copy(
                 isDone = state
             ))
         }
@@ -97,7 +99,7 @@ class ShoppingListViewViewModel @Inject constructor(
         val (text, amount) = itemInput.extractLastAmount()
 
         viewModelScope.launch {
-            repository.insert(ShoppingItem(
+            repository.upsert(ShoppingItem(
                 itemName = text,
                 amount = amount,
                 buyTime = _state.value.dateInput,
@@ -176,7 +178,19 @@ class ShoppingListViewViewModel @Inject constructor(
 
     fun removeAllCheckedItems() {
         viewModelScope.launch {
-            repository.removeAllCheckedItemsInShoppingList(_state.value.shoppingList!!.id)
+            _state.value.shoppingList?.let { shoppingList ->
+                val itemsToRemove = repository.getCheckedShoppingItemsByShoppingList(shoppingList.id)
+                repository.deleteMany(itemsToRemove)
+                snackbarManager.showUndo(
+                    message = UiText.PluralStringResource(
+                        R.plurals.delete_all_checked_items_success_message,
+                        itemsToRemove.size,
+                        itemsToRemove.size
+                    ),
+                ) {
+                    repository.upsertMany(itemsToRemove)
+                }
+            }
         }
     }
 
