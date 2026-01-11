@@ -80,7 +80,7 @@ private fun ScanResultSection(
         verticalArrangement = Arrangement.spacedBy(spacing16)
     ) {
         Text(
-            text = "This is the scan result, please check it before adding to ${shoppingList.name}:",
+            text = stringResource(R.string.scan_result_modal_text, shoppingList.name),
             style = MaterialTheme.typography.bodySmall,
         )
         LazyColumn(
@@ -130,7 +130,7 @@ fun ScanResultDialog(
                     onClick = onDismissRequest,
                     colors = ButtonDefaults.textButtonColors(contentColor = textPrimaryColor())
                 ) {
-                    Text("Try Again")
+                    Text(stringResource(R.string.try_again_label))
                 }
             }
         },
@@ -140,7 +140,7 @@ fun ScanResultDialog(
                     onClick = onConfirm,
                     colors = ButtonDefaults.textButtonColors(contentColor = MaterialTheme.colorScheme.primary)
                 ) {
-                    Text("Add items")
+                    Text(stringResource(R.string.add_items_label))
                 }
             }
         }

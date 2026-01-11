@@ -21,9 +21,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.UserRound
+import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.model.TokenData
 import dev.krazymanj.shopito.ui.elements.modal.LogoutDialog
 import dev.krazymanj.shopito.ui.theme.Primary
@@ -60,7 +62,9 @@ fun AccountCard(
             .fillMaxWidth(),
     ) {
         Column(
-            modifier = Modifier.fillMaxWidth().padding(spacing16),
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(spacing16),
             verticalArrangement = Arrangement.spacedBy(spacing8)
         ) {
             Row(
@@ -74,14 +78,17 @@ fun AccountCard(
                 )
                 Column {
                     Text(
-                        text = loggedData?.username ?: "Guest",
+                        text = loggedData?.username ?: stringResource(R.string.guest_label),
                         style = MaterialTheme.typography.titleLarge,
                     )
                     Text(
                         text = when {
-                            lastTimeSynced != null -> "Last sync: ${DateUtils.getDateTimeString(lastTimeSynced)}"
+                            lastTimeSynced != null -> stringResource(
+                                R.string.last_sync_label,
+                                DateUtils.getDateTimeString(lastTimeSynced)
+                            )
                             syncError != null -> syncError
-                            isSyncing -> "Syncing..."
+                            isSyncing -> stringResource(R.string.syncing_label)
                             else -> ""
                         },
                         style = MaterialTheme.typography.bodySmall,
@@ -93,7 +100,9 @@ fun AccountCard(
                 }
             }
             HorizontalDivider(
-                modifier = Modifier.fillMaxWidth().padding(vertical = spacing4),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(vertical = spacing4),
                 color = textSecondaryColor()
             )
             Row(
@@ -110,7 +119,7 @@ fun AccountCard(
                             CircularProgressIndicator()
                         }
                         else {
-                            Text("Sync")
+                            Text(stringResource(R.string.sync_label))
                         }
                     }
                 }
@@ -125,7 +134,7 @@ fun AccountCard(
                     },
                     colors = ButtonDefaults.textButtonColors(contentColor = textPrimaryColor())
                 ) {
-                    Text(text = if (loggedData != null) "Logout" else "Login")
+                    Text(text = if (loggedData != null) stringResource(R.string.logout_label) else stringResource(R.string.login_label))
                 }
             }
         }

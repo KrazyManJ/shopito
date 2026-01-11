@@ -4,12 +4,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.work.WorkInfo
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.core.UserManager
 import dev.krazymanj.shopito.database.IShopitoLocalRepository
 import dev.krazymanj.shopito.database.entities.ShoppingList
 import dev.krazymanj.shopito.datastore.DataStoreKey
 import dev.krazymanj.shopito.datastore.IDataStoreRepository
 import dev.krazymanj.shopito.navigation.StartDestinationSetting
+import dev.krazymanj.shopito.ui.UiText
+import dev.krazymanj.shopito.worker.SyncWorker
 import dev.krazymanj.shopito.worker.WorkScheduler
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -116,7 +119,11 @@ class SettingsViewModel @Inject constructor(
 
                 val resultMessage = when (state) {
                     WorkInfo.State.FAILED -> {
-                        workInfo.outputData.getString("ERROR_MSG") ?: "Unknown error"
+                        val error = workInfo.outputData.getInt(SyncWorker.ERROR_KEY, defaultValue = -1)
+                        UiText.StringResource(when (error) {
+                            -1 -> R.string.error_unknown
+                            else -> error
+                        })
                     }
                     else -> null
                 }
@@ -132,28 +139,4 @@ class SettingsViewModel @Inject constructor(
     override fun attemptSync() {
         workScheduler.scheduleOneTimeSync()
     }
-
-//    override fun attemptSync() {
-//        viewModelScope.launch {
-//            _state.update { it.copy(
-//                isSyncing = true
-//            ) }
-//            val syncResult = syncManager.sync()
-//
-//            when (syncResult) {
-//                is SyncManager.Result.Success -> {
-//                    _state.update { it.copy(
-//                        isSyncing = false,
-//                        syncResult = "Successfully synced"
-//                    ) }
-//                }
-//                is SyncManager.Result.Error -> {
-//                    _state.update { it.copy(
-//                        isSyncing = false,
-//                        syncResult = syncResult.message
-//                    ) }
-//                }
-//            }
-//        }
-//    }
 }

@@ -28,12 +28,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.composables.icons.lucide.Camera
 import com.composables.icons.lucide.Lucide
+import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.navigation.Destination
 import dev.krazymanj.shopito.navigation.INavigationRouter
 import dev.krazymanj.shopito.ui.elements.CameraComposeView
@@ -79,7 +81,7 @@ fun ScanShoppingListScreen(
     }
 
     BaseScreen(
-        topBarText = "Scan Shopping List",
+        topBarText = stringResource(R.string.scan_shopping_list_title),
         onBackClick = { navRouter.returnBack() },
         showLoading = state.isLoading
     ) {
@@ -137,7 +139,9 @@ private fun ScanShoppingListScreenContent(
                     isCapturingImage = true
                     it()
                 },
-                modifier = Modifier.align(Alignment.BottomCenter).size(spacing64),
+                modifier = Modifier
+                    .align(Alignment.BottomCenter)
+                    .size(spacing64),
                 colors = IconButtonDefaults.iconButtonColors(
                     containerColor = MaterialTheme.colorScheme.primary,
                     contentColor = MaterialTheme.colorScheme.onPrimary,
@@ -158,7 +162,7 @@ private fun ScanShoppingListScreenContent(
         capturedBitmap?.let { bitmap ->
             Image(
                 bitmap = bitmap.asImageBitmap(),
-                contentDescription = "Frozen Preview",
+                contentDescription = null,
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues),

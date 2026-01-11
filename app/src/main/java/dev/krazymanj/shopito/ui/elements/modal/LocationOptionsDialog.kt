@@ -14,12 +14,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.MapPin
 import com.composables.icons.lucide.X
+import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.model.Location
 import dev.krazymanj.shopito.model.SavedLocation
 import dev.krazymanj.shopito.ui.theme.Emphasized
@@ -48,7 +50,7 @@ fun LocationOptionsDialog(
         options = listOf(LocationOptionRowType.MapPicker).plus(
             options.reversed().map { LocationOptionRowType.Row(it) }
         ),
-        title = "Choose a location",
+        title = stringResource(R.string.choose_a_location_label),
         row = {
             when(it) {
                 LocationOptionRowType.MapPicker -> {
@@ -58,7 +60,7 @@ fun LocationOptionsDialog(
                     )
                     Spacer(Modifier.width(spacing8))
                     Text(
-                        text = "Choose from a map...",
+                        text = stringResource(R.string.choose_from_a_map_label),
                         style = MaterialTheme.typography.bodyLarge
                     )
                 }

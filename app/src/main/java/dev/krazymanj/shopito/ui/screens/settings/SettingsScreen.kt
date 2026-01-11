@@ -67,7 +67,10 @@ fun SettingsScreenContent(
     navRouter: INavigationRouter
 ) {
     Box(
-        modifier = Modifier.fillMaxSize().padding(spacing16).padding(bottom = spacing16)
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(spacing16)
+            .padding(bottom = spacing16)
     ) {
         Column(
             modifier = Modifier.padding(paddingValues),
@@ -79,7 +82,7 @@ fun SettingsScreenContent(
                 onSyncRequest = {
                     actions.attemptSync()
                 },
-                syncError = state.syncError,
+                syncError = state.syncError?.asString(),
                 lastTimeSynced = state.lastTimeSynced,
                 onAuthActionRequest = {
                     if (state.isLoggedIn()) {
@@ -120,7 +123,7 @@ fun SettingsScreenContent(
                     }) },
                     value = state.startScreenSetting,
                     onValueChange = { actions.onStartScreenSettingChange(it) },
-                    labelText = "When app opens...",
+                    labelText = stringResource(R.string.when_app_opens_setting_label),
                     modifier = Modifier.fillMaxWidth()
                 )
                 SuggestionField(
@@ -128,7 +131,7 @@ fun SettingsScreenContent(
                     labelProvider = { it.name },
                     value = state.shoppingLists.find { list -> list.id == state.startShoppingListId },
                     onValueChange = { actions.onStartShoppingListChange(it) },
-                    labelText = "Shopping List to open",
+                    labelText = stringResource(R.string.shopping_list_to_open_setting_label),
                     modifier = Modifier.fillMaxWidth(),
                     enabled = state.startScreenSetting == StartDestinationSetting.ShoppingListScreen
                 )

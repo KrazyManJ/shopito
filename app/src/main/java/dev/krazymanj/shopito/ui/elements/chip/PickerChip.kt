@@ -2,7 +2,6 @@ package dev.krazymanj.shopito.ui.elements.chip
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.CircularProgressIndicator
@@ -15,9 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.tooling.preview.PreviewLightDark
 import androidx.compose.ui.unit.dp
-import com.composables.icons.lucide.Image
 import com.composables.icons.lucide.Lucide
 import com.composables.icons.lucide.X
 import dev.krazymanj.shopito.ui.theme.Primary
@@ -97,14 +94,4 @@ fun PickerChip(
         colors = pickerChipColors(),
         modifier = modifier.then(Modifier)
     )
-}
-
-@PreviewLightDark
-@Composable
-private fun Preview() {
-    Column {
-        PickerChip(true, {}, Lucide.Image, "Chip", {},)
-        PickerChip(true, {}, Lucide.Image, "Chip", {}, showLoading = true)
-        PickerChip(false, {}, Lucide.Image, "Chip", {},)
-    }
 }

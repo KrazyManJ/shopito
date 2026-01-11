@@ -13,6 +13,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.res.stringResource
+import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.ui.elements.input.ShopitoCheckbox
 import dev.krazymanj.shopito.ui.theme.backgroundSecondaryColor
 import dev.krazymanj.shopito.ui.theme.spacing16
@@ -29,20 +31,20 @@ fun LogoutDialog(
     AlertDialog(
         onDismissRequest = onDismissRequest,
         title = {
-            Text("Logout")
+            Text(stringResource(R.string.logout_label))
         },
         text = {
             Column(
                 verticalArrangement = Arrangement.spacedBy(spacing16)
             ) {
-                Text("Are you sure you want to logout?")
-                Text("Logout won't wipe your data. To wipe your data as well, check the box below.")
+                Text(stringResource(R.string.logout_modal_text))
+                Text(stringResource(R.string.logout_modal_wipe_data_text))
                 Row(
                     verticalAlignment = Alignment.CenterVertically,
                     horizontalArrangement = Arrangement.spacedBy(spacing4)
                 ) {
                     ShopitoCheckbox(checked = checkBoxState, onCheckedChange = { checkBoxState = it })
-                    Text("Wipe data")
+                    Text(stringResource(R.string.wipe_data_label))
                 }
             }
         },
@@ -53,7 +55,7 @@ fun LogoutDialog(
                     contentColor = textPrimaryColor(),
                 )
             ) {
-                Text("Dismiss")
+                Text(stringResource(R.string.dismiss_label))
             }
         },
         confirmButton = {
@@ -63,7 +65,10 @@ fun LogoutDialog(
                 }
             ) {
                 Text(
-                    text = if (checkBoxState) "Logout and wipe data" else "Logout"
+                    text = if (checkBoxState)
+                        stringResource(R.string.logout_and_wipe_data_label)
+                    else
+                        stringResource(R.string.logout_label)
                 )
             }
         },

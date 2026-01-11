@@ -26,13 +26,18 @@ class SyncWorker @AssistedInject constructor(
     private val snackbarManager: SnackbarManager,
     private val navigationManager: NavigationManager
 ) : CoroutineWorker(appContext, workerParams) {
+
+    companion object {
+        const val ERROR_KEY = "ERROR_MSG"
+    }
+
     override suspend fun doWork(): Result {
         val result = syncManager.sync()
         return when (result) {
             is SyncManager.Result.Error -> {
-                val error = workDataOf("ERROR_MSG" to result.message)
+                val error = workDataOf(ERROR_KEY to result.errorId)
 
-                if (result.message == "No internet connection" || result.message == "Unknown error") {
+                if (result.errorId == R.string.error_no_internet_connection || result.errorId == R.string.error_unknown) {
                     Result.retry()
                 } else {
                     Result.failure(error)
@@ -51,7 +56,7 @@ class SyncWorker @AssistedInject constructor(
                     withDismissAction = true,
                     reAppearOnNavigation = true
                 ))
-                Result.failure(workDataOf("ERROR_MSG" to "Unauthorized"))
+                Result.failure(workDataOf(ERROR_KEY to R.string.error_unauthorized))
             }
         }
     }

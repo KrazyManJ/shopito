@@ -49,8 +49,8 @@ fun AuthScreen(
 
     BaseScreen(
         topBarText = when (state.authType) {
-            AuthType.Login -> "Login"
-            AuthType.Register -> "Register"
+            AuthType.Login -> stringResource(R.string.login_label)
+            AuthType.Register -> stringResource(R.string.register_label)
         },
         onBackClick = { navRouter.returnBack() }
     ) {
@@ -65,7 +65,10 @@ private fun LoginScreenContent(
     actions: AuthActions
 ) {
     Column(
-        modifier = Modifier.fillMaxWidth().padding(paddingValues).padding(spacing16),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(paddingValues)
+            .padding(spacing16),
         verticalArrangement = Arrangement.spacedBy(spacing32)
     ) {
         Column(
@@ -97,13 +100,13 @@ private fun LoginScreenContent(
             OutlinedTextField(
                 value = state.usernameInput,
                 onValueChange = { actions.onUsernameInputChange(it) },
-                label = { Text("Username") },
+                label = { Text(stringResource(R.string.username)) },
                 modifier = Modifier.fillMaxWidth()
             )
             OutlinedTextField(
                 value = state.passwordInput,
                 onValueChange = { actions.onPasswordInputChange(it) },
-                label = { Text("Password") },
+                label = { Text(stringResource(R.string.password_label)) },
                 visualTransformation = PasswordVisualTransformation(),
                 modifier = Modifier.fillMaxWidth()
             )
@@ -120,7 +123,9 @@ private fun LoginScreenContent(
                     actions.onLoginClick()
                 },
                 enabled = state.isFormValid(),
-                modifier = Modifier.fillMaxWidth().height(48.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(48.dp)
             ) {
                 if (state.isAuthenticating) {
                     CircularProgressIndicator(
@@ -131,8 +136,8 @@ private fun LoginScreenContent(
                 else {
                     Text(
                         text = when (state.authType) {
-                            AuthType.Login -> "Login"
-                            AuthType.Register -> "Register"
+                            AuthType.Login -> stringResource(R.string.login_label)
+                            AuthType.Register -> stringResource(R.string.register_label)
                         }
                     )
                 }
@@ -149,8 +154,8 @@ private fun LoginScreenContent(
             ) {
                 Text(
                     text = when (state.authType) {
-                        AuthType.Login -> "Don't have an account? Register here"
-                        AuthType.Register -> "Already have an account? Login here"
+                        AuthType.Login -> stringResource(R.string.login_to_register_button_label)
+                        AuthType.Register -> stringResource(R.string.register_to_login_button_label)
                     }
                 )
             }

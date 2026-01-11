@@ -1,5 +1,7 @@
 package dev.krazymanj.shopito.core
 
+import androidx.annotation.StringRes
+import dev.krazymanj.shopito.R
 import dev.krazymanj.shopito.communication.CommunicationResult
 import dev.krazymanj.shopito.communication.IShopitoRemoteRepository
 import dev.krazymanj.shopito.database.ShopitoDao
@@ -22,7 +24,7 @@ class SyncManager @Inject constructor(
 
     sealed class Result {
         data object Success : Result()
-        data class Error(val message: String) : Result()
+        data class Error(@field:StringRes val errorId: Int) : Result()
         data object Unauthorized : Result()
     }
 
@@ -38,19 +40,19 @@ class SyncManager @Inject constructor(
             items = dirtyItems.map { it.toNetworkModel() }
         )
 
-        val token = dataStore.get(DataStoreKey.Token) ?: return Result.Error("Not logged in")
+        val token = dataStore.get(DataStoreKey.Token) ?: return Result.Error(R.string.not_logged_in)
 
         val result = withContext(Dispatchers.IO) {
             repository.sync(token, request)
         }
 
         return when (result) {
-            is CommunicationResult.ConnectionError -> Result.Error("No internet connection")
+            is CommunicationResult.ConnectionError -> Result.Error(R.string.error_no_internet_connection)
             is CommunicationResult.Error -> when (result.error.code) {
                 401 -> Result.Unauthorized
-                else -> Result.Error("Unknown error")
+                else -> Result.Error(R.string.error_unknown)
             }
-            is CommunicationResult.Exception -> Result.Error("Unknown error")
+            is CommunicationResult.Exception -> Result.Error(R.string.error_unknown)
             is CommunicationResult.Success -> {
                 val data = result.data
 

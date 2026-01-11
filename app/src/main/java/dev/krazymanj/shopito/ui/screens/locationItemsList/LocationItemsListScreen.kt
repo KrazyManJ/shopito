@@ -90,14 +90,16 @@ fun LocationItemsListScreenContent(
 ) {
 
     Column(
-        modifier = Modifier.padding(paddingValues).padding(spacing16),
+        modifier = Modifier
+            .padding(paddingValues)
+            .padding(spacing16),
         verticalArrangement = Arrangement.spacedBy(spacing32)
     ) {
         Column(
             modifier = Modifier.fillMaxWidth()
         ) {
             Text(
-                text = "Current shop",
+                text = stringResource(R.string.current_shop_subtitle),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
                 style = MaterialTheme.typography.titleMedium,
@@ -105,7 +107,7 @@ fun LocationItemsListScreenContent(
             )
             Spacer(modifier = Modifier.padding(vertical = spacing4))
             Text(
-                text = state.locationLabel ?: "Loading...",
+                text = state.locationLabel ?: stringResource(R.string.loading_label),
                 textAlign = TextAlign.Center,
                 modifier = Modifier.fillMaxWidth(),
                 style = MaterialTheme.typography.bodyMedium,

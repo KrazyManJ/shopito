@@ -4,6 +4,7 @@ import dev.krazymanj.shopito.database.entities.ShoppingList
 import dev.krazymanj.shopito.datastore.DataStoreKey
 import dev.krazymanj.shopito.model.TokenData
 import dev.krazymanj.shopito.navigation.StartDestinationSetting
+import dev.krazymanj.shopito.ui.UiText
 
 
 data class SettingsUIState(
@@ -19,7 +20,7 @@ data class SettingsUIState(
 
     val isSyncing: Boolean = false,
     val lastTimeSynced: Long? = null,
-    val syncError: String? = null
+    val syncError: UiText? = null
 ) {
     fun isLoggedIn() = loggedData != null
 }

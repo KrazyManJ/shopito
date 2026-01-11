@@ -50,23 +50,27 @@ fun <T> OptionSelectDialog(
             if (options.isEmpty()) {
                 item {
                     Text(
-                        text = "No available options...",
+                        text = stringResource(R.string.no_available_options_label),
                         color = textSecondaryColor(),
                         style = MaterialTheme.typography.bodyMedium,
                         textAlign = TextAlign.Center,
-                        modifier = Modifier.fillMaxWidth().padding(spacing16)
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(spacing16)
                     )
                 }
             }
             items(items = options) {
                 val enabled = enabledOptionsPredicate(it)
                 Column(
-                    modifier = Modifier.fillMaxWidth().then(
-                        if (enabled)
-                            Modifier.clickable { onOptionSelect(it) }
-                        else
-                            Modifier
-                    )
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .then(
+                            if (enabled)
+                                Modifier.clickable { onOptionSelect(it) }
+                            else
+                                Modifier
+                        )
                 ) {
                     CompositionLocalProvider(
                         value = LocalContentColor provides if (enabledOptionsPredicate(it)) textPrimaryColor() else textSecondaryColor()
